@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">DnDApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Options Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="action_edit">Edit</string>
+
+    <!-- Character Sheet values -->
+    <string name="character_default_name">Character name</string>
+    <string name="character_AC">AC: %1$d</string>
+    <string name="character_HP">HP: %1$d</string>
+    <string name="character_Speed">Speed: %1$dft</string>
+
+    <!-- Ability values -->
+    <string name="ability_score_STR">STR</string>
+    <string name="ability_score_DEX">DEX</string>
+    <string name="ability_score_CON">CON</string>
+    <string name="ability_score_INT">INT</string>
+    <string name="ability_score_WIS">WIS</string>
+    <string name="ability_score_CHA">CHA</string>
+    <string name="ability_score_value_default">XX(+X)</string>
+    <string name="ability_score_value">%1$d (%2$s%3$d)</string>
+
+    <!-- Feature values -->
+    <string name="feature_default_title">Ability title</string>
+    <string name="feature_default_description">Ability description</string>
+
+    <!-- Content Descriptions -->
+    <string name="content_description_separator">Separator</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
