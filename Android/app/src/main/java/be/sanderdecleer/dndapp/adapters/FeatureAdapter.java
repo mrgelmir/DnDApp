@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp;
+package be.sanderdecleer.dndapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,15 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.utils.LayoutUtils;
 
 /**
  * Created by SD on 20/05/2016.
  */
 public class FeatureAdapter extends ArrayAdapter<FeatureModel> {
 
-    public int layoutResourceId;
+    private int layoutResourceId;
     private CharacterModel character = null;
 
     public FeatureAdapter(Context context, int layoutResourceId) {
@@ -44,10 +46,7 @@ public class FeatureAdapter extends ArrayAdapter<FeatureModel> {
             convertView = inflater.inflate(layoutResourceId, parent, false);
 
             vh = new ViewHolder();
-
             vh.titleView = (TextView) convertView.findViewById(R.id.ability_title);
-            vh.descriptionView = (TextView) convertView.findViewById(R.id.ability_description);
-            vh.descriptionView.setVisibility(View.GONE);
 
             convertView.setTag(vh);
         } else {
@@ -55,30 +54,35 @@ public class FeatureAdapter extends ArrayAdapter<FeatureModel> {
         }
 
         // Get Data object
-        FeatureModel abilityData = character.abilities.get(position);
+        final FeatureModel abilityData = character.abilities.get(position);
 //        FeatureModel abilityData = new FeatureModel("title " + position, "description");
 
         // Set data in view
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vh.descriptionView.setVisibility(vh.descriptionView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                parent.forceLayout();
+                LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
+                        abilityData.title, new LayoutUtils.EditViewCallback() {
+                            @Override
+                            public void EditView(View view) {
+                                TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
+                                descriptionView.setText(abilityData.description);
+                            }
+                        });
             }
         });
 
         vh.titleView.setText(abilityData.title);
-        vh.descriptionView.setText(abilityData.description);
 
         return convertView;
     }
 
     public void setCharacter(CharacterModel character){
         this.character = character;
+        notifyDataSetChanged();
     }
 
     private static class ViewHolder {
         public TextView titleView;
-        public TextView descriptionView;
     }
 }

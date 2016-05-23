@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">DnDApp</string>
 
+    <!-- Base values -->
+    <string name="done">Done</string>
+
+    <!-- Navigation Bar values  -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -11,7 +15,7 @@
     <!-- Character Sheet values -->
     <string name="character_default_name">Character name</string>
     <string name="character_AC">AC: %1$d</string>
-    <string name="character_HP">HP: %1$d</string>
+    <string name="character_HP">HP: %1$d/%2$d</string>
     <string name="character_Speed">Speed: %1$dft</string>
 
     <!-- Ability values -->
@@ -23,6 +27,12 @@
     <string name="ability_score_CHA">CHA</string>
     <string name="ability_score_value_default">XX(+X)</string>
     <string name="ability_score_value">%1$d (%2$s%3$d)</string>
+
+    <!-- Weapon values -->
+    <string name="weapon_nickname_placeholder">Nickname</string>
+    <string name="weapon_type_placeholder">Nickname</string>
+    <string name="weapon_to_hit_placeholder">+5</string>
+    <string name="weapon_damage_placeholder">1d6 + 3p</string>
 
     <!-- Feature values -->
     <string name="feature_default_title">Ability title</string>

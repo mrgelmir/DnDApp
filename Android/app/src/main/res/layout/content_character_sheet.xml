@@ -22,7 +22,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/view_padding">
 
         <!-- AC -->
         <TextView
@@ -54,15 +55,11 @@
     <include layout="@layout/p_separator" />
 
     <!-- Weapons & Attacks -->
-    <TableLayout
+    <ListView
+        android:id="@+id/weapon_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="*">
-
-        <include layout="@layout/p_weapon_row"/>
-        <include layout="@layout/p_weapon_row"/>
-        <include layout="@layout/p_weapon_row"/>
-    </TableLayout>
+        android:orientation="vertical" />
 
     <include layout="@layout/p_separator" />
 
@@ -74,8 +71,6 @@
     <ListView
         android:id="@+id/feature_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    </ListView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

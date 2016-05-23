@@ -13,6 +13,7 @@ public class CharacterModel {
     public String name;
 
     public List<FeatureModel> abilities = new ArrayList<>();
+    public List<WeaponModel> weapons = new ArrayList<>();
 
     // Ability scores
     public int STR;
@@ -24,7 +25,8 @@ public class CharacterModel {
 
     public int speed;
     public int AC;
-    public int HP;
+    public int HP_max;
+    public int HP_current;
 
     public CharacterModel(String name) {
         this.name = name;
@@ -41,6 +43,10 @@ public class CharacterModel {
 
     public void addAbility(FeatureModel ability) {
         abilities.add(ability);
+    }
+
+    public void addWeapon(WeaponModel weapon) {
+        weapons.add(weapon);
     }
 
 }
