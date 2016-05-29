@@ -1,38 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingEnd="@dimen/view_padding"
+    android:paddingStart="@dimen/view_padding">
 
     <TextView
         android:id="@+id/expendable_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="KI points:"
+        android:layout_gravity="center_vertical"
+        android:text="@string/expendable_title_placeholder"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="10/10"
-        android:paddingStart="@dimen/view_padding"
-        android:paddingEnd="@dimen/view_padding"/>
-
+    <!-- Spacing -->
     <View
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"/>
-    <Button
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/expendable_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingEnd="@dimen/view_padding"
+        android:paddingStart="@dimen/view_padding"
+        android:text="@string/expendable_value_placeholder" />
+
+
+    <ImageButton
+        android:id="@+id/expendable_btn_increase"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="+"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/content_description_increase"
+        android:paddingEnd="@dimen/view_padding"
         android:paddingStart="@dimen/view_padding"
-        android:paddingEnd="@dimen/view_padding"/>
-    <Button
+        android:src="@drawable/ic_add_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/expendable_btn_decrease"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="-"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/content_description_decrease"
+        android:paddingEnd="@dimen/view_padding"
         android:paddingStart="@dimen/view_padding"
-        android:paddingEnd="@dimen/view_padding"/>
+        android:src="@drawable/ic_remove_black_24dp" />
 
 </LinearLayout>

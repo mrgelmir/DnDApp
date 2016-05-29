@@ -38,8 +38,15 @@
     <string name="feature_default_title">Ability title</string>
     <string name="feature_default_description">Ability description</string>
 
+    <!-- Expendable values -->
+    <string name="expendable_title_placeholder">Ki points</string>
+    <string name="expendable_value_placeholder">10/10</string>
+    <string name="expendable_value">%1$d/%2$d</string>
+
     <!-- Content Descriptions -->
     <string name="content_description_separator">Separator</string>
+    <string name="content_description_increase">Increases value</string>
+    <string name="content_description_decrease">Decreases value</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

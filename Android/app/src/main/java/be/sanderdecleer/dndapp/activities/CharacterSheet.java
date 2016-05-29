@@ -131,12 +131,13 @@ public class CharacterSheet extends AppCompatActivity
         character1.addWeapon(dagger);
         character1.addWeapon(shortSword);
         ExpendableModel kiExpendable = new ExpendableModel("KI points", 2, 1);
+        ExpendableModel superiorityExpendable = new ExpendableModel("Superiority Dice", 10, 5);
         character1.addExpendable(kiExpendable);
+        character1.addExpendable(superiorityExpendable);
         character1.addExpendable(kiExpendable);
+        character1.addExpendable(superiorityExpendable);
         character1.addExpendable(kiExpendable);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(kiExpendable);
+        character1.addExpendable(superiorityExpendable);
 
         // Test character 2
         character2 = new CharacterModel("Derek the Dude");
