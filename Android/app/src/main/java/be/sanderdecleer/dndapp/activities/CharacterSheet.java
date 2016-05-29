@@ -12,12 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
+import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
 import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
+import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
@@ -27,8 +33,7 @@ public class CharacterSheet extends AppCompatActivity
 
     private CharacterModel activeCharacter;
 
-    private FeatureAdapter featureAdapter;
-    private WeaponAdapter weaponAdapter;
+    private ArrayList<BaseCharacterAdapter> characterAdapters;
 
     // TEMP
     private CharacterModel character1;
@@ -67,17 +72,32 @@ public class CharacterSheet extends AppCompatActivity
         if (navigationView != null)
             navigationView.setNavigationItemSelectedListener(this);
 
+
+        // ADAPTERS
+        characterAdapters = new ArrayList<>(3);
+
         // Create feature adapter and link to view
-        featureAdapter = new FeatureAdapter(this, R.layout.p_ability_view_item);
-        ListView abilitiesView = (ListView) findViewById(R.id.feature_list);
-        if (abilitiesView != null)
+        FeatureAdapter featureAdapter = new FeatureAdapter(this, R.layout.p_ability_view_item);
+        characterAdapters.add(featureAdapter);
+        AdapterView abilitiesView = (AdapterView) findViewById(R.id.feature_list);
+        if (abilitiesView != null) {
             abilitiesView.setAdapter(featureAdapter);
+        }
 
         // Create weapon adapter and link to view
-        weaponAdapter = new WeaponAdapter(this, R.layout.p_weapon_view_item);
-        ListView weaponView = (ListView) findViewById(R.id.weapon_list);
-        if (weaponView != null)
+        WeaponAdapter weaponAdapter = new WeaponAdapter(this, R.layout.p_weapon_view_item);
+        characterAdapters.add(weaponAdapter);
+        AdapterView weaponView = (AdapterView) findViewById(R.id.weapon_list);
+        if (weaponView != null) {
             weaponView.setAdapter(weaponAdapter);
+        }
+
+        // Create expandable view and link to view
+        ExpendableAdapter expendableAdapter = new ExpendableAdapter(this, R.layout.p_expendable_view);
+        characterAdapters.add(expendableAdapter);
+        AdapterView expendableView = (AdapterView) findViewById(R.id.expendables_list);
+        if (expendableView != null)
+            expendableView.setAdapter(expendableAdapter);
 
         // TEMP
 
@@ -86,10 +106,16 @@ public class CharacterSheet extends AppCompatActivity
         character1.setAbilityScores(14, 16, 14, 11, 14, 13);
         character1.HP_current = 8;
         character1.HP_max = 13;
+        character1.hitDice_max = "2d8";
         character1.AC = 15;
         character1.speed = 40;
         character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
         character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
         character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
         WeaponModel shortSword = new WeaponModel();
         shortSword.nickname = "";
@@ -104,12 +130,20 @@ public class CharacterSheet extends AppCompatActivity
         dagger.weaponFeatures = "finesse, light, range(30/60ft)";
         character1.addWeapon(dagger);
         character1.addWeapon(shortSword);
+        ExpendableModel kiExpendable = new ExpendableModel("KI points", 2, 1);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(kiExpendable);
 
         // Test character 2
         character2 = new CharacterModel("Derek the Dude");
         character2.setAbilityScores(10, 12, 8, 20, 17, 16);
         character2.HP_current = 8;
         character2.HP_max = 8;
+        character1.hitDice_max = "2d6";
         character2.AC = 13;
         character2.speed = 30;
         character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
@@ -233,8 +267,12 @@ public class CharacterSheet extends AppCompatActivity
 
 
         // Update the adapters
-        featureAdapter.setCharacter(activeCharacter);
-        weaponAdapter.setCharacter(activeCharacter);
+        for (BaseCharacterAdapter adapter : characterAdapters) {
+            adapter.setCharacter(activeCharacter);
+        }
+
+        findViewById(R.id.scrollView).invalidate();
+
     }
 
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {

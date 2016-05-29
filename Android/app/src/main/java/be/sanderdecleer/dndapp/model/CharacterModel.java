@@ -14,6 +14,7 @@ public class CharacterModel {
 
     public List<FeatureModel> abilities = new ArrayList<>();
     public List<WeaponModel> weapons = new ArrayList<>();
+    public List<ExpendableModel> expendables = new ArrayList<>();
 
     // Ability scores
     public int STR;
@@ -27,6 +28,9 @@ public class CharacterModel {
     public int AC;
     public int HP_max;
     public int HP_current;
+
+    // TODO: 29/05/2016 replace with a list of hitDice objects
+    public String hitDice_max;
 
     public CharacterModel(String name) {
         this.name = name;
@@ -47,6 +51,10 @@ public class CharacterModel {
 
     public void addWeapon(WeaponModel weapon) {
         weapons.add(weapon);
+    }
+
+    public void addExpendable(ExpendableModel expendable) {
+        expendables.add(expendable);
     }
 
 }

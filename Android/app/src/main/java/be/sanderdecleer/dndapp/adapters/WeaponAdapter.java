@@ -20,17 +20,13 @@ import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 
 /**
- * Created by SD on 23/05/2016.
+ * Adapter for weapon views
  */
-public class WeaponAdapter extends ArrayAdapter<WeaponModel> {
+public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel> {
 
-    private int layoutResourceId;
-    private CharacterModel character = null;
 
     public WeaponAdapter(Context context, int layoutResourceId) {
         super(context, layoutResourceId);
-
-        this.layoutResourceId = layoutResourceId;
     }
 
     @Override
@@ -92,11 +88,6 @@ public class WeaponAdapter extends ArrayAdapter<WeaponModel> {
         vh.damageView.setText(weaponData.weaponDamage);
 
         return convertView;
-    }
-
-    public void setCharacter(CharacterModel character) {
-        this.character = character;
-        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

@@ -54,23 +54,49 @@
 
     <include layout="@layout/p_separator" />
 
-    <!-- Weapons & Attacks -->
-    <ListView
-        android:id="@+id/weapon_list"
+    <!-- ListViews Below -->
+
+
+    <LinearLayout
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <include layout="@layout/p_separator" />
+        <!-- Weapons & Attacks -->
+        <ListView
+            android:id="@+id/weapon_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:listitem="@layout/p_weapon_view_item" />
 
-    <!-- Place things like KI-points/Bardic inspiration or Superiority dice here -->
+        <include layout="@layout/p_separator" />
 
-    <!--<include layout="@layout/p_separator" />-->
+        <!-- Expendables:
+                Place things like KI-points/Bardic inspiration or Superiority dice here -->
 
-    <!-- Features -->
-    <ListView
-        android:id="@+id/feature_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <ListView
+            android:id="@+id/expendables_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:listitem="@layout/p_expendable_view" />
 
+        <include
+            android:id="@+id/expendables_separator"
+            layout="@layout/p_separator" />
+
+        <!-- Features -->
+        <ListView
+            android:id="@+id/feature_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:listitem="@layout/p_ability_view_item" />
+
+    </LinearLayout>
 </LinearLayout>

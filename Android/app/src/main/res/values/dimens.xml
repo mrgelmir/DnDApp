@@ -9,4 +9,8 @@
 
     <!-- small button padding -->
     <dimen name="view_padding">8dp</dimen>
+
+    <!-- Font sizes -->
+    <dimen name="attr_title">18sp</dimen>
+    <dimen name="attr_sub">12sp</dimen>
 </resources>
