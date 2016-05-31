@@ -1,8 +1,11 @@
 package be.sanderdecleer.dndapp.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
 import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
@@ -27,6 +32,7 @@ import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
+import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,6 +40,8 @@ public class CharacterSheet extends AppCompatActivity
     private CharacterModel activeCharacter;
 
     private ArrayList<BaseCharacterAdapter> characterAdapters;
+
+    private SubMenu characterSubMenu;
 
     // TEMP
     private CharacterModel character1;
@@ -157,9 +165,25 @@ public class CharacterSheet extends AppCompatActivity
         dagger2.weaponFeatures = "finesse, light, range(30/60ft)";
         character2.addWeapon(dagger2);
 
-        // Temp set activeCharacter
-        setActiveCharacter(character1);
+        // Temp save these two characters
+        CharacterFileUtil.saveCharacter(this, character1);
+        CharacterFileUtil.saveCharacter(this, character2);
 
+        // Temp check saved characters
+        List<String> characters = CharacterFileUtil.getAvailableCharacters(this);
+
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+        if (nav != null) {
+            // This is hard-coded for now: fix this later
+            characterSubMenu = nav.getMenu().getItem(1).getSubMenu();
+
+            for (int i = 0; i < characters.size(); ++i) {
+                characterSubMenu.add(0, i, 0, characters.get(i));
+            }
+
+            // Make sure the menu redraws
+            invalidateOptionsMenu();
+        }
 
     }
 
@@ -195,38 +219,46 @@ public class CharacterSheet extends AppCompatActivity
 
         if (id == R.id.action_edit) {
             return true;
+        } else if (id == R.id.action_save) {
+            CharacterFileUtil.saveCharacter(this, activeCharacter);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        // Catch specific actions here
         if (id == R.id.nav_add_character) {
-            // TODO show add new activeCharacter stuff
-        } else if (id == R.id.nav_character_1) { // TODO make this dynamic
-            setActiveCharacter(character1);
-        } else if (id == R.id.nav_character_2) {
-            setActiveCharacter(character2);
+            // TODO: create new character
+
+        } else {
+            // This is (probably) a character being selected
+            // Load corresponding file and display
+
+            // Do a dirty 'loop' over characterSubMenu children and un-check
+            int index = 0;
+            MenuItem otherItem = characterSubMenu.getItem(index);
+            try {
+                while (otherItem != null) {
+                    otherItem.setChecked(false);
+                    otherItem = characterSubMenu.getItem(index);
+                    ++index;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                // silently fail here
+            }
+
+            // Check this item to see current
+            item.setChecked(true);
+
+            // TEMP load item from filename given
+            setActiveCharacter(CharacterFileUtil.loadCharacter(this, item.getTitle().toString()));
         }
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null)

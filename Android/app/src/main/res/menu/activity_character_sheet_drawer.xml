@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_add_character"
             android:icon="@drawable/ic_add_circle_outline_black_24dp"
-            android:title="Add Character" />
+            android:title="@string/navigation_drawer_add_character" />
         <!--<item-->
         <!--android:id="@+id/nav_camera"-->
         <!--android:icon="@drawable/ic_menu_camera"-->
@@ -24,15 +24,15 @@
         <!--android:title="Tools" />-->
     </group>
 
-    <item android:title="Characters">
+    <item android:title="@string/navigation_drawer_title_characters">
         <menu>
             <!-- Add characters here -->
-            <item
-                android:id="@+id/nav_character_1"
-                android:title="Guy Stormcrow" />
-            <item
-                android:id="@+id/nav_character_2"
-                android:title="Derek the Dude" />
+            <!--<item-->
+                <!--android:id="@+id/nav_character_1"-->
+                <!--android:title="Guy Stormcrow" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_character_2"-->
+                <!--android:title="Derek the Dude" />-->
 
             <!--<item-->
             <!--android:id="@+id/nav_share"-->

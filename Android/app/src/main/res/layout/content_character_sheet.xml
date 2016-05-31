@@ -55,8 +55,6 @@
     <include layout="@layout/p_separator" />
 
     <!-- ListViews Below -->
-
-
     <LinearLayout
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
