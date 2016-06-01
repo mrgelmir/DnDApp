@@ -22,7 +22,8 @@
     </android.support.design.widget.AppBarLayout>
 
     <!-- The actual contents -->
-    <include layout="@layout/content_character_sheet" />
+    <include layout="@layout/fragment_character_overview" />
+    <!--<include layout="@layout/content_character_sheet" />-->
 
     <!-- TODO implement the Pager -->
     <!--<android.support.v4.view.ViewPager-->
@@ -31,6 +32,7 @@
         <!--android:layout_height="match_parent">-->
 
     <!--</android.support.v4.view.ViewPager>-->
+
 
     <!-- Floating action Button -->
     <android.support.design.widget.FloatingActionButton

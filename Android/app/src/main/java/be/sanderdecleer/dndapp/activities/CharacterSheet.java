@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -169,21 +170,8 @@ public class CharacterSheet extends AppCompatActivity
         CharacterFileUtil.saveCharacter(this, character1);
         CharacterFileUtil.saveCharacter(this, character2);
 
-        // Temp check saved characters
-        List<String> characters = CharacterFileUtil.getAvailableCharacters(this);
-
-        NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
-        if (nav != null) {
-            // This is hard-coded for now: fix this later
-            characterSubMenu = nav.getMenu().getItem(1).getSubMenu();
-
-            for (int i = 0; i < characters.size(); ++i) {
-                characterSubMenu.add(0, i, 0, characters.get(i));
-            }
-
-            // Make sure the menu redraws
-            invalidateOptionsMenu();
-        }
+        // Load saved characters
+        populateCharacterMenu();
 
     }
 
@@ -319,5 +307,25 @@ public class CharacterSheet extends AppCompatActivity
         int attributeModifier = Math.round((attributeValue - 10) / 2);
         attrScoreView.setText(String.format(getResources().getString(R.string.ability_score_value),
                 attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
+    }
+
+    private void populateCharacterMenu() {
+
+        // get the saved characters
+        List<String> characters = CharacterFileUtil.getAvailableCharacters(this);
+
+        // get a reference to the navigation
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+        if (nav != null) {
+            // This is using a hard-coded index for now: fix this later
+            characterSubMenu = nav.getMenu().findItem(R.id.nav_character_list).getSubMenu();
+
+            for (int i = 0; i < characters.size(); ++i) {
+                characterSubMenu.add(0, i, 0, characters.get(i));
+            }
+
+            // Make sure the menu redraws
+            invalidateOptionsMenu();
+        }
     }
 }
