@@ -75,7 +75,6 @@ public class CharacterModel implements Parcelable {
 
     private CharacterModel(Parcel in) {
         // Read data
-
         name = in.readString();
         STR = in.readInt();
         DEX = in.readInt();
@@ -100,5 +99,19 @@ public class CharacterModel implements Parcelable {
         dest.writeInt(INT);
         dest.writeInt(WIS);
         dest.writeInt(CHA);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        // TODO
+        // Question: what do we use here?
+        // - fast version
+        // - super detailed version (for testing)
+
+
+
+
+        return super.equals(o);
     }
 }

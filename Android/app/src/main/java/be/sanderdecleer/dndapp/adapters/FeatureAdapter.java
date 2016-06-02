@@ -1,7 +1,9 @@
 package be.sanderdecleer.dndapp.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
+import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 /**
  * Adapter for feature views
@@ -49,20 +52,51 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
         // Get Data object
         final FeatureModel featureData = character.abilities.get(position);
 
+        // TODO: 2/06/2016 find out how to do this somewhat more legible.
+        
         // Set data in view
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
-                        featureData.title, new LayoutUtils.EditViewCallback() {
-                            @Override
-                            public void EditView(View view) {
-                                TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
-                                descriptionView.setText(featureData.description);
-                            }
-                        });
-            }
-        });
+        convertView.setOnClickListener(new OnClickListenerEditable(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
+                                featureData.title, new LayoutUtils.EditViewCallback() {
+                                    @Override
+                                    public void EditView(View view) {
+                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
+                                        descriptionView.setText(featureData.description);
+                                    }
+                                });
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        LayoutUtils.showEditDialog((Activity) getContext(), R.layout.p_ability_view_edit,
+                                featureData.title, new LayoutUtils.EditViewCallback() {
+                                    @Override
+                                    public void EditView(View view) {
+
+                                        TextView titleView = (TextView) view.findViewById(R.id.ability_edit_title);
+                                        titleView.setText(featureData.title);
+                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_edit_description);
+                                        descriptionView.setText(featureData.description);
+                                    }
+                                }, new LayoutUtils.DismissDialogCallback() {
+                                    @Override
+                                    public void OnDialogDismissed(View view) {
+
+                                        TextView titleView = (TextView) view.findViewById(R.id.ability_edit_title);
+                                        featureData.title = titleView.getText().toString();
+                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_edit_description);
+                                        featureData.description = descriptionView.getText().toString();
+                                    }
+                                });
+
+                    }
+                }));
 
         vh.titleView.setText(featureData.title);
 

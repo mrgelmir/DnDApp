@@ -1,11 +1,9 @@
 package be.sanderdecleer.dndapp.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,6 +30,7 @@ import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
+import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,12 +41,35 @@ public class CharacterSheet extends AppCompatActivity
 
     private SubMenu characterSubMenu;
 
+    private static boolean is_edit_mode = false;
+
+    public static boolean isEditMode() {
+        return is_edit_mode;
+    }
+
     // TEMP
-    private CharacterModel character1;
-    private CharacterModel character2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        // TODO: 1/06/2016 Move a bunch of code to the respective fragment
+
+
+        // TODO: 1/06/2016 Implement View pager
+//        ViewPager pager = new ViewPager(this);
+//        FragmentPagerAdapter fragmentAdapter = new FragmentPagerAdapter(getFragmentManager()) {
+//            @Override
+//            public Fragment getItem(int position) {
+//                return null;
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return 0;
+//            }
+//        };
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_sheet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -108,70 +128,14 @@ public class CharacterSheet extends AppCompatActivity
         if (expendableView != null)
             expendableView.setAdapter(expendableAdapter);
 
-        // TEMP
-
-        // Test character 1
-        character1 = new CharacterModel("Guy Stormcrow");
-        character1.setAbilityScores(14, 16, 14, 11, 14, 13);
-        character1.HP_current = 8;
-        character1.HP_max = 13;
-        character1.hitDice_max = "2d8";
-        character1.AC = 15;
-        character1.speed = 40;
-        character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
-        character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        WeaponModel shortSword = new WeaponModel();
-        shortSword.nickname = "";
-        shortSword.weaponType = "Short sword";
-        shortSword.weaponDamage = "1d6 + 3 slashing";
-        shortSword.weaponToHit = "+5";
-        shortSword.weaponFeatures = "finesse, light";
-        WeaponModel dagger = new WeaponModel();
-        dagger.weaponType = "Dagger";
-        dagger.weaponDamage = "1d4 + 3 piercing";
-        dagger.weaponToHit = "+5";
-        dagger.weaponFeatures = "finesse, light, range(30/60ft)";
-        character1.addWeapon(dagger);
-        character1.addWeapon(shortSword);
-        ExpendableModel kiExpendable = new ExpendableModel("KI points", 2, 1);
-        ExpendableModel superiorityExpendable = new ExpendableModel("Superiority Dice", 10, 5);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(superiorityExpendable);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(superiorityExpendable);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(superiorityExpendable);
-
-        // Test character 2
-        character2 = new CharacterModel("Derek the Dude");
-        character2.setAbilityScores(10, 12, 8, 20, 17, 16);
-        character2.HP_current = 8;
-        character2.HP_max = 8;
-        character1.hitDice_max = "2d6";
-        character2.AC = 13;
-        character2.speed = 30;
-        character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
-        character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
-        WeaponModel dagger2 = new WeaponModel();
-        dagger2.nickname = "lil' edge";
-        dagger2.weaponType = "Dagger";
-        dagger2.weaponDamage = "1d4 + 3 piercing";
-        dagger2.weaponToHit = "+5";
-        dagger2.weaponFeatures = "finesse, light, range(30/60ft)";
-        character2.addWeapon(dagger2);
-
-        // Temp save these two characters
-        CharacterFileUtil.saveCharacter(this, character1);
-        CharacterFileUtil.saveCharacter(this, character2);
+        // Attach click listeners for both regular and edit use
+        attachClickListeners();
 
         // Load saved characters
         populateCharacterMenu();
+
+        // TEMP
+        createTestData();
 
     }
 
@@ -200,15 +164,21 @@ public class CharacterSheet extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         if (id == R.id.action_edit) {
+
+            // Toggle between regular and edit mode
+            is_edit_mode = !is_edit_mode;
+
+            // Set corresponding title
+            item.setTitle(getString(is_edit_mode ?
+                    R.string.action_edit_done :
+                    R.string.action_edit));
+
             return true;
         } else if (id == R.id.action_save) {
+            // Save the character (Should this be automatic?)
             CharacterFileUtil.saveCharacter(this, activeCharacter);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -256,7 +226,7 @@ public class CharacterSheet extends AppCompatActivity
 
 
     /**
-     * Set the current character and update all views
+     * Set the current character and update all views/fragments
      *
      * @param character the character to display
      */
@@ -328,4 +298,82 @@ public class CharacterSheet extends AppCompatActivity
             invalidateOptionsMenu();
         }
     }
+
+    private void attachClickListeners() {
+
+        // TODO
+        View dexView = findViewById(R.id.ability_score_STR);
+        if (dexView != null) {
+            dexView.setOnClickListener(new OnClickListenerEditable(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("test", "no edit tap");
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("test", "edit tap");
+                        }
+                    }));
+        }
+    }
+
+    // Not really needed -> move
+    private void createTestData() {
+
+        // Test character 1
+        CharacterModel character1 = new CharacterModel("Guy Stormcrow");
+        character1.setAbilityScores(14, 16, 14, 11, 14, 13);
+        character1.HP_current = 8;
+        character1.HP_max = 13;
+        character1.hitDice_max = "2d8";
+        character1.AC = 15;
+        character1.speed = 40;
+        character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
+        character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
+        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+        WeaponModel shortSword = new WeaponModel();
+        shortSword.nickname = "";
+        shortSword.weaponType = "Short sword";
+        shortSword.weaponDamage = "1d6 + 3 slashing";
+        shortSword.weaponToHit = "+5";
+        shortSword.weaponFeatures = "finesse, light";
+        WeaponModel dagger = new WeaponModel();
+        dagger.weaponType = "Dagger";
+        dagger.weaponDamage = "1d4 + 3 piercing";
+        dagger.weaponToHit = "+5";
+        dagger.weaponFeatures = "finesse, light, range(30/60ft)";
+        character1.addWeapon(dagger);
+        character1.addWeapon(shortSword);
+        ExpendableModel kiExpendable = new ExpendableModel("KI points", 2, 1);
+        ExpendableModel superiorityExpendable = new ExpendableModel("Superiority Dice", 10, 5);
+        character1.addExpendable(kiExpendable);
+        character1.addExpendable(superiorityExpendable);
+
+        // Test character 2
+        CharacterModel character2 = new CharacterModel("Derek the Dude");
+        character2.setAbilityScores(10, 12, 8, 20, 17, 16);
+        character2.HP_current = 8;
+        character2.HP_max = 8;
+        character2.hitDice_max = "2d6";
+        character2.AC = 13;
+        character2.speed = 30;
+        character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
+        character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
+        WeaponModel dagger2 = new WeaponModel();
+        dagger2.nickname = "lil' edge";
+        dagger2.weaponType = "Dagger";
+        dagger2.weaponDamage = "1d4 + 3 piercing";
+        dagger2.weaponToHit = "+5";
+        dagger2.weaponFeatures = "finesse, light, range(30/60ft)";
+        character2.addWeapon(dagger2);
+
+        // Temp save these two characters as base characters
+        CharacterFileUtil.saveCharacter(this, character1);
+        CharacterFileUtil.saveCharacter(this, character2);
+
+    }
+
 }
