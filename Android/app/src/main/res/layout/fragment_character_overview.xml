@@ -92,7 +92,7 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical"
-            tools:listitem="@layout/p_ability_view_item" />
+            tools:listitem="@layout/p_feature_view_item" />
 
     </LinearLayout>
 

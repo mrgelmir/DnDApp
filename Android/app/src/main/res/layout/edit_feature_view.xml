@@ -8,11 +8,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:labelFor="@+id/ability_edit_title"
+        android:labelFor="@+id/feature_edit_title"
         android:text="@string/feature_default_title" />
 
     <EditText
-        android:id="@+id/ability_edit_title"
+        android:id="@+id/feature_edit_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/feature_default_title"
@@ -21,11 +21,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:labelFor="@+id/ability_edit_description"
+        android:labelFor="@+id/feature_edit_description"
         android:text="@string/feature_default_description" />
 
     <EditText
-        android:id="@+id/ability_edit_description"
+        android:id="@+id/feature_edit_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/feature_default_description"

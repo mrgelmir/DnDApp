@@ -113,9 +113,6 @@ public class CharacterSheet extends AppCompatActivity
         overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
         characterChangedListeners.add(overviewFragment);
 
-        // Attach click listeners for both regular and edit use
-        attachClickListeners();
-
         // Load saved characters
         populateCharacterMenu();
 
@@ -212,7 +209,6 @@ public class CharacterSheet extends AppCompatActivity
         return true;
     }
 
-
     /**
      * Set the current character and update all views/fragments
      *
@@ -236,19 +232,6 @@ public class CharacterSheet extends AppCompatActivity
 
     }
 
-    private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
-
-        View attributeView = findViewById(attributeViewID);
-
-        TextView attrNameView = (TextView) attributeView.findViewById(R.id.attribute_name);
-        TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_score);
-
-        attrNameView.setText(getResources().getText(attributeStringId));
-        int attributeModifier = Math.round((attributeValue - 10) / 2);
-        attrScoreView.setText(String.format(getResources().getString(R.string.ability_score_value),
-                attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
-    }
-
     private void populateCharacterMenu() {
 
         // get the saved characters
@@ -266,27 +249,6 @@ public class CharacterSheet extends AppCompatActivity
 
             // Make sure the menu redraws
             invalidateOptionsMenu();
-        }
-    }
-
-    private void attachClickListeners() {
-
-        // TODO
-        View dexView = findViewById(R.id.ability_score_STR);
-        if (dexView != null) {
-            dexView.setOnClickListener(new OnClickListenerEditable(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("test", "no edit tap");
-                        }
-                    },
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("test", "edit tap");
-                        }
-                    }));
         }
     }
 

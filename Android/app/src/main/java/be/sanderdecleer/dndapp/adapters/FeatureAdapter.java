@@ -1,9 +1,7 @@
 package be.sanderdecleer.dndapp.adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +58,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
                     @Override
                     public void onClick(View v) {
 
-                        LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
+                        LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_feature_view_full,
                                 featureData.title, new LayoutUtils.EditViewCallback() {
                                     @Override
                                     public void EditView(View view) {
@@ -74,23 +72,23 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
                     @Override
                     public void onClick(View v) {
 
-                        LayoutUtils.showEditDialog((Activity) getContext(), R.layout.p_ability_view_edit,
+                        LayoutUtils.showEditDialog((Activity) getContext(), R.layout.edit_feature_view,
                                 featureData.title, new LayoutUtils.EditViewCallback() {
                                     @Override
                                     public void EditView(View view) {
 
-                                        TextView titleView = (TextView) view.findViewById(R.id.ability_edit_title);
+                                        TextView titleView = (TextView) view.findViewById(R.id.feature_edit_title);
                                         titleView.setText(featureData.title);
-                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_edit_description);
+                                        TextView descriptionView = (TextView) view.findViewById(R.id.feature_edit_description);
                                         descriptionView.setText(featureData.description);
                                     }
                                 }, new LayoutUtils.DismissDialogCallback() {
                                     @Override
                                     public void OnDialogDismissed(View view) {
 
-                                        TextView titleView = (TextView) view.findViewById(R.id.ability_edit_title);
+                                        TextView titleView = (TextView) view.findViewById(R.id.feature_edit_title);
                                         featureData.title = titleView.getText().toString();
-                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_edit_description);
+                                        TextView descriptionView = (TextView) view.findViewById(R.id.feature_edit_description);
                                         featureData.description = descriptionView.getText().toString();
                                     }
                                 });
@@ -118,7 +116,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
 
         @Override
         public void onClick(View v) {
-            LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
+            LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_feature_view_full,
                     featureData.title, new LayoutUtils.EditViewCallback() {
                         @Override
                         public void EditView(View view) {

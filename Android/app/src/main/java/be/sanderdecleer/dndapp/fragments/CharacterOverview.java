@@ -1,14 +1,16 @@
 package be.sanderdecleer.dndapp.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
 import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
 import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
 import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.utils.LayoutUtils;
+import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 
 /**
@@ -79,9 +83,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_character_overview, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_character_overview, container, false);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         characterAdapters = new ArrayList<>(3);
 
         // Create feature adapter and link to view
-        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.p_ability_view_item);
+        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.p_feature_view_item);
         characterAdapters.add(featureAdapter);
         AdapterView abilitiesView = (AdapterView) getActivity().findViewById(R.id.feature_list);
         if (abilitiesView != null) {
@@ -116,11 +118,17 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         if (expendableView != null) {
             expendableView.setAdapter(expendableAdapter);
         }
+
+        // Attach click listeners for both regular and edit use
+        attachClickListeners();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        // Find out how to handle this
+
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -159,15 +167,15 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         // Update other stats
         String formattedAC = String.format(getResources().getString(R.string.character_AC),
                 characterModel.AC);
-        ((TextView) getView().findViewById(R.id.character_AC)).setText(formattedAC);
+        ((TextView) getActivity().findViewById(R.id.character_AC)).setText(formattedAC);
 
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
                 characterModel.HP_current, characterModel.HP_max);
-        ((TextView) getView().findViewById(R.id.character_HP)).setText(formattedHP);
+        ((TextView) getActivity().findViewById(R.id.character_HP)).setText(formattedHP);
 
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
                 characterModel.speed);
-        ((TextView) getView().findViewById(R.id.character_Speed)).setText(formattedSpeed);
+        ((TextView) getActivity().findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
         // Update the adapters
         for (BaseCharacterAdapter adapter : characterAdapters) {
@@ -177,7 +185,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
 
-        View attributeView = getView().findViewById(attributeViewID);
+        View attributeView = getActivity().findViewById(attributeViewID);
 
         TextView attrNameView = (TextView) attributeView.findViewById(R.id.attribute_name);
         TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_score);
@@ -188,6 +196,40 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
                 attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
     }
 
+    private void attachClickListeners() {
+
+        // TODO: add these to all elements
+        final View strView = getActivity().findViewById(R.id.ability_score_STR);
+        if (strView != null) {
+            strView.setOnClickListener(new OnClickListenerEditable(
+                    null,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(), "edit tap", Toast.LENGTH_SHORT).show();
+                            Log.i("test", "edit tap");
+
+                            LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
+                                    getActivity().getString(R.string.ability_score_STR),
+                                    new LayoutUtils.EditViewCallback() {
+                                        @Override
+                                        public void EditView(View view) {
+                                            NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+                                            picker.setMinValue(0);
+                                            picker.setMaxValue(24);
+                                            picker.setWrapSelectorWheel(false);
+                                        }
+                                    }, new LayoutUtils.DismissDialogCallback() {
+                                        @Override
+                                        public void OnDialogDismissed(View view) {
+                                            // TODO: 16/06/2016
+                                        }
+                                    });
+
+                        }
+                    }));
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
