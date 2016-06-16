@@ -7,10 +7,17 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.activities.CharacterSheet;
+import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
+import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
+import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
+import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 
 
@@ -29,6 +36,8 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
     // TODO: Rename and change types of parameters
     private CharacterModel characterModel = null;
+
+    private ArrayList<BaseCharacterAdapter> characterAdapters;
 
     private OnFragmentInteractionListener mListener;
 
@@ -54,6 +63,8 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get bundle info
         if (getArguments() != null) {
             // Get character parameter
             characterModel = getArguments().getParcelable(ARG_CHARACTER);
@@ -61,24 +72,51 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
             // Set data
             onCharacterChanged(characterModel);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_character_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_character_overview, container, false);
 
-        // Set data in the view
-
+        return view;
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Do setup here
+
+        // ADAPTERS
+        characterAdapters = new ArrayList<>(3);
+
+        // Create feature adapter and link to view
+        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.p_ability_view_item);
+        characterAdapters.add(featureAdapter);
+        AdapterView abilitiesView = (AdapterView) getActivity().findViewById(R.id.feature_list);
+        if (abilitiesView != null) {
+            abilitiesView.setAdapter(featureAdapter);
+        }
+
+        // Create weapon adapter and link to view
+        WeaponAdapter weaponAdapter = new WeaponAdapter(getActivity(), R.layout.p_weapon_view_item);
+        characterAdapters.add(weaponAdapter);
+        AdapterView weaponView = (AdapterView) getActivity().findViewById(R.id.weapon_list);
+        if (weaponView != null) {
+            weaponView.setAdapter(weaponAdapter);
+        }
+
+        // Create expandable view and link to view
+        ExpendableAdapter expendableAdapter = new ExpendableAdapter(getActivity(), R.layout.p_expendable_view);
+        characterAdapters.add(expendableAdapter);
+        AdapterView expendableView = (AdapterView) getActivity().findViewById(R.id.expendables_list);
+        if (expendableView != null) {
+            expendableView.setAdapter(expendableAdapter);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -104,7 +142,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         characterModel = character;
 
         // Update data if character is valid
-        if(characterModel == null){
+        if (characterModel == null) {
             // TODO: 16/06/2016 Clear fields
             return;
         }
@@ -130,6 +168,11 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
                 characterModel.speed);
         ((TextView) getView().findViewById(R.id.character_Speed)).setText(formattedSpeed);
+
+        // Update the adapters
+        for (BaseCharacterAdapter adapter : characterAdapters) {
+            adapter.setCharacter(characterModel);
+        }
     }
 
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
@@ -151,14 +194,8 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name -> is this needed?
-
         void onCharacterChanged();
     }
 }

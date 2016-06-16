@@ -40,7 +40,6 @@ public class CharacterSheet extends AppCompatActivity
 
     private CharacterModel activeCharacter;
 
-    private ArrayList<BaseCharacterAdapter> characterAdapters;
     private ArrayList<OnCharacterChangedListener> characterChangedListeners;
 
     private SubMenu characterSubMenu;
@@ -57,10 +56,6 @@ public class CharacterSheet extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-        // TODO: 1/06/2016 Move a bunch of code to the respective fragment
-
 
         // TODO: 1/06/2016 Implement View pager
 //        ViewPager pager = new ViewPager(this);
@@ -117,33 +112,6 @@ public class CharacterSheet extends AppCompatActivity
         // get the overview fragment
         overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
         characterChangedListeners.add(overviewFragment);
-
-        // TODO: 16/06/2016 move adapters to fragments
-        // ADAPTERS
-        characterAdapters = new ArrayList<>(3);
-
-        // Create feature adapter and link to view
-        FeatureAdapter featureAdapter = new FeatureAdapter(this, R.layout.p_ability_view_item);
-        characterAdapters.add(featureAdapter);
-        AdapterView abilitiesView = (AdapterView) findViewById(R.id.feature_list);
-        if (abilitiesView != null) {
-            abilitiesView.setAdapter(featureAdapter);
-        }
-
-        // Create weapon adapter and link to view
-        WeaponAdapter weaponAdapter = new WeaponAdapter(this, R.layout.p_weapon_view_item);
-        characterAdapters.add(weaponAdapter);
-        AdapterView weaponView = (AdapterView) findViewById(R.id.weapon_list);
-        if (weaponView != null) {
-            weaponView.setAdapter(weaponAdapter);
-        }
-
-        // Create expandable view and link to view
-        ExpendableAdapter expendableAdapter = new ExpendableAdapter(this, R.layout.p_expendable_view);
-        characterAdapters.add(expendableAdapter);
-        AdapterView expendableView = (AdapterView) findViewById(R.id.expendables_list);
-        if (expendableView != null)
-            expendableView.setAdapter(expendableAdapter);
 
         // Attach click listeners for both regular and edit use
         attachClickListeners();
@@ -253,7 +221,7 @@ public class CharacterSheet extends AppCompatActivity
     public void setActiveCharacter(CharacterModel character) {
         this.activeCharacter = character;
 
-        // Set activeCharacter name
+        // Set activeCharacter name as title
         if (activeCharacter != null)
             getSupportActionBar().setTitle(activeCharacter.name);
         else
@@ -262,11 +230,6 @@ public class CharacterSheet extends AppCompatActivity
         // Update the listening fragments
         for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
             characterChangedListener.onCharacterChanged(activeCharacter);
-        }
-
-        // Update the adapters
-        for (BaseCharacterAdapter adapter : characterAdapters) {
-            adapter.setCharacter(activeCharacter);
         }
 
         findViewById(R.id.scrollView).invalidate();
