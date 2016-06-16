@@ -6,6 +6,10 @@
             android:id="@+id/nav_add_character"
             android:icon="@drawable/ic_add_circle_outline_black_24dp"
             android:title="@string/navigation_drawer_add_character" />
+        <item
+            android:id="@+id/nav_clear_character"
+            android:icon="@drawable/ic_remove_black_24dp"
+            android:title="@string/navigation_drawer_clear_character" />
     </group>
 
     <group android:checkableBehavior="single">

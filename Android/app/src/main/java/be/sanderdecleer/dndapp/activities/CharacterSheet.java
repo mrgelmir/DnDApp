@@ -1,5 +1,7 @@
 package be.sanderdecleer.dndapp.activities;
 
+import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +27,7 @@ import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
 import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
+import be.sanderdecleer.dndapp.fragments.CharacterOverview;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
@@ -38,8 +41,11 @@ public class CharacterSheet extends AppCompatActivity
     private CharacterModel activeCharacter;
 
     private ArrayList<BaseCharacterAdapter> characterAdapters;
+    private ArrayList<OnCharacterChangedListener> characterChangedListeners;
 
     private SubMenu characterSubMenu;
+
+    private CharacterOverview overviewFragment;
 
     private static boolean is_edit_mode = false;
 
@@ -102,6 +108,17 @@ public class CharacterSheet extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
 
 
+        // FRAGMENTS
+        characterChangedListeners = new ArrayList<>();
+
+        // TODO: 16/06/2016 maybe create fragment here, instead of finding it
+        // -> some fragments won't be needed for some characters
+
+        // get the overview fragment
+        overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
+        characterChangedListeners.add(overviewFragment);
+
+        // TODO: 16/06/2016 move adapters to fragments
         // ADAPTERS
         characterAdapters = new ArrayList<>(3);
 
@@ -135,7 +152,7 @@ public class CharacterSheet extends AppCompatActivity
         populateCharacterMenu();
 
         // TEMP
-        createTestData();
+//        createTestData();
 
     }
 
@@ -193,6 +210,8 @@ public class CharacterSheet extends AppCompatActivity
         if (id == R.id.nav_add_character) {
             // TODO: create new character
 
+        } else if (id == R.id.nav_clear_character) {
+            setActiveCharacter(null);
         } else {
             // This is (probably) a character being selected
             // Load corresponding file and display
@@ -214,7 +233,8 @@ public class CharacterSheet extends AppCompatActivity
             item.setChecked(true);
 
             // TEMP load item from filename given
-            setActiveCharacter(CharacterFileUtil.loadCharacter(this, item.getTitle().toString()));
+            CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
+            setActiveCharacter(loadedCharacter);
         }
 
 
@@ -234,28 +254,15 @@ public class CharacterSheet extends AppCompatActivity
         this.activeCharacter = character;
 
         // Set activeCharacter name
-        getSupportActionBar().setTitle(activeCharacter.name);
+        if (activeCharacter != null)
+            getSupportActionBar().setTitle(activeCharacter.name);
+        else
+            getSupportActionBar().setTitle(R.string.app_name);
 
-        // Update Ability scores
-        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR, activeCharacter.STR);
-        setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX, activeCharacter.DEX);
-        setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON, activeCharacter.CON);
-        setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT, activeCharacter.INT);
-        setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS, activeCharacter.WIS);
-        setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA, activeCharacter.CHA);
-
-        // Update other stats
-        String formattedAC = String.format(getResources().getString(R.string.character_AC),
-                activeCharacter.AC);
-        ((TextView) findViewById(R.id.character_AC)).setText(formattedAC);
-
-        String formattedHP = String.format(getResources().getString(R.string.character_HP),
-                activeCharacter.HP_current, activeCharacter.HP_max);
-        ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
-
-        String formattedSpeed = String.format(getResources().getString(R.string.character_Speed), activeCharacter.speed);
-        ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
-
+        // Update the listening fragments
+        for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
+            characterChangedListener.onCharacterChanged(activeCharacter);
+        }
 
         // Update the adapters
         for (BaseCharacterAdapter adapter : characterAdapters) {
@@ -376,4 +383,7 @@ public class CharacterSheet extends AppCompatActivity
 
     }
 
+    public interface OnCharacterChangedListener {
+        void onCharacterChanged(CharacterModel character);
+    }
 }

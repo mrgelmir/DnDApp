@@ -53,7 +53,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
         final FeatureModel featureData = character.abilities.get(position);
 
         // TODO: 2/06/2016 find out how to do this somewhat more legible.
-        
+
         // Set data in view
         convertView.setOnClickListener(new OnClickListenerEditable(
                 new View.OnClickListener() {
@@ -105,5 +105,27 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
 
     private static class ViewHolder {
         public TextView titleView;
+    }
+
+    // TODO: 3/06/2016  
+    private class InfoDialogListener implements View.OnClickListener {
+
+        private FeatureModel featureData;
+
+        public InfoDialogListener(FeatureModel featureData) {
+            this.featureData = featureData;
+        }
+
+        @Override
+        public void onClick(View v) {
+            LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_ability_view_full,
+                    featureData.title, new LayoutUtils.EditViewCallback() {
+                        @Override
+                        public void EditView(View view) {
+                            TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
+                            descriptionView.setText(featureData.description);
+                        }
+                    });
+        }
     }
 }
