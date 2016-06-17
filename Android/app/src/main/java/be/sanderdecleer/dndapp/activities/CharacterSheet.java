@@ -16,27 +16,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
-import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
-import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
+import be.sanderdecleer.dndapp.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
 import be.sanderdecleer.dndapp.fragments.CharacterOverview;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
-import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 public class CharacterSheet extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider {
 
     private CharacterModel activeCharacter;
 
@@ -209,6 +204,8 @@ public class CharacterSheet extends AppCompatActivity
         return true;
     }
 
+    // CHARACTER MANAGEMENT
+
     /**
      * Set the current character and update all views/fragments
      *
@@ -217,19 +214,23 @@ public class CharacterSheet extends AppCompatActivity
     public void setActiveCharacter(CharacterModel character) {
         this.activeCharacter = character;
 
+        UpdateCharacter();
+    }
+
+    private void UpdateCharacter() {
+
         // Set activeCharacter name as title
         if (activeCharacter != null)
             getSupportActionBar().setTitle(activeCharacter.name);
         else
             getSupportActionBar().setTitle(R.string.app_name);
 
-        // Update the listening fragments
+        // Notify the listening fragments
         for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
-            characterChangedListener.onCharacterChanged(activeCharacter);
+            characterChangedListener.onCharacterChanged();
         }
 
         findViewById(R.id.scrollView).invalidate();
-
     }
 
     private void populateCharacterMenu() {
@@ -252,7 +253,9 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
-    // Not really needed -> move
+    // TEST
+
+    // Not really needed -> move?
     private void createTestData() {
 
         // Test character 1
@@ -308,7 +311,31 @@ public class CharacterSheet extends AppCompatActivity
 
     }
 
+
+    // SHARED CHARACTER DATA IMPLEMENTATION
+
+    @Override
+    public CharacterModel getCharacter() {
+        return activeCharacter;
+    }
+
+    @Override
+    public void setCharacter(CharacterModel character) {
+        activeCharacter = character;
+    }
+
+    @Override
+    public void CharacterUpdated() {
+        UpdateCharacter();
+    }
+
+    // INTERFACES
+
     public interface OnCharacterChangedListener {
-        void onCharacterChanged(CharacterModel character);
+
+        /**
+         * Notify that the character has changed
+         */
+        void onCharacterChanged();
     }
 }

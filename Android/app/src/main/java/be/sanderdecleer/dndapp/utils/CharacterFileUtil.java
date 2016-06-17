@@ -87,9 +87,6 @@ public class CharacterFileUtil {
                 }
             }
         }
-
-        // Why isn't file visible in explorer?
-        Log.i(LOG_TOKEN, "file exists: " + file.length());
     }
 
     public static CharacterModel loadCharacter(Context context, String characterName) {

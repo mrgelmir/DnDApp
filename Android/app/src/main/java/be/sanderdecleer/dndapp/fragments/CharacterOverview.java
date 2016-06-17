@@ -3,17 +3,16 @@ package be.sanderdecleer.dndapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import be.sanderdecleer.dndapp.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.activities.CharacterSheet;
 import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
@@ -28,22 +27,16 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CharacterOverview.OnFragmentInteractionListener} interface
+ * {@link be.sanderdecleer.dndapp.CharacterProvider} interface
  * to handle interaction events.
  * Use the {@link CharacterOverview#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class CharacterOverview extends Fragment implements CharacterSheet.OnCharacterChangedListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_CHARACTER = "argument_character";
-
-    // TODO: Rename and change types of parameters
-    private CharacterModel characterModel = null;
 
     private ArrayList<BaseCharacterAdapter> characterAdapters;
 
-    private OnFragmentInteractionListener mListener;
+    private CharacterProvider characterProvider;
 
     public CharacterOverview() {
         // Required empty public constructor
@@ -51,16 +44,12 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment
      *
-     * @param character Character
      * @return A new instance of fragment CharacterOverview.
      */
-    public static CharacterOverview newInstance(CharacterModel character) {
+    public static CharacterOverview newInstance() {
         CharacterOverview fragment = new CharacterOverview();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_CHARACTER, character);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -70,11 +59,9 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
         // Get bundle info
         if (getArguments() != null) {
-            // Get character parameter
-            characterModel = getArguments().getParcelable(ARG_CHARACTER);
 
             // Set data
-            onCharacterChanged(characterModel);
+            onCharacterChanged();
         }
 
     }
@@ -82,6 +69,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_character_overview, container, false);
     }
@@ -129,57 +117,62 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
         // Find out how to handle this
 
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof CharacterProvider) {
+            // Get Character Provider
+            characterProvider = (CharacterProvider) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement CharacterOverviewActor");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        // Clean up
+        characterProvider = null;
     }
 
     @Override
-    public void onCharacterChanged(CharacterModel character) {
-
-        // Save character reference
-        characterModel = character;
+    public void onCharacterChanged() {
 
         // Update data if character is valid
-        if (characterModel == null) {
+        if (characterProvider.getCharacter() == null) {
             // TODO: 16/06/2016 Clear fields
             return;
         }
 
         // Update Ability scores
-        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR, characterModel.STR);
-        setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX, characterModel.DEX);
-        setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON, characterModel.CON);
-        setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT, characterModel.INT);
-        setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS, characterModel.WIS);
-        setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA, characterModel.CHA);
+        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
+                characterProvider.getCharacter().STR);
+        setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
+                characterProvider.getCharacter().DEX);
+        setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
+                characterProvider.getCharacter().CON);
+        setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
+                characterProvider.getCharacter().INT);
+        setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
+                characterProvider.getCharacter().WIS);
+        setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
+                characterProvider.getCharacter().CHA);
 
 
         // Update other stats
         String formattedAC = String.format(getResources().getString(R.string.character_AC),
-                characterModel.AC);
+                characterProvider.getCharacter().AC);
         ((TextView) getActivity().findViewById(R.id.character_AC)).setText(formattedAC);
 
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
-                characterModel.HP_current, characterModel.HP_max);
+                characterProvider.getCharacter().HP_current, characterProvider.getCharacter().HP_max);
         ((TextView) getActivity().findViewById(R.id.character_HP)).setText(formattedHP);
 
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
-                characterModel.speed);
+                characterProvider.getCharacter().speed);
         ((TextView) getActivity().findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
         // Update the adapters
         for (BaseCharacterAdapter adapter : characterAdapters) {
-            adapter.setCharacter(characterModel);
+            adapter.setCharacter(characterProvider.getCharacter());
         }
     }
 
@@ -194,35 +187,113 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         int attributeModifier = Math.round((attributeValue - 10) / 2);
         attrScoreView.setText(String.format(getResources().getString(R.string.ability_score_value),
                 attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
+
     }
 
     private void attachClickListeners() {
 
-        // TODO: add these to all elements
-        final View strView = getActivity().findViewById(R.id.ability_score_STR);
+        // Set up ability updating
+        setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().STR;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().STR = value;
+            }
+        });
+        setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().DEX;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().DEX = value;
+            }
+        });
+        setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().CON;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().CON = value;
+            }
+        });
+        setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().INT;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().INT = value;
+            }
+        });
+        setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().WIS;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().WIS = value;
+            }
+        });
+        setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
+            @Override
+            public int get() {
+                return characterProvider.getCharacter().CHA;
+            }
+
+            @Override
+            public void set(int value) {
+                characterProvider.getCharacter().CHA = value;
+            }
+        });
+    }
+
+    private void setupAbilityView(int viewId, final AbilityAccessor abilityAccessor) {
+
+        final View strView = getActivity().findViewById(viewId);
         if (strView != null) {
             strView.setOnClickListener(new OnClickListenerEditable(
-                    null,
+                    null, // No default click listeners
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getActivity(), "edit tap", Toast.LENGTH_SHORT).show();
-                            Log.i("test", "edit tap");
+
+                            // Only show dialog when a character is present
+                            if (characterProvider.getCharacter() == null)
+                                return;
 
                             LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
                                     getActivity().getString(R.string.ability_score_STR),
                                     new LayoutUtils.EditViewCallback() {
                                         @Override
                                         public void EditView(View view) {
+                                            // Set values of the picker
                                             NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
                                             picker.setMinValue(0);
                                             picker.setMaxValue(24);
                                             picker.setWrapSelectorWheel(false);
+                                            picker.setValue(abilityAccessor.get());
                                         }
                                     }, new LayoutUtils.DismissDialogCallback() {
                                         @Override
                                         public void OnDialogDismissed(View view) {
-                                            // TODO: 16/06/2016
+                                            // Confirm values
+                                            NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+                                            abilityAccessor.set(picker.getValue());
+                                            characterProvider.CharacterUpdated();
                                         }
                                     });
 
@@ -231,13 +302,20 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
-    public interface OnFragmentInteractionListener {
-        void onCharacterChanged();
+    interface AbilityAccessor {
+
+        void set(int value);
+
+        int get();
     }
+
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     */
+//    public interface CharacterOverviewActor {
+//        void onCharacterChanged();
+//    }
 }
