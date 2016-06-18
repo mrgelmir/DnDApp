@@ -19,6 +19,10 @@ public final class LayoutUtils {
         void OnDialogDismissed(View view);
     }
 
+    public interface OnDeleteCallback {
+        void OnDelete(View view);
+    }
+
     public interface EditViewCallback {
         void EditView(View view);
     }
@@ -51,12 +55,19 @@ public final class LayoutUtils {
     public static void showEditDialog(Activity activity, int layoutId, String title,
                                       final EditViewCallback editViewCallback,
                                       final DismissDialogCallback onConfirm) {
+        showEditDialog(activity, layoutId, title, editViewCallback, onConfirm, null);
+    }
+
+    public static void showEditDialog(Activity activity, int layoutId, String title,
+                                      final EditViewCallback editViewCallback,
+                                      final DismissDialogCallback onConfirm,
+                                      final OnDeleteCallback onDelete) {
 
         showDialog(activity, layoutId, title,
                 new EditViewCallback() {
                     @Override
                     public void EditView(View view) {
-                        if(editViewCallback != null)
+                        if (editViewCallback != null)
                             editViewCallback.EditView(view);
                     }
                 },
@@ -71,6 +82,19 @@ public final class LayoutUtils {
                                     onConfirm.OnDialogDismissed(view);
                             }
                         });
+
+                        // Add delete handler if needed
+                        if (onDelete != null) {
+                            builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    if (onDelete != null) {
+                                        onDelete.OnDelete(view);
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
 

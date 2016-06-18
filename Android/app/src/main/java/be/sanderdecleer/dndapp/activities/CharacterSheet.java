@@ -41,6 +41,7 @@ public class CharacterSheet extends AppCompatActivity
 
     private CharacterOverview overviewFragment;
 
+    // TODO: 18/06/2016 Add edit state changed listeners
     private static boolean is_edit_mode = false;
 
     public static boolean isEditMode() {
@@ -145,6 +146,7 @@ public class CharacterSheet extends AppCompatActivity
 
             // Toggle between regular and edit mode
             is_edit_mode = !is_edit_mode;
+            UpdateCharacter();
 
             // Set corresponding title
             item.setTitle(getString(is_edit_mode ?
@@ -229,8 +231,6 @@ public class CharacterSheet extends AppCompatActivity
         for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
             characterChangedListener.onCharacterChanged();
         }
-
-        findViewById(R.id.scrollView).invalidate();
     }
 
     private void populateCharacterMenu() {

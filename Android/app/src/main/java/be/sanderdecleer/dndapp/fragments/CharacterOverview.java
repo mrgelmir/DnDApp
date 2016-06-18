@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -19,7 +21,6 @@ import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
 import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
 import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
 import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
-import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
@@ -34,9 +35,18 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
  */
 public class CharacterOverview extends Fragment implements CharacterSheet.OnCharacterChangedListener {
 
+    // Keep track of all adapters that use character data
     private ArrayList<BaseCharacterAdapter> characterAdapters;
 
+    // The object (probably activity) which holds the character data
     private CharacterProvider characterProvider;
+
+
+    // Views
+    private AdapterView abilitiesView;
+    private AdapterView expendableView;
+    private View expendableSeparator;
+
 
     public CharacterOverview() {
         // Required empty public constructor
@@ -50,6 +60,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
      */
     public static CharacterOverview newInstance() {
         CharacterOverview fragment = new CharacterOverview();
+        // Do initialization or bundle argument putting here if needed
         return fragment;
     }
 
@@ -59,11 +70,10 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
         // Get bundle info
         if (getArguments() != null) {
-
-            // Set data
-            onCharacterChanged();
+            // Set data from bundle
         }
 
+        onCharacterChanged();
     }
 
     @Override
@@ -86,7 +96,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         // Create feature adapter and link to view
         FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.p_feature_view_item);
         characterAdapters.add(featureAdapter);
-        AdapterView abilitiesView = (AdapterView) getActivity().findViewById(R.id.feature_list);
+        abilitiesView = (AdapterView) findViewById(R.id.feature_list);
         if (abilitiesView != null) {
             abilitiesView.setAdapter(featureAdapter);
         }
@@ -94,7 +104,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         // Create weapon adapter and link to view
         WeaponAdapter weaponAdapter = new WeaponAdapter(getActivity(), R.layout.p_weapon_view_item);
         characterAdapters.add(weaponAdapter);
-        AdapterView weaponView = (AdapterView) getActivity().findViewById(R.id.weapon_list);
+        AdapterView weaponView = (AdapterView) findViewById(R.id.weapon_list);
         if (weaponView != null) {
             weaponView.setAdapter(weaponAdapter);
         }
@@ -102,10 +112,11 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         // Create expandable view and link to view
         ExpendableAdapter expendableAdapter = new ExpendableAdapter(getActivity(), R.layout.p_expendable_view);
         characterAdapters.add(expendableAdapter);
-        AdapterView expendableView = (AdapterView) getActivity().findViewById(R.id.expendables_list);
+        expendableView = (AdapterView) findViewById(R.id.expendables_list);
         if (expendableView != null) {
             expendableView.setAdapter(expendableAdapter);
         }
+        expendableSeparator = findViewById(R.id.expendables_separator);
 
         // Attach click listeners for both regular and edit use
         attachClickListeners();
@@ -138,7 +149,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
         // Update data if character is valid
         if (characterProvider.getCharacter() == null) {
-            // TODO: 16/06/2016 Clear fields
+            // TODO: 16/06/2016 Clear fields? -> us a null character?
             return;
         }
 
@@ -160,25 +171,36 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         // Update other stats
         String formattedAC = String.format(getResources().getString(R.string.character_AC),
                 characterProvider.getCharacter().AC);
-        ((TextView) getActivity().findViewById(R.id.character_AC)).setText(formattedAC);
+        ((TextView) findViewById(R.id.character_AC)).setText(formattedAC);
 
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
                 characterProvider.getCharacter().HP_current, characterProvider.getCharacter().HP_max);
-        ((TextView) getActivity().findViewById(R.id.character_HP)).setText(formattedHP);
+        ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
 
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
                 characterProvider.getCharacter().speed);
-        ((TextView) getActivity().findViewById(R.id.character_Speed)).setText(formattedSpeed);
+        ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
+
+        // Set adapter visibility (Always visible when in edit mode?)
+        if (characterProvider.getCharacter().expendables.size() > 0) {
+            expendableView.setVisibility(View.VISIBLE);
+            expendableSeparator.setVisibility(View.VISIBLE);
+        } else {
+            expendableView.setVisibility(View.GONE);
+            expendableSeparator.setVisibility(View.GONE);
+        }
 
         // Update the adapters
         for (BaseCharacterAdapter adapter : characterAdapters) {
             adapter.setCharacter(characterProvider.getCharacter());
         }
+
+        findViewById(R.id.scrollView).invalidate();
     }
 
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
 
-        View attributeView = getActivity().findViewById(attributeViewID);
+        View attributeView = findViewById(attributeViewID);
 
         TextView attrNameView = (TextView) attributeView.findViewById(R.id.attribute_name);
         TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_score);
@@ -263,7 +285,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
 
     private void setupAbilityView(int viewId, final AbilityAccessor abilityAccessor) {
 
-        final View strView = getActivity().findViewById(viewId);
+        final View strView = findViewById(viewId);
         if (strView != null) {
             strView.setOnClickListener(new OnClickListenerEditable(
                     null, // No default click listeners
@@ -300,6 +322,16 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
                         }
                     }));
         }
+    }
+
+
+    /**
+     * Finds a view that was identified by the id attribute
+     *
+     * @return The view, if found
+     */
+    private View findViewById(int id) {
+        return getActivity().findViewById(id);
     }
 
     interface AbilityAccessor {
