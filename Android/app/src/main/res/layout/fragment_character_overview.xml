@@ -66,7 +66,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            tools:listitem="@layout/p_weapon_view_item" />
+            tools:listitem="@layout/item_weapon_view" />
 
         <include layout="@layout/p_separator" />
 
@@ -79,7 +79,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            tools:listitem="@layout/p_expendable_view" />
+            tools:listitem="@layout/item_expendable_view" />
 
         <include
             android:id="@+id/expendables_separator"
@@ -92,7 +92,7 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical"
-            tools:listitem="@layout/p_feature_view_item" />
+            tools:listitem="@layout/item_feature_view" />
 
     </LinearLayout>
 

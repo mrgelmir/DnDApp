@@ -92,7 +92,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         characterAdapters = new ArrayList<>(3);
 
         // Create feature adapter and link to view
-        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.p_feature_view_item);
+        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.item_feature_view);
         characterAdapters.add(featureAdapter);
         abilitiesView = (AdapterView) findViewById(R.id.feature_list);
         if (abilitiesView != null) {
@@ -100,7 +100,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         }
 
         // Create weapon adapter and link to view
-        WeaponAdapter weaponAdapter = new WeaponAdapter(getActivity(), R.layout.p_weapon_view_item);
+        WeaponAdapter weaponAdapter = new WeaponAdapter(getActivity(), R.layout.item_weapon_view);
         characterAdapters.add(weaponAdapter);
         AdapterView weaponView = (AdapterView) findViewById(R.id.weapon_list);
         if (weaponView != null) {
@@ -108,7 +108,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         }
 
         // Create expandable view and link to view
-        ExpendableAdapter expendableAdapter = new ExpendableAdapter(getActivity(), R.layout.p_expendable_view);
+        ExpendableAdapter expendableAdapter = new ExpendableAdapter(getActivity(), R.layout.item_expendable_view);
         characterAdapters.add(expendableAdapter);
         expendableView = (AdapterView) findViewById(R.id.expendables_list);
         if (expendableView != null) {

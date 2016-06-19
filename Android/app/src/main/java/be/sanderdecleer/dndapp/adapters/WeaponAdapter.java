@@ -68,7 +68,7 @@ public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel>
                     vh.damageView = (TextView) convertView.findViewById(R.id.weapon_damage);
                     break;
                 case VIEW_TYPE_ADD:
-                    convertView = inflater.inflate(R.layout.p_add_item, parent, false);
+                    convertView = inflater.inflate(R.layout.item_add, parent, false);
                     break;
 
             }

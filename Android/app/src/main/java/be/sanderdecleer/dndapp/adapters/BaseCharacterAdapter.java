@@ -23,7 +23,7 @@ public class BaseCharacterAdapter<T> extends ArrayAdapter<T> {
     public void setCharacter(CharacterModel character) {
         this.character = character;
 
-        // TODO: 29/05/2016 subscribe to changes here?
+        // TODO: 19/06/2016 Use a CharacterProvider instead?
         
         notifyDataSetChanged();
     }

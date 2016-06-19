@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.activities.CharacterSheet;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
@@ -60,7 +59,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
 
             switch (type) {
                 case VIEW_TYPE_ADD:
-                    convertView = inflater.inflate(R.layout.p_add_item, parent, false);
+                    convertView = inflater.inflate(R.layout.item_add, parent, false);
                     vh.titleView = (TextView) convertView.findViewById(R.id.ability_title);
                     break;
                 default:

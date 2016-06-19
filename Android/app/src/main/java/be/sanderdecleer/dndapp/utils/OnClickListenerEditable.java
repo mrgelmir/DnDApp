@@ -2,10 +2,9 @@ package be.sanderdecleer.dndapp.utils;
 
 import android.view.View;
 
-import be.sanderdecleer.dndapp.activities.CharacterSheet;
-
 /**
- * Created by SD on 2/06/2016.
+ * OnClickListener class that differentiates its behaviour depending on edit mode
+ * Might be obsolete if only one OnClickListener gets attached in Adapters
  */
 public class OnClickListenerEditable implements View.OnClickListener {
 

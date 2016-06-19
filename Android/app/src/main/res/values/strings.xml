@@ -40,17 +40,23 @@
     <!-- Ability edit values -->
 
     <!-- Weapon values -->
-    <string name="weapon_default_nickname">Weapon Nickname</string>
-    <string name="weapon_default_type">Weapon type</string>
+    <string name="weapon_default_nickname">Nickname</string>
+    <string name="weapon_default_type">WeaponType</string>
     <string name="weapon_default_to_hit">+X</string>
     <string name="weapon_default_damage">XdY + Z</string>
+
+    <!-- Weapon edit values -->
+    <string name="weapon_edit_nickname">Weapon Nickname</string>
+    <string name="weapon_edit_type">Weapon type</string>
+    <string name="weapon_edit_to_hit">Weapon to hit (+X)</string>
+    <string name="weapon_edit_damage">Weapon damage (XdY + Z damageType)</string>
 
     <!-- Feature values -->
     <string name="feature_default_title">Feature title</string>
     <string name="feature_default_description">Feature description</string>
 
     <!-- Expendable values -->
-    <string name="expendable_title_placeholder">Ki points</string>
+    <string name="expendable_title_placeholder">Expendable title</string>
     <string name="expendable_value_placeholder">10/10</string>
     <string name="expendable_value">%1$d/%2$d</string>
 

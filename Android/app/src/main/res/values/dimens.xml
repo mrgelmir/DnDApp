@@ -13,4 +13,6 @@
     <!-- Font sizes -->
     <dimen name="attr_title">18sp</dimen>
     <dimen name="attr_sub">12sp</dimen>
+
+    <dimen name="number_picker_height">120dp</dimen>
 </resources>

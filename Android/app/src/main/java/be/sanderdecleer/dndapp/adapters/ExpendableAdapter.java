@@ -2,6 +2,7 @@ package be.sanderdecleer.dndapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,8 @@ import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
-import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.EditControl;
+import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 /**
  * Adapter for Expendables
@@ -65,7 +66,7 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
                     vh.decreaseButton = (ImageButton) convertView.findViewById(R.id.expendable_btn_decrease);
                     break;
                 case VIEW_TYPE_ADD:
-                    convertView = inflater.inflate(R.layout.p_add_item, parent, false);
+                    convertView = inflater.inflate(R.layout.item_add, parent, false);
                     break;
 
             }
@@ -76,7 +77,7 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
         }
 
         // Special case: add expendable button
-        if(type == VIEW_TYPE_ADD) {
+        if (type == VIEW_TYPE_ADD) {
 
             // add click listeners
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +93,6 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
         }
 
         // Default case below
-
         final ExpendableModel expendableData = character.expendables.get(position);
 
         vh.titleView.setText(expendableData.title);
@@ -100,17 +100,24 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
         vh.increaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                character.expendables.get(position).increase();
+                expendableData.increase();
                 setValueFormatted(vh.valueView, expendableData);
+                notifyDataSetChanged();
             }
         });
         vh.decreaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                character.expendables.get(position).decrease();
+                expendableData.decrease();
                 setValueFormatted(vh.valueView, expendableData);
+                notifyDataSetChanged();
             }
         });
+
+        // TODO: 19/06/2016 Add Edit and Deletion
+        vh.titleView.setOnClickListener(new OnClickListenerEditable(
+                null,
+                new ExpendableClickListenerEdit(expendableData)));
 
 
         return convertView;
@@ -131,5 +138,18 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
         public TextView valueView;
         public ImageButton increaseButton;
         public ImageButton decreaseButton;
+    }
+
+    private class ExpendableClickListenerEdit implements View.OnClickListener {
+        ExpendableModel expendableData;
+
+        public ExpendableClickListenerEdit(ExpendableModel expendableData) {
+            this.expendableData = expendableData;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO: 19/06/2016
+        }
     }
 }

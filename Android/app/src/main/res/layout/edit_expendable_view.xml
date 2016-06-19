@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/expendable_edit_title"
+        android:text="Title" />
+
+    <EditText
+        android:id="@+id/expendable_edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Hint"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Maximum" />
+
+    <NumberPicker
+        android:id="@+id/expendable_edit_maximum"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/number_picker_height" />
+
+    <!-- Add description later -->
+
+    <TextView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/expendable_edit_description"
+        android:text="Description (Optional)" />
+
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/expendable_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="description"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

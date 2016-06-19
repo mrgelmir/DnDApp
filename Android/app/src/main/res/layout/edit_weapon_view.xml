@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/weapon_edit_nickname"
-        android:text="@string/weapon_default_nickname" />
+        android:text="@string/weapon_edit_nickname" />
 
     <EditText
         android:id="@+id/weapon_edit_nickname"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/weapon_edit_type"
-        android:text="@string/weapon_default_type" />
+        android:text="@string/weapon_edit_type" />
 
     <EditText
         android:id="@+id/weapon_edit_type"
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/weapon_edit_to_hit"
-        android:text="@string/weapon_default_to_hit" />
+        android:text="@string/weapon_edit_to_hit" />
 
     <EditText
         android:id="@+id/weapon_edit_to_hit"
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/weapon_edit_damage"
-        android:text="@string/weapon_default_damage" />
+        android:text="@string/weapon_edit_damage" />
 
     <EditText
         android:id="@+id/weapon_edit_damage"
