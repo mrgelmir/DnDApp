@@ -1,5 +1,7 @@
 package be.sanderdecleer.dndapp.model;
 
+import android.content.Context;
+
 /**
  * Created by SD on 29/05/2016.
  */
@@ -29,4 +31,7 @@ public class ExpendableModel {
         expendables_current = expendables_max;
     }
 
+    public static ExpendableModel getEmpty(Context context) {
+        return new ExpendableModel("temp", 0, 0);
+    }
 }

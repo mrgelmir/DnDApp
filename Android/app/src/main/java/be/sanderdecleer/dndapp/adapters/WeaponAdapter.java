@@ -1,27 +1,14 @@
 package be.sanderdecleer.dndapp.adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.XmlResourceParser;
-import android.support.annotation.IntDef;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.model.CharacterModel;
-import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
