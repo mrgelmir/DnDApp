@@ -24,6 +24,9 @@
     <string name="character_HP">HP: %1$d/%2$d</string>
     <string name="character_Speed">Speed: %1$dft</string>
 
+    <!-- Editing values -->
+    <string name="edit_add">Add item</string>
+
     <!-- Ability values -->
     <string name="ability_score_STR">STR</string>
     <string name="ability_score_DEX">DEX</string>
@@ -37,10 +40,10 @@
     <!-- Ability edit values -->
 
     <!-- Weapon values -->
-    <string name="weapon_nickname_placeholder">Nickname</string>
-    <string name="weapon_type_placeholder">Nickname</string>
-    <string name="weapon_to_hit_placeholder">+5</string>
-    <string name="weapon_damage_placeholder">1d6 + 3p</string>
+    <string name="weapon_default_nickname">Weapon Nickname</string>
+    <string name="weapon_default_type">Weapon type</string>
+    <string name="weapon_default_to_hit">+X</string>
+    <string name="weapon_default_damage">XdY + Z</string>
 
     <!-- Feature values -->
     <string name="feature_default_title">Feature title</string>

@@ -7,14 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import be.sanderdecleer.dndapp.CharacterProvider;
+import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.activities.CharacterSheet;
 import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
@@ -28,7 +26,7 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link be.sanderdecleer.dndapp.CharacterProvider} interface
+ * {@link CharacterProvider} interface
  * to handle interaction events.
  * Use the {@link CharacterOverview#newInstance} factory method to
  * create an instance of this fragment.

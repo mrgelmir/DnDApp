@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/weapon_edit_nickname"
+        android:text="@string/weapon_default_nickname" />
+
+    <EditText
+        android:id="@+id/weapon_edit_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/weapon_default_nickname"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/weapon_edit_type"
+        android:text="@string/weapon_default_type" />
+
+    <EditText
+        android:id="@+id/weapon_edit_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/weapon_default_type"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/weapon_edit_to_hit"
+        android:text="@string/weapon_default_to_hit" />
+
+    <EditText
+        android:id="@+id/weapon_edit_to_hit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/weapon_default_to_hit"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/weapon_edit_damage"
+        android:text="@string/weapon_default_damage" />
+
+    <EditText
+        android:id="@+id/weapon_edit_damage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/weapon_default_damage"
+        android:inputType="text" />
+
+    <!--<string name="weapon_default_to_hit">+X</string>-->
+    <!--<string name="weapon_default_damage">XdY + Z</string>-->
+
+</LinearLayout>

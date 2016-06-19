@@ -1,11 +1,10 @@
 package be.sanderdecleer.dndapp.activities;
 
-import android.app.Fragment;
-import android.net.Uri;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,12 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import be.sanderdecleer.dndapp.CharacterProvider;
+import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.fragments.CharacterOverview;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
@@ -29,6 +27,7 @@ import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
+import be.sanderdecleer.dndapp.utils.EditControl;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider {
@@ -40,15 +39,6 @@ public class CharacterSheet extends AppCompatActivity
     private SubMenu characterSubMenu;
 
     private CharacterOverview overviewFragment;
-
-    // TODO: 18/06/2016 Add edit state changed listeners
-    private static boolean is_edit_mode = false;
-
-    public static boolean isEditMode() {
-        return is_edit_mode;
-    }
-
-    // TEMP
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +94,16 @@ public class CharacterSheet extends AppCompatActivity
 
         // TODO: 16/06/2016 maybe create fragment here, instead of finding it
         // -> some fragments won't be needed for some characters
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        You can then add a fragment using the add() method, specifying the fragment to add and the view in which to insert it. For example:
+        overviewFragment = new CharacterOverview();
+        fragmentTransaction.add(R.id.pager, overviewFragment);
+        fragmentTransaction.commit();
 
         // get the overview fragment
-        overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
-        characterChangedListeners.add(overviewFragment);
+//        overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
+        characterChangedListeners.add(this.overviewFragment);
 
         // Load saved characters
         populateCharacterMenu();
@@ -145,11 +141,11 @@ public class CharacterSheet extends AppCompatActivity
         if (id == R.id.action_edit) {
 
             // Toggle between regular and edit mode
-            is_edit_mode = !is_edit_mode;
-            UpdateCharacter();
+            EditControl.toggleEditMode();
 
-            // Set corresponding title
-            item.setTitle(getString(is_edit_mode ?
+            // Set corresponding title.
+            // TODO: Move this to an EditControl.EditModeChangedListener later
+            item.setTitle(getString(EditControl.isEditMode() ?
                     R.string.action_edit_done :
                     R.string.action_edit));
 

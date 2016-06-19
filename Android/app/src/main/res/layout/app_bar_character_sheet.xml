@@ -25,15 +25,24 @@
     <!--<include layout="@layout/fragment_character_overview" />-->
     <!--<include layout="@layout/content_character_sheet" />-->
 
-    <fragment
-        android:id="@+id/fragment_character_overview"
-        android:name="be.sanderdecleer.dndapp.fragments.CharacterOverview"
+    <!--<fragment-->
+    <!--android:id="@+id/fragment_character_overview"-->
+    <!--android:name="be.sanderdecleer.dndapp.fragments.CharacterOverview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--tools:layout="@layout/fragment_character_overview" />-->
+
+    <LinearLayout
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout="@layout/fragment_character_overview" />
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <!-- TODO implement the Pager -->
+    </LinearLayout>
+
+    <!--TODO implement the Pager -->
     <!--<android.support.v4.view.ViewPager-->
     <!--android:id="@+id/pager"-->
     <!--android:layout_width="match_parent"-->

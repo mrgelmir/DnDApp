@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp;
+package be.sanderdecleer.dndapp.utils;
 
 import be.sanderdecleer.dndapp.model.CharacterModel;
 

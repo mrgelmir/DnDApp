@@ -9,7 +9,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/weapon_nickname_placeholder"
+        android:text="@string/weapon_default_nickname"
         android:textStyle="bold"
         />
 
@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/weapon_to_hit_placeholder" />
+        android:text="@string/weapon_default_to_hit" />
 
 
     <TextView
@@ -26,5 +26,5 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/weapon_damage_placeholder" />
+        android:text="@string/weapon_default_damage" />
 </LinearLayout>

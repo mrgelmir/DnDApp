@@ -22,7 +22,7 @@ public class OnClickListenerEditable implements View.OnClickListener {
     public void onClick(View v) {
 
         // Swap between two setOnClickListener instances depending on state
-        if (CharacterSheet.isEditMode()) {
+        if (EditControl.isEditMode()) {
             if (editClickListener != null)
                 editClickListener.onClick(v);
         } else if (defaultClickListener != null) {

@@ -5,27 +5,31 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.activities.CharacterSheet;
 import be.sanderdecleer.dndapp.model.FeatureModel;
+import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 /**
  * Adapter for feature views
  */
-public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
+public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
+        implements EditControl.EditModeChangedListener {
 
     public FeatureAdapter(Context context, int layoutResourceId) {
         super(context, layoutResourceId);
+        EditControl.addListener(this);
     }
 
     @Override
     public int getCount() {
         if (character != null && character.abilities != null) {
-            return character.abilities.size() + (CharacterSheet.isEditMode() ? 1 : 0);
+            return character.abilities.size() + (EditControl.isEditMode() ? 1 : 0);
         }
         return 0;
     }
@@ -54,7 +58,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
             LayoutInflater inflater = ((Activity) getContext()).getLayoutInflater();
             vh = new ViewHolder();
 
-            switch (type){
+            switch (type) {
                 case VIEW_TYPE_ADD:
                     convertView = inflater.inflate(R.layout.p_add_item, parent, false);
                     vh.titleView = (TextView) convertView.findViewById(R.id.ability_title);
@@ -74,15 +78,13 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
         // Special case: add a new feature view
         if (type == VIEW_TYPE_ADD) {
 
-            vh.titleView.setText("Add new thingy");
-
             // add click listeners
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Create new feature model
                     character.abilities.add(FeatureModel.getEmpty(getContext()));
-                    notifyDataSetInvalidated();
+                    notifyDataSetChanged();
                 }
             });
 
@@ -98,57 +100,17 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
 
         // Set data in view
         convertView.setOnClickListener(new OnClickListenerEditable(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_feature_view_full,
-                                featureData.title, new LayoutUtils.EditViewCallback() {
-                                    @Override
-                                    public void EditView(View view) {
-                                        TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
-                                        descriptionView.setText(featureData.description);
-                                    }
-                                });
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        LayoutUtils.showEditDialog((Activity) getContext(), R.layout.edit_feature_view,
-                                featureData.title, new LayoutUtils.EditViewCallback() {
-                                    @Override
-                                    public void EditView(View view) {
-
-                                        TextView titleView = (TextView) view.findViewById(R.id.feature_edit_title);
-                                        titleView.setText(featureData.title);
-                                        TextView descriptionView = (TextView) view.findViewById(R.id.feature_edit_description);
-                                        descriptionView.setText(featureData.description);
-                                    }
-                                }, new LayoutUtils.DismissDialogCallback() {
-                                    @Override
-                                    public void OnDialogDismissed(View view) {
-
-                                        TextView titleView = (TextView) view.findViewById(R.id.feature_edit_title);
-                                        featureData.title = titleView.getText().toString();
-                                        TextView descriptionView = (TextView) view.findViewById(R.id.feature_edit_description);
-                                        featureData.description = descriptionView.getText().toString();
-                                    }
-                                }, new LayoutUtils.OnDeleteCallback() {
-                                    @Override
-                                    public void OnDelete(View view) {
-                                        character.abilities.remove(featureData);
-                                        notifyDataSetInvalidated();
-                                    }
-                                });
-
-                    }
-                }));
+                new FeatureClickListener(featureData),
+                new FeatureClickListenerEdit(featureData)));
 
         vh.titleView.setText(featureData.title);
 
         return convertView;
+    }
+
+    @Override
+    public void OnEditModeChanged(boolean isEditMode) {
+        notifyDataSetChanged();
     }
 
     private static class ViewHolder {
@@ -172,6 +134,76 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel> {
                         public void EditView(View view) {
                             TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
                             descriptionView.setText(featureData.description);
+                        }
+                    });
+        }
+    }
+
+    private class FeatureClickListener implements View.OnClickListener {
+
+        private FeatureModel featureData;
+
+        public FeatureClickListener(FeatureModel featureData) {
+            this.featureData = featureData;
+        }
+
+        /**
+         * Show the dialog containing data
+         */
+        @Override
+        public void onClick(View v) {
+            LayoutUtils.showInfoDialog((Activity) getContext(), R.layout.p_feature_view_full,
+                    featureData.title, new LayoutUtils.EditViewCallback() {
+                        @Override
+                        public void EditView(View view) {
+                            TextView descriptionView = (TextView) view.findViewById(R.id.ability_description);
+                            descriptionView.setText(featureData.description);
+                        }
+                    });
+        }
+    }
+
+    private class FeatureClickListenerEdit implements View.OnClickListener {
+
+        private FeatureModel featureData;
+
+        public FeatureClickListenerEdit(FeatureModel featureData) {
+            this.featureData = featureData;
+        }
+
+        /**
+         * Show the dialog for editing data
+         */
+        @Override
+        public void onClick(View v) {
+            LayoutUtils.showEditDialog((Activity) getContext(), R.layout.edit_feature_view,
+                    featureData.title, new LayoutUtils.EditViewCallback() {
+                        @Override
+                        public void EditView(View view) {
+                            // Set up view for display
+                            EditText titleView = (EditText) view.findViewById(R.id.feature_edit_title);
+                            EditText descriptionView = (EditText) view.findViewById(R.id.feature_edit_description);
+
+                            titleView.setText(featureData.title);
+                            descriptionView.setText(featureData.description);
+                        }
+                    }, new LayoutUtils.DismissDialogCallback() {
+                        @Override
+                        public void OnDialogDismissed(View view) {
+                            // Save edited data
+                            EditText titleView = (EditText) view.findViewById(R.id.feature_edit_title);
+                            EditText descriptionView = (EditText) view.findViewById(R.id.feature_edit_description);
+
+                            featureData.title = titleView.getText().toString();
+                            featureData.description = descriptionView.getText().toString();
+                            notifyDataSetChanged();
+                        }
+                    }, new LayoutUtils.OnDeleteCallback() {
+                        @Override
+                        public void OnDelete(View view) {
+                            // Delete this instance
+                            character.abilities.remove(featureData);
+                            notifyDataSetChanged();
                         }
                     });
         }
