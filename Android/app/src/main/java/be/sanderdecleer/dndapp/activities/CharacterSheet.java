@@ -2,9 +2,11 @@ package be.sanderdecleer.dndapp.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.InputType;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.model.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
 import be.sanderdecleer.dndapp.utils.EditControl;
+import be.sanderdecleer.dndapp.utils.LayoutUtils;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider {
@@ -37,6 +42,7 @@ public class CharacterSheet extends AppCompatActivity
     private ArrayList<OnCharacterChangedListener> characterChangedListeners;
 
     private SubMenu characterSubMenu;
+    private Menu optionsMenu;
 
     private CharacterOverview overviewFragment;
 
@@ -62,6 +68,7 @@ public class CharacterSheet extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Link Activity name and option menu to toolbar
         setSupportActionBar(toolbar);
+
 
         // Setup and hide Floating action button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -110,7 +117,6 @@ public class CharacterSheet extends AppCompatActivity
 
         // TEMP
 //        createTestData();
-
     }
 
     @Override
@@ -126,8 +132,15 @@ public class CharacterSheet extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Save menu for later use
+        this.optionsMenu = menu;
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.character_sheet, menu);
+
+        updateOptionsMenu();
+
         return true;
     }
 
@@ -138,25 +151,77 @@ public class CharacterSheet extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
+        boolean handled = false;
 
+        switch (id) {
             // Toggle between regular and edit mode
-            EditControl.toggleEditMode();
+            case R.id.action_edit:
+                EditControl.toggleEditMode();
 
-            // Set corresponding title.
-            // TODO: Move this to an EditControl.EditModeChangedListener later
-            item.setTitle(getString(EditControl.isEditMode() ?
-                    R.string.action_edit_done :
-                    R.string.action_edit));
+                // Set corresponding title.
+                // TODO: Move this to an EditControl.EditModeChangedListener later
+                item.setTitle(getString(EditControl.isEditMode() ?
+                        R.string.action_edit_done :
+                        R.string.action_edit));
 
-            return true;
-        } else if (id == R.id.action_save) {
+                handled = true;
+                break;
+
             // Save the character (Should this be automatic?)
-            CharacterFileUtil.saveCharacter(this, activeCharacter);
-            return true;
+            case R.id.action_save:
+                CharacterFileUtil.saveCharacter(this, activeCharacter);
+                handled = true;
+
+                // Update the options menu to hide the save icon if nothing went wrong
+                activeCharacter.hasChanges = false;
+                updateOptionsMenu();
+
+                // Just in case this is a newly added character -> Update menu
+                populateCharacterMenu();
+                break;
+
+            // Rename character
+            case R.id.action_edit_name:
+
+                // Show name popup
+
+                LayoutUtils.showEditDialog(this, R.layout.edit_text, getString(R.string.name_edit_title),
+                        new LayoutUtils.EditViewCallback() {
+                            @Override
+                            public void EditView(View view) {
+                                EditText textView = (EditText) view.findViewById(R.id.name_edit);
+                                if(textView != null){
+                                    textView.setText(activeCharacter.name);
+                                    textView.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+
+                                    textView.selectAll();
+
+                                    // TODO: 15/09/2016 Open keyboard
+                                }
+                            }
+                        }, new LayoutUtils.DismissDialogCallback() {
+                            @Override
+                            public void OnDialogDismissed(View view) {
+                                EditText textView = (EditText) view.findViewById(R.id.name_edit);
+                                if(textView != null){
+                                    activeCharacter.name = textView.getText().toString();
+                                    updateCharacter();
+                                }
+                            }
+                        });
+
+                handled = true;
+                break;
+            case R.id.action_delete:
+
+                // TODO: 15/09/2016
+                
+                handled = true;
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        // If handled, no need for underlying logic
+        return handled || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -166,9 +231,16 @@ public class CharacterSheet extends AppCompatActivity
 
         // Catch specific actions here
         if (id == R.id.nav_add_character) {
-            // TODO: create new character
+            // TODO: 14/09/2016 Ask for name
+            CharacterModel newModel = new CharacterModel("New Character");
+
+            setActiveCharacter(newModel);
+
+            // TODO: 14/09/2016 set editing active
 
         } else if (id == R.id.nav_clear_character) {
+
+            // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
             setActiveCharacter(null);
         } else {
             // This is (probably) a character being selected
@@ -193,6 +265,10 @@ public class CharacterSheet extends AppCompatActivity
             // TEMP load item from filename given
             CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
             setActiveCharacter(loadedCharacter);
+
+            // Dirty way of keeping the save button hidden. Loaded characters have no changes
+            activeCharacter.hasChanges = false;
+            updateOptionsMenu();
         }
 
 
@@ -212,16 +288,21 @@ public class CharacterSheet extends AppCompatActivity
     public void setActiveCharacter(CharacterModel character) {
         this.activeCharacter = character;
 
-        UpdateCharacter();
+        updateCharacter();
     }
 
-    private void UpdateCharacter() {
+    private void updateCharacter() {
 
         // Set activeCharacter name as title
-        if (activeCharacter != null)
+        if (activeCharacter != null) {
             getSupportActionBar().setTitle(activeCharacter.name);
-        else
+            activeCharacter.hasChanges = true;
+        } else {
             getSupportActionBar().setTitle(R.string.app_name);
+        }
+
+        // Update the options menu accordingly
+        updateOptionsMenu();
 
         // Notify the listening fragments
         for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
@@ -239,6 +320,7 @@ public class CharacterSheet extends AppCompatActivity
         if (nav != null) {
             // This is using a hard-coded index for now: fix this later
             characterSubMenu = nav.getMenu().findItem(R.id.nav_character_list).getSubMenu();
+            characterSubMenu.clear();
 
             for (int i = 0; i < characters.size(); ++i) {
                 characterSubMenu.add(0, i, 0, characters.get(i));
@@ -249,9 +331,61 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
+
+    // OPTION MENU FUNCTIONALITY
+    private void updateOptionsMenu() {
+
+        if (optionsMenu == null) {
+            // TODO: 15/09/2016 Add error handling
+            return;
+        }
+
+//        MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
+//        MenuItem editNameAction = optionsMenu.findItem(R.id.action_edit_name);
+        MenuItem saveAction = optionsMenu.findItem(R.id.action_save);
+
+        optionsMenu.setGroupVisible(R.id.action_group, activeCharacter != null);
+
+        if (activeCharacter == null) {
+            // Disable menu
+
+        } else {
+
+            saveAction.setVisible(activeCharacter.hasChanges);
+        }
+    }
+
+
+    // SHARED CHARACTER DATA IMPLEMENTATION
+
+    @Override
+    public CharacterModel getCharacter() {
+        return activeCharacter;
+    }
+
+    @Override
+    public void setCharacter(CharacterModel character) {
+        activeCharacter = character;
+    }
+
+    @Override
+    public void CharacterUpdated() {
+        updateCharacter();
+    }
+
+    // INTERFACES
+
+    public interface OnCharacterChangedListener {
+
+        /**
+         * Notify that the character has changed
+         */
+        void onCharacterChanged();
+    }
+
     // TEST
 
-    // Not really needed -> move?
+    // Not really needed -> (re-)move?
     private void createTestData() {
 
         // Test character 1
@@ -305,33 +439,5 @@ public class CharacterSheet extends AppCompatActivity
         CharacterFileUtil.saveCharacter(this, character1);
         CharacterFileUtil.saveCharacter(this, character2);
 
-    }
-
-
-    // SHARED CHARACTER DATA IMPLEMENTATION
-
-    @Override
-    public CharacterModel getCharacter() {
-        return activeCharacter;
-    }
-
-    @Override
-    public void setCharacter(CharacterModel character) {
-        activeCharacter = character;
-    }
-
-    @Override
-    public void CharacterUpdated() {
-        UpdateCharacter();
-    }
-
-    // INTERFACES
-
-    public interface OnCharacterChangedListener {
-
-        /**
-         * Notify that the character has changed
-         */
-        void onCharacterChanged();
     }
 }

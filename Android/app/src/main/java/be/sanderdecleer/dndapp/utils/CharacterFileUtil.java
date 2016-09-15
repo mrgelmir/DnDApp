@@ -37,6 +37,11 @@ public class CharacterFileUtil {
 
     public static void saveCharacter(Context context, CharacterModel character) {
 
+        if(character == null){
+            Log.w(LOG_TOKEN, "Character is null");
+            return;
+        }
+
         // TODO: 30/05/2016 Do this async
 
         boolean writable = isExternalStorageWritable();

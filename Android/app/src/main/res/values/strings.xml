@@ -17,6 +17,8 @@
     <string name="action_edit">Edit</string>
     <string name="action_edit_done">Stop editing</string>
     <string name="action_save">Save</string>
+    <string name="action_delete">Remove Character</string>
+    <string name="action_edit_name">Change Name</string>
 
     <!-- Character Sheet values -->
     <string name="character_default_name">Character name</string>
@@ -26,6 +28,12 @@
 
     <!-- Editing values -->
     <string name="edit_add">Add item</string>
+
+    <!-- Name values -->
+    <string name="name_default">New Character</string>
+
+    <!-- Name edit values -->
+    <string name="name_edit_title">Edit name</string>
 
     <!-- Ability values -->
     <string name="ability_score_STR">STR</string>

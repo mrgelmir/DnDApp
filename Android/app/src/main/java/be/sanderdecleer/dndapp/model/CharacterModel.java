@@ -32,6 +32,11 @@ public class CharacterModel implements Parcelable {
     public int HP_max;
     public int HP_current;
 
+    /**
+     * Does this character model have unsaved changes?
+     */
+    public boolean hasChanges = false;
+
     // TODO: 29/05/2016 replace with a list of hitDice objects
     public String hitDice_max;
 

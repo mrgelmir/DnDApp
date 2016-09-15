@@ -10,7 +10,7 @@
             android:id="@+id/nav_clear_character"
             android:icon="@drawable/ic_remove_black_24dp"
             android:title="@string/navigation_drawer_clear_character"
-            android:visible="false"/>
+            android:visible="true"/>
     </group>
 
     <group android:checkableBehavior="single">

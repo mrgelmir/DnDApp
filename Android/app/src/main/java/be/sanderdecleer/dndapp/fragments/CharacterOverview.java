@@ -201,10 +201,11 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         View attributeView = findViewById(attributeViewID);
 
         TextView attrNameView = (TextView) attributeView.findViewById(R.id.attribute_name);
-        TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_score);
+        TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_value);
 
         attrNameView.setText(getResources().getText(attributeStringId));
-        int attributeModifier = Math.round((attributeValue - 10) / 2);
+        // Round down ability score (casting doesn't work in the negatives)
+        int attributeModifier = (int) Math.floor((attributeValue - 10) / 2.0);
         attrScoreView.setText(String.format(getResources().getString(R.string.ability_score_value),
                 attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
 
