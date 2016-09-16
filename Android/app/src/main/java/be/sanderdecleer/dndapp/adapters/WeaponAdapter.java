@@ -69,6 +69,9 @@ public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel>
                     break;
                 case VIEW_TYPE_ADD:
                     convertView = inflater.inflate(R.layout.item_add, parent, false);
+
+                    // Doesn't really fit, but I can live with it
+                    vh.nameView = (TextView) convertView.findViewById(R.id.ability_title);
                     break;
 
             }
@@ -80,12 +83,17 @@ public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel>
 
         // Special case: Adding a new item
         if (type == VIEW_TYPE_ADD) {
+
+            // Set correct title
+            vh.nameView.setText(R.string.weapon_edit_add);
+
             // add click listeners
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Create new feature model
                     character.weapons.add(WeaponModel.getEmpty(getContext()));
+                    character.hasChanges = true;
                     notifyDataSetChanged();
                 }
             });
@@ -161,6 +169,7 @@ public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel>
 
         public WeaponClickListenerEdit(WeaponModel weaponData) {
             this.weaponData = weaponData;
+            character.hasChanges = true;
         }
 
         /**

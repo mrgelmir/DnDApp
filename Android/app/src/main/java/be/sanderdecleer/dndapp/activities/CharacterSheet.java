@@ -2,7 +2,6 @@ package be.sanderdecleer.dndapp.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -35,7 +33,8 @@ import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 
 public class CharacterSheet extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider {
+        implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider,
+        EditControl.EditModeChangedListener {
 
     private CharacterModel activeCharacter;
 
@@ -111,9 +110,14 @@ public class CharacterSheet extends AppCompatActivity
         // get the overview fragment
 //        overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
         characterChangedListeners.add(this.overviewFragment);
+        EditControl.addListener(this.overviewFragment);
 
         // Load saved characters
         populateCharacterMenu();
+
+
+        // Subscribe to edit mode changes
+        EditControl.addListener(this);
 
         // TEMP
 //        createTestData();
@@ -156,6 +160,8 @@ public class CharacterSheet extends AppCompatActivity
         switch (id) {
             // Toggle between regular and edit mode
             case R.id.action_edit:
+
+                // toggle edit mode
                 EditControl.toggleEditMode();
 
                 // Set corresponding title.
@@ -169,8 +175,15 @@ public class CharacterSheet extends AppCompatActivity
 
             // Save the character (Should this be automatic?)
             case R.id.action_save:
+
+                // Save character to file
                 CharacterFileUtil.saveCharacter(this, activeCharacter);
                 handled = true;
+
+                // If we are currently editing: Stop editing
+                if(EditControl.isEditMode()){
+                    EditControl.setEditMode(false);
+                }
 
                 // Update the options menu to hide the save icon if nothing went wrong
                 activeCharacter.hasChanges = false;
@@ -189,8 +202,8 @@ public class CharacterSheet extends AppCompatActivity
                         new LayoutUtils.EditViewCallback() {
                             @Override
                             public void EditView(View view) {
-                                EditText textView = (EditText) view.findViewById(R.id.name_edit);
-                                if(textView != null){
+                                EditText textView = (EditText) view.findViewById(R.id.edit_field);
+                                if (textView != null) {
                                     textView.setText(activeCharacter.name);
                                     textView.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 
@@ -202,8 +215,8 @@ public class CharacterSheet extends AppCompatActivity
                         }, new LayoutUtils.DismissDialogCallback() {
                             @Override
                             public void OnDialogDismissed(View view) {
-                                EditText textView = (EditText) view.findViewById(R.id.name_edit);
-                                if(textView != null){
+                                EditText textView = (EditText) view.findViewById(R.id.edit_field);
+                                if (textView != null) {
                                     activeCharacter.name = textView.getText().toString();
                                     updateCharacter();
                                 }
@@ -215,7 +228,7 @@ public class CharacterSheet extends AppCompatActivity
             case R.id.action_delete:
 
                 // TODO: 15/09/2016
-                
+
                 handled = true;
                 break;
         }
@@ -232,7 +245,7 @@ public class CharacterSheet extends AppCompatActivity
         // Catch specific actions here
         if (id == R.id.nav_add_character) {
             // TODO: 14/09/2016 Ask for name
-            CharacterModel newModel = new CharacterModel("New Character");
+            CharacterModel newModel = new CharacterModel(getString(R.string.name_default));
 
             setActiveCharacter(newModel);
 
@@ -331,6 +344,10 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
+    @Override
+    public void OnEditModeChanged(boolean isEditMode) {
+        updateCharacter();
+    }
 
     // OPTION MENU FUNCTIONALITY
     private void updateOptionsMenu() {
@@ -343,6 +360,7 @@ public class CharacterSheet extends AppCompatActivity
 //        MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
 //        MenuItem editNameAction = optionsMenu.findItem(R.id.action_edit_name);
         MenuItem saveAction = optionsMenu.findItem(R.id.action_save);
+        MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
 
         optionsMenu.setGroupVisible(R.id.action_group, activeCharacter != null);
 
@@ -351,7 +369,8 @@ public class CharacterSheet extends AppCompatActivity
 
         } else {
 
-            saveAction.setVisible(activeCharacter.hasChanges);
+            saveAction.setVisible(EditControl.isEditMode() && activeCharacter.hasChanges);
+            editAction.setVisible(!EditControl.isEditMode());
         }
     }
 

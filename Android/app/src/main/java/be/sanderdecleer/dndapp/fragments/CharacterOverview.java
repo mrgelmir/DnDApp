@@ -19,6 +19,7 @@ import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
 import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
 import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
 import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
+import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
@@ -31,7 +32,8 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
  * Use the {@link CharacterOverview#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CharacterOverview extends Fragment implements CharacterSheet.OnCharacterChangedListener {
+public class CharacterOverview extends Fragment
+        implements CharacterSheet.OnCharacterChangedListener, EditControl.EditModeChangedListener {
 
     // Keep track of all adapters that use character data
     private ArrayList<BaseCharacterAdapter> characterAdapters;
@@ -180,7 +182,7 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
         // Set adapter visibility (Always visible when in edit mode?)
-        if (characterProvider.getCharacter().expendables.size() > 0) {
+        if (EditControl.isEditMode() || characterProvider.getCharacter().expendables.size() > 0) {
             expendableView.setVisibility(View.VISIBLE);
             expendableSeparator.setVisibility(View.VISIBLE);
         } else {
@@ -194,6 +196,15 @@ public class CharacterOverview extends Fragment implements CharacterSheet.OnChar
         }
 
         findViewById(R.id.scrollView).invalidate();
+    }
+
+    @Override
+    public void OnEditModeChanged(boolean isEditMode) {
+
+        // For now update character to show edit specific things, maybe later change this
+        onCharacterChanged();
+
+        
     }
 
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {

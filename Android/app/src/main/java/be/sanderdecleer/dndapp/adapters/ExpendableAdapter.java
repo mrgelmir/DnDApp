@@ -145,6 +145,7 @@ public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
 
         public ExpendableClickListenerEdit(ExpendableModel expendableData) {
             this.expendableData = expendableData;
+            character.hasChanges = true;
         }
 
         @Override

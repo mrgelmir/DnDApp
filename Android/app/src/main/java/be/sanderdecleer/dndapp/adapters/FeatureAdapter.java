@@ -77,12 +77,16 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
         // Special case: add a new feature view
         if (type == VIEW_TYPE_ADD) {
 
-            // add click listeners
+            // Set correct title
+            vh.titleView.setText(R.string.feature_edit_add);
+
+            // Add click listeners
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Create new feature model
                     character.abilities.add(FeatureModel.getEmpty(getContext()));
+                    character.hasChanges = true;
                     notifyDataSetChanged();
                 }
             });
@@ -168,6 +172,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
 
         public FeatureClickListenerEdit(FeatureModel featureData) {
             this.featureData = featureData;
+            character.hasChanges = true;
         }
 
         /**

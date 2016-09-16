@@ -28,6 +28,7 @@
 
     <!-- Editing values -->
     <string name="edit_add">Add item</string>
+    <string name="edit_default">Edit text</string>
 
     <!-- Name values -->
     <string name="name_default">New Character</string>
@@ -54,6 +55,7 @@
     <string name="weapon_default_damage">XdY + Z</string>
 
     <!-- Weapon edit values -->
+    <string name="weapon_edit_add">Add Weapon</string>
     <string name="weapon_edit_nickname">Weapon Nickname</string>
     <string name="weapon_edit_type">Weapon type</string>
     <string name="weapon_edit_to_hit">Weapon to hit (+X)</string>
@@ -63,10 +65,16 @@
     <string name="feature_default_title">Feature title</string>
     <string name="feature_default_description">Feature description</string>
 
+    <!-- Feature edit values -->
+    <string name="feature_edit_add">Add Feature</string>
+
     <!-- Expendable values -->
     <string name="expendable_title_placeholder">Expendable title</string>
     <string name="expendable_value_placeholder">10/10</string>
     <string name="expendable_value">%1$d/%2$d</string>
+
+    <!-- Expendable edit values -->
+    <string name="expendable_edit_add">Add Expendable</string>
 
     <!-- Content Descriptions -->
     <string name="content_description_separator">Separator</string>
