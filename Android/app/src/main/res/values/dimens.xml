@@ -8,7 +8,9 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- small button padding -->
-    <dimen name="view_padding">8dp</dimen>
+    <dimen name="padding_narrow">8dp</dimen>
+    <dimen name="padding_regular">16dp</dimen>
+    <dimen name="padding_wide">32dp</dimen>
 
     <!-- Font sizes -->
     <!-- TODO: Change these to more generic defines
@@ -16,5 +18,10 @@
     <dimen name="attr_title">18sp</dimen>
     <dimen name="attr_sub">12sp</dimen>
 
+
+    <!-- Buttons -->
+    <dimen name="button_width_small">50dp</dimen>
+
+    <!-- Various -->
     <dimen name="number_picker_height">120dp</dimen>
 </resources>

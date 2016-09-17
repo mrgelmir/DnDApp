@@ -195,7 +195,7 @@ public class CharacterOverview extends Fragment
             adapter.setCharacter(characterProvider.getCharacter());
         }
 
-        findViewById(R.id.scrollView).invalidate();
+        findViewById(R.id.scroll_view).invalidate();
     }
 
     @Override
@@ -235,6 +235,11 @@ public class CharacterOverview extends Fragment
             public void set(int value) {
                 characterProvider.getCharacter().STR = value;
             }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_STR);
+            }
         });
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
@@ -245,6 +250,11 @@ public class CharacterOverview extends Fragment
             @Override
             public void set(int value) {
                 characterProvider.getCharacter().DEX = value;
+            }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_DEX);
             }
         });
         setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
@@ -257,6 +267,11 @@ public class CharacterOverview extends Fragment
             public void set(int value) {
                 characterProvider.getCharacter().CON = value;
             }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_CON);
+            }
         });
         setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
             @Override
@@ -267,6 +282,11 @@ public class CharacterOverview extends Fragment
             @Override
             public void set(int value) {
                 characterProvider.getCharacter().INT = value;
+            }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_INT);
             }
         });
         setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
@@ -279,6 +299,11 @@ public class CharacterOverview extends Fragment
             public void set(int value) {
                 characterProvider.getCharacter().WIS = value;
             }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_WIS);
+            }
         });
         setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
             @Override
@@ -289,6 +314,11 @@ public class CharacterOverview extends Fragment
             @Override
             public void set(int value) {
                 characterProvider.getCharacter().CHA = value;
+            }
+
+            @Override
+            public String getName() {
+                return getString(R.string.ability_score_CHA);
             }
         });
     }
@@ -308,7 +338,7 @@ public class CharacterOverview extends Fragment
                                 return;
 
                             LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
-                                    getActivity().getString(R.string.ability_score_STR),
+                                    abilityAccessor.getName(),
                                     new LayoutUtils.EditViewCallback() {
                                         @Override
                                         public void EditView(View view) {
@@ -349,6 +379,8 @@ public class CharacterOverview extends Fragment
         void set(int value);
 
         int get();
+
+        String getName();
     }
 
 //    /**

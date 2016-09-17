@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,20 +8,35 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:scrollbars="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".fragments.CharacterOverview">
 
     <!-- Character name is in toolbar -->
 
     <!-- Attributes -->
-    <include layout="@layout/p_ability_scores" />
-
-    <include layout="@layout/p_separator" />
-
-    <LinearLayout
+    <include
+        android:id="@+id/overview_ability_scores"
+        layout="@layout/p_ability_scores"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/view_padding">
+        android:layout_alignParentTop="true" />
+
+    <include
+        android:id="@+id/overview_ability_scores_separator"
+        layout="@layout/p_separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/overview_ability_scores" />
+
+    <LinearLayout
+        android:id="@+id/overview_various_todo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/overview_ability_scores_separator"
+        android:padding="@dimen/padding_narrow">
 
         <!-- AC -->
         <TextView
@@ -50,13 +65,19 @@
             android:textAlignment="center" />
     </LinearLayout>
 
-    <include layout="@layout/p_separator" />
-
-    <!-- ListViews Below -->
-    <LinearLayout
-        android:id="@+id/scrollView"
+    <include
+        android:id="@+id/overview_various_todo_separator"
+        layout="@layout/p_separator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/overview_various_todo" />
+
+    <LinearLayout
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/overview_various_todo_separator"
         android:orientation="vertical">
 
         <!-- Weapons & Attacks -->
@@ -68,10 +89,12 @@
             android:orientation="vertical"
             tools:listitem="@layout/item_weapon_view" />
 
-        <include layout="@layout/p_separator" />
+        <include
+            android:id="@+id/weapon_list_separator"
+            layout="@layout/p_separator" />
 
         <!-- Expendables:
-                Place things like KI-points/Bardic inspiration or Superiority dice here -->
+                    Place things like KI-points/Bardic inspiration or Superiority dice here -->
 
         <ListView
             android:id="@+id/expendables_list"
@@ -90,10 +113,12 @@
             android:id="@+id/feature_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:orientation="vertical"
             tools:listitem="@layout/item_feature_view" />
 
+
     </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>

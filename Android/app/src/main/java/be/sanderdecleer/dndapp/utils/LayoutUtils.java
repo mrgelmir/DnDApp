@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.res.XmlResourceParser;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 
 import be.sanderdecleer.dndapp.R;
 
@@ -25,6 +26,10 @@ public final class LayoutUtils {
 
     public interface EditViewCallback {
         void EditView(View view);
+    }
+
+    public interface TextResultCallback {
+        void GetTextResult(String string);
     }
 
     private interface EditAlertDialogBuilderCallback {
@@ -98,6 +103,26 @@ public final class LayoutUtils {
                     }
                 });
 
+    }
+
+    public static void showEditTextDialog(Activity activity, String title, final String startText,
+                                          final TextResultCallback textResultCallback) {
+        LayoutUtils.showEditDialog(activity, R.layout.edit_text, title,
+                new LayoutUtils.EditViewCallback() {
+                    @Override
+                    public void EditView(View view) {
+                        EditText label = (EditText) view.findViewById(R.id.edit_field);
+                        label.setText(startText);
+                    }
+                }, new LayoutUtils.DismissDialogCallback() {
+                    @Override
+                    public void OnDialogDismissed(View view) {
+                        if(textResultCallback != null){
+                            EditText label = (EditText) view.findViewById(R.id.edit_field);
+                            textResultCallback.GetTextResult(label.getText().toString());
+                        }
+                    }
+                });
     }
 
     private static void showDialog(Activity activity, int layoutId, String title,

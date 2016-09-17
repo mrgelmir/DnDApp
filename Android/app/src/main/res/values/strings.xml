@@ -4,6 +4,7 @@
     <!-- Base values -->
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Navigation Bar values  -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

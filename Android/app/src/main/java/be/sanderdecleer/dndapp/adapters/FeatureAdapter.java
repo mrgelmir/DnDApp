@@ -66,6 +66,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
                 case VIEW_TYPE_ITEM:
                     convertView = inflater.inflate(layoutResourceId, parent, false);
                     vh.titleView = (TextView) convertView.findViewById(R.id.ability_title);
+                    vh.descriptionView = (TextView) convertView.findViewById(R.id.ability_description);
                     break;
             }
 
@@ -107,6 +108,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
                 new FeatureClickListenerEdit(featureData)));
 
         vh.titleView.setText(featureData.title);
+        vh.descriptionView.setText(featureData.description);
 
         return convertView;
     }
@@ -118,6 +120,7 @@ public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
 
     private static class ViewHolder {
         public TextView titleView;
+        public TextView descriptionView;
     }
 
     // TODO: 3/06/2016  

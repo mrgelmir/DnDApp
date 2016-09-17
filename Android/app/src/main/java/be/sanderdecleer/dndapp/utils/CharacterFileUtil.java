@@ -37,7 +37,7 @@ public class CharacterFileUtil {
 
     public static void saveCharacter(Context context, CharacterModel character) {
 
-        if(character == null){
+        if (character == null) {
             Log.w(LOG_TOKEN, "Character is null");
             return;
         }
@@ -125,6 +125,19 @@ public class CharacterFileUtil {
         CharacterModel character = gson.fromJson(contents, CharacterModel.class);
 
         return character;
+    }
+
+    public static void deleteCharacter(Context context, CharacterModel character) {
+        if (character == null) {
+            Log.w(LOG_TOKEN, "Character is null");
+            return;
+        }
+
+        File file = getFile(context, characterNameToFileName(character.name));
+
+        if(!file.delete()) {
+            // Something went wrong here.
+        }
     }
 
     // TODO: 30/05/2016 Replace with character preview data?

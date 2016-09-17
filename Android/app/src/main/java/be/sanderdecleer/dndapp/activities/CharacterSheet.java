@@ -1,7 +1,9 @@
 package be.sanderdecleer.dndapp.activities;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -96,28 +98,41 @@ public class CharacterSheet extends AppCompatActivity
 
 
         // FRAGMENTS
+        // TODO: 17/09/2016
+        // create a no-character fragment/view to display when no character is selected at the start
+
+        // create character changed listeners array
         characterChangedListeners = new ArrayList<>();
 
-        // TODO: 16/06/2016 maybe create fragment here, instead of finding it
-        // -> some fragments won't be needed for some characters
+        // NOTE -> some fragments won't be needed for some characters
         FragmentManager fragmentManager = getFragmentManager();
+
+
+        // Create the character overview fragment and subscribe where necessary
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //        You can then add a fragment using the add() method, specifying the fragment to add and the view in which to insert it. For example:
         overviewFragment = new CharacterOverview();
         fragmentTransaction.add(R.id.pager, overviewFragment);
         fragmentTransaction.commit();
 
-        // get the overview fragment
-//        overviewFragment = (CharacterOverview) getFragmentManager().findFragmentById(R.id.fragment_character_overview);
         characterChangedListeners.add(this.overviewFragment);
         EditControl.addListener(this.overviewFragment);
 
         // Load saved characters
         populateCharacterMenu();
 
-
         // Subscribe to edit mode changes
         EditControl.addListener(this);
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Set given character, or null if none is present (always for now)
+        setActiveCharacter(null);
 
         // TEMP
 //        createTestData();
@@ -181,7 +196,7 @@ public class CharacterSheet extends AppCompatActivity
                 handled = true;
 
                 // If we are currently editing: Stop editing
-                if(EditControl.isEditMode()){
+                if (EditControl.isEditMode()) {
                     EditControl.setEditMode(false);
                 }
 
@@ -229,6 +244,30 @@ public class CharacterSheet extends AppCompatActivity
 
                 // TODO: 15/09/2016
 
+                DialogInterface.OnClickListener deleteListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case AlertDialog.BUTTON_POSITIVE:
+                                // set current character to null and remove file
+                                CharacterFileUtil.deleteCharacter(CharacterSheet.this, activeCharacter);
+                                setActiveCharacter(null);
+                                // re-populate character menu
+                                populateCharacterMenu();
+                                break;
+                            case AlertDialog.BUTTON_NEGATIVE:
+                                // do nothing
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setPositiveButton(R.string.delete, deleteListener)
+                        .setNegativeButton(R.string.cancel, deleteListener)
+                        .show();
+
+
                 handled = true;
                 break;
         }
@@ -244,12 +283,17 @@ public class CharacterSheet extends AppCompatActivity
 
         // Catch specific actions here
         if (id == R.id.nav_add_character) {
-            // TODO: 14/09/2016 Ask for name
-            CharacterModel newModel = new CharacterModel(getString(R.string.name_default));
 
-            setActiveCharacter(newModel);
+            LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
+                    getString(R.string.name_default), new LayoutUtils.TextResultCallback() {
+                        @Override
+                        public void GetTextResult(String string) {
+                            CharacterModel newModel = new CharacterModel(string);
+                            setActiveCharacter(newModel);
+                        }
+                    });
 
-            // TODO: 14/09/2016 set editing active
+            EditControl.setEditMode(true);
 
         } else if (id == R.id.nav_clear_character) {
 
@@ -310,8 +354,10 @@ public class CharacterSheet extends AppCompatActivity
         if (activeCharacter != null) {
             getSupportActionBar().setTitle(activeCharacter.name);
             activeCharacter.hasChanges = true;
+            overviewFragment.getView().setVisibility(View.VISIBLE);
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
+            overviewFragment.getView().setVisibility(View.GONE);
         }
 
         // Update the options menu accordingly
