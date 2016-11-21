@@ -10,7 +10,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:visibility="visible">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -19,37 +20,33 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:layout_anchor="@+id/toolbar"
+            app:layout_anchorGravity="bottom"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorTextAlternative"
+            app:tabTextColor="@color/colorTextAlternative">
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Tab 1" />
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Tab 2" />
+
+        </android.support.design.widget.TabLayout>
+
     </android.support.design.widget.AppBarLayout>
 
-    <!-- The actual contents -->
-    <!--<include layout="@layout/fragment_character_overview" />-->
-    <!--<include layout="@layout/content_character_sheet" />-->
-
-    <!--<fragment-->
-    <!--android:id="@+id/fragment_character_overview"-->
-    <!--android:name="be.sanderdecleer.dndapp.fragments.CharacterOverview"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--tools:layout="@layout/fragment_character_overview" />-->
-
-    <LinearLayout
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    </LinearLayout>
-
-    <!--TODO implement the Pager -->
-    <!--<android.support.v4.view.ViewPager-->
-    <!--android:id="@+id/pager"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--</android.support.v4.view.ViewPager>-->
-
+    <!-- View pager which will hold all sub-fragments -->
 
     <!-- Floating action Button -->
     <android.support.design.widget.FloatingActionButton
@@ -58,7 +55,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email"
+        android:src="@drawable/ic_save_white_24dp"
         android:visibility="gone" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

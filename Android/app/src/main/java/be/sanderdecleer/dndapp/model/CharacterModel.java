@@ -19,13 +19,16 @@ public class CharacterModel implements Parcelable {
     public List<WeaponModel> weapons = new ArrayList<>();
     public List<ExpendableModel> expendables = new ArrayList<>();
 
+    // TODO: 21/11/2016 Change all the public variables to privates to allow for modifications
+    // via modifiers, items, skills, boons...
+
     // Ability scores
-    public int STR;
-    public int DEX;
-    public int CON;
-    public int INT;
-    public int WIS;
-    public int CHA;
+    public int STR_base;
+    public int DEX_base;
+    public int CON_base;
+    public int INT_base;
+    public int WIS_base;
+    public int CHA_base;
 
     public int speed;
     public int AC;
@@ -45,12 +48,12 @@ public class CharacterModel implements Parcelable {
     }
 
     public void setAbilityScores(int STR, int DEX, int CON, int INT, int WIS, int CHA) {
-        this.STR = STR;
-        this.DEX = DEX;
-        this.CON = CON;
-        this.INT = INT;
-        this.WIS = WIS;
-        this.CHA = CHA;
+        this.STR_base = STR;
+        this.DEX_base = DEX;
+        this.CON_base = CON;
+        this.INT_base = INT;
+        this.WIS_base = WIS;
+        this.CHA_base = CHA;
     }
 
     public void addAbility(FeatureModel ability) {
@@ -81,12 +84,12 @@ public class CharacterModel implements Parcelable {
     private CharacterModel(Parcel in) {
         // Read data
         name = in.readString();
-        STR = in.readInt();
-        DEX = in.readInt();
-        CON = in.readInt();
-        INT = in.readInt();
-        WIS = in.readInt();
-        CHA = in.readInt();
+        STR_base = in.readInt();
+        DEX_base = in.readInt();
+        CON_base = in.readInt();
+        INT_base = in.readInt();
+        WIS_base = in.readInt();
+        CHA_base = in.readInt();
     }
 
     @Override
@@ -98,12 +101,14 @@ public class CharacterModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         // Write all data
         dest.writeString(name);
-        dest.writeInt(STR);
-        dest.writeInt(DEX);
-        dest.writeInt(CON);
-        dest.writeInt(INT);
-        dest.writeInt(WIS);
-        dest.writeInt(CHA);
+        dest.writeInt(STR_base);
+        dest.writeInt(DEX_base);
+        dest.writeInt(CON_base);
+        dest.writeInt(INT_base);
+        dest.writeInt(WIS_base);
+        dest.writeInt(CHA_base);
+
+        // TODO: All the rest :)
     }
 
     @Override
@@ -114,9 +119,16 @@ public class CharacterModel implements Parcelable {
         // - fast version
         // - super detailed version (for testing)
 
+        // For now, we use the name
 
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        CharacterModel other = (CharacterModel ) o;
 
-
-        return super.equals(o);
+        return other.name.equals(name);
     }
 }

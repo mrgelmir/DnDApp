@@ -6,6 +6,7 @@ import be.sanderdecleer.dndapp.R;
 
 /**
  * Created by SD on 23/05/2016.
+ * Holds all data of a weapon.
  */
 public class WeaponModel {
 
@@ -16,6 +17,11 @@ public class WeaponModel {
     public String weaponDamage; // maybe swap to a dice representation later
     public String weaponFeatures;
 
+    /***
+     * Shows the name of the weapon fit for display purposes.
+     *
+     * @return nickname, if present. Else weapon type.
+     */
     public String getDisplayName() {
         if (nickname != null && !nickname.isEmpty()) {
             return nickname;

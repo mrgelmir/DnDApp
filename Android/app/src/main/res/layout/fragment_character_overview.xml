@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/character_AC"
-            android:textAlignment="center" />
+            android:textAlignment="center"/>
 
         <!-- Movement -->
         <TextView

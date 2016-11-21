@@ -6,11 +6,14 @@ import be.sanderdecleer.dndapp.R;
 
 /**
  * Created by SD on 20/05/2016.
+ * Holds all data of a feature.
  */
 public class FeatureModel {
 
     public String title;
     public String description;
+
+    // TODO add some function if needed
 
     public FeatureModel(String title, String description) {
         this.title = title;

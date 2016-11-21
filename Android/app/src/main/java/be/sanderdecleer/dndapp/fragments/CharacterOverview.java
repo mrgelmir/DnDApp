@@ -2,7 +2,7 @@ package be.sanderdecleer.dndapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.activities.CharacterSheet;
@@ -25,22 +26,16 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link CharacterFragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CharacterProvider} interface
- * to handle interaction events.
+ * {@link CharacterProvider} interface to provide character data.
  * Use the {@link CharacterOverview#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CharacterOverview extends Fragment
-        implements CharacterSheet.OnCharacterChangedListener, EditControl.EditModeChangedListener {
+public class CharacterOverview extends CharacterFragment {
 
     // Keep track of all adapters that use character data
     private ArrayList<BaseCharacterAdapter> characterAdapters;
-
-    // The object (probably activity) which holds the character data
-    private CharacterProvider characterProvider;
-
 
     // Views
     private AdapterView abilitiesView;
@@ -64,31 +59,14 @@ public class CharacterOverview extends Fragment
         return fragment;
     }
 
+    // Override methods
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Get bundle info
-        if (getArguments() != null) {
-            // Set data from bundle
-        }
-
-        onCharacterChanged();
+    protected int getLayoutID() {
+        return R.layout.fragment_character_overview;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_character_overview, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // Do setup here
+    protected void setup() {
 
         // ADAPTERS
         characterAdapters = new ArrayList<>(3);
@@ -123,28 +101,6 @@ public class CharacterOverview extends Fragment
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // Find out how to handle this
-
-        if (context instanceof CharacterProvider) {
-            // Get Character Provider
-            characterProvider = (CharacterProvider) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement CharacterOverviewActor");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        // Clean up
-        characterProvider = null;
-    }
-
-    @Override
     public void onCharacterChanged() {
 
         // Update data if character is valid
@@ -155,17 +111,17 @@ public class CharacterOverview extends Fragment
 
         // Update Ability scores
         setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
-                characterProvider.getCharacter().STR);
+                characterProvider.getCharacter().STR_base);
         setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
-                characterProvider.getCharacter().DEX);
+                characterProvider.getCharacter().DEX_base);
         setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
-                characterProvider.getCharacter().CON);
+                characterProvider.getCharacter().CON_base);
         setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
-                characterProvider.getCharacter().INT);
+                characterProvider.getCharacter().INT_base);
         setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
-                characterProvider.getCharacter().WIS);
+                characterProvider.getCharacter().WIS_base);
         setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
-                characterProvider.getCharacter().CHA);
+                characterProvider.getCharacter().CHA_base);
 
 
         // Update other stats
@@ -198,15 +154,7 @@ public class CharacterOverview extends Fragment
         findViewById(R.id.scroll_view).invalidate();
     }
 
-    @Override
-    public void OnEditModeChanged(boolean isEditMode) {
-
-        // For now update character to show edit specific things, maybe later change this
-        onCharacterChanged();
-
-        
-    }
-
+    // Custom methods
     private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
 
         View attributeView = findViewById(attributeViewID);
@@ -228,12 +176,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().STR;
+                return characterProvider.getCharacter().STR_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().STR = value;
+                characterProvider.getCharacter().STR_base = value;
             }
 
             @Override
@@ -244,12 +192,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().DEX;
+                return characterProvider.getCharacter().DEX_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().DEX = value;
+                characterProvider.getCharacter().DEX_base = value;
             }
 
             @Override
@@ -260,12 +208,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().CON;
+                return characterProvider.getCharacter().CON_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().CON = value;
+                characterProvider.getCharacter().CON_base = value;
             }
 
             @Override
@@ -276,12 +224,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().INT;
+                return characterProvider.getCharacter().INT_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().INT = value;
+                characterProvider.getCharacter().INT_base = value;
             }
 
             @Override
@@ -292,12 +240,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().WIS;
+                return characterProvider.getCharacter().WIS_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().WIS = value;
+                characterProvider.getCharacter().WIS_base = value;
             }
 
             @Override
@@ -308,12 +256,12 @@ public class CharacterOverview extends Fragment
         setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().CHA;
+                return characterProvider.getCharacter().CHA_base;
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().CHA = value;
+                characterProvider.getCharacter().CHA_base = value;
             }
 
             @Override
@@ -355,23 +303,14 @@ public class CharacterOverview extends Fragment
                                             // Confirm values
                                             NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
                                             abilityAccessor.set(picker.getValue());
-                                            characterProvider.CharacterUpdated();
+                                            // TODO fix line below: character should listen for this itself?
+                                            CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
                                         }
                                     });
 
                         }
                     }));
         }
-    }
-
-
-    /**
-     * Finds a view that was identified by the id attribute
-     *
-     * @return The view, if found
-     */
-    private View findViewById(int id) {
-        return getActivity().findViewById(id);
     }
 
     interface AbilityAccessor {
@@ -383,13 +322,4 @@ public class CharacterOverview extends Fragment
         String getName();
     }
 
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     */
-//    public interface CharacterOverviewActor {
-//        void onCharacterChanged();
-//    }
 }

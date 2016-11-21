@@ -1,12 +1,13 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.view.SubMenu;
 import android.view.View;
@@ -23,7 +24,8 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.sanderdecleer.dndapp.utils.CharacterProvider;
+import be.sanderdecleer.dndapp.fragments.SpellSheetOverview;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.fragments.CharacterOverview;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
@@ -35,54 +37,32 @@ import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 
 public class CharacterSheet extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CharacterProvider,
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CharacterControl.Listener,
         EditControl.EditModeChangedListener {
 
-    private CharacterModel activeCharacter;
-
-    private ArrayList<OnCharacterChangedListener> characterChangedListeners;
+    private ArrayList<CharacterControl.Listener> characterChangedListeners;
 
     private SubMenu characterSubMenu;
     private Menu optionsMenu;
 
-    private CharacterOverview overviewFragment;
+    private ViewPager mPager;
+    private FragmentPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // TODO: 1/06/2016 Implement View pager
-//        ViewPager pager = new ViewPager(this);
-//        FragmentPagerAdapter fragmentAdapter = new FragmentPagerAdapter(getFragmentManager()) {
-//            @Override
-//            public Fragment getItem(int position) {
-//                return null;
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return 0;
-//            }
-//        };
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_character_sheet);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // Link Activity name and option menu to toolbar
-        setSupportActionBar(toolbar);
 
+        // Set view
+        setContentView(R.layout.activity_character_sheet);
 
         // Setup and hide Floating action button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            fab.hide();
-        }
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        // Link Activity name and option menu to toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Add drawer to toolbar
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -100,12 +80,25 @@ public class CharacterSheet extends AppCompatActivity
         // FRAGMENTS
         // TODO: 17/09/2016
         // create a no-character fragment/view to display when no character is selected at the start
+        // TODO: 21/11/2016
+        // Add this fragment to the viewPager
+
+        // Viewpager setup
+        mAdapter = new CharacterSheetPageAdapter(getSupportFragmentManager());
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mAdapter);
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(mPager);
+
 
         // create character changed listeners array
         characterChangedListeners = new ArrayList<>();
 
+/*
         // NOTE -> some fragments won't be needed for some characters
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
 
         // Create the character overview fragment and subscribe where necessary
@@ -117,6 +110,7 @@ public class CharacterSheet extends AppCompatActivity
 
         characterChangedListeners.add(this.overviewFragment);
         EditControl.addListener(this.overviewFragment);
+*/
 
         // Load saved characters
         populateCharacterMenu();
@@ -132,7 +126,7 @@ public class CharacterSheet extends AppCompatActivity
         super.onStart();
 
         // Set given character, or null if none is present (always for now)
-        setActiveCharacter(null);
+        CharacterControl.getInstance().setCharacter(null);
 
         // TEMP
 //        createTestData();
@@ -147,6 +141,8 @@ public class CharacterSheet extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        // TODO: 21/11/2016 Interpose a back to main character sheet here before native action
     }
 
     @Override
@@ -192,7 +188,7 @@ public class CharacterSheet extends AppCompatActivity
             case R.id.action_save:
 
                 // Save character to file
-                CharacterFileUtil.saveCharacter(this, activeCharacter);
+                CharacterFileUtil.saveCharacter(this, CharacterControl.getCurrentCharacter());
                 handled = true;
 
                 // If we are currently editing: Stop editing
@@ -201,7 +197,7 @@ public class CharacterSheet extends AppCompatActivity
                 }
 
                 // Update the options menu to hide the save icon if nothing went wrong
-                activeCharacter.hasChanges = false;
+                CharacterControl.getCurrentCharacter().hasChanges = false;
                 updateOptionsMenu();
 
                 // Just in case this is a newly added character -> Update menu
@@ -219,7 +215,7 @@ public class CharacterSheet extends AppCompatActivity
                             public void EditView(View view) {
                                 EditText textView = (EditText) view.findViewById(R.id.edit_field);
                                 if (textView != null) {
-                                    textView.setText(activeCharacter.name);
+                                    textView.setText(CharacterControl.getCurrentCharacter().name);
                                     textView.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 
                                     textView.selectAll();
@@ -232,7 +228,7 @@ public class CharacterSheet extends AppCompatActivity
                             public void OnDialogDismissed(View view) {
                                 EditText textView = (EditText) view.findViewById(R.id.edit_field);
                                 if (textView != null) {
-                                    activeCharacter.name = textView.getText().toString();
+                                    CharacterControl.getCurrentCharacter().name = textView.getText().toString();
                                     updateCharacter();
                                 }
                             }
@@ -250,8 +246,9 @@ public class CharacterSheet extends AppCompatActivity
                         switch (which) {
                             case AlertDialog.BUTTON_POSITIVE:
                                 // set current character to null and remove file
-                                CharacterFileUtil.deleteCharacter(CharacterSheet.this, activeCharacter);
-                                setActiveCharacter(null);
+                                CharacterFileUtil.deleteCharacter(CharacterSheet.this,
+                                        CharacterControl.getCurrentCharacter());
+                                CharacterControl.setCurrentCharacter(null);
                                 // re-populate character menu
                                 populateCharacterMenu();
                                 break;
@@ -289,7 +286,7 @@ public class CharacterSheet extends AppCompatActivity
                         @Override
                         public void GetTextResult(String string) {
                             CharacterModel newModel = new CharacterModel(string);
-                            setActiveCharacter(newModel);
+                            CharacterControl.getInstance().setCharacter(newModel);
                         }
                     });
 
@@ -298,7 +295,7 @@ public class CharacterSheet extends AppCompatActivity
         } else if (id == R.id.nav_clear_character) {
 
             // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
-            setActiveCharacter(null);
+            CharacterControl.getInstance().setCharacter(null);
         } else {
             // This is (probably) a character being selected
             // Load corresponding file and display
@@ -321,10 +318,10 @@ public class CharacterSheet extends AppCompatActivity
 
             // TEMP load item from filename given
             CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
-            setActiveCharacter(loadedCharacter);
+            CharacterControl.getInstance().setCharacter(loadedCharacter);
 
             // Dirty way of keeping the save button hidden. Loaded characters have no changes
-            activeCharacter.hasChanges = false;
+            CharacterControl.getInstance().getCharacter().hasChanges = false;
             updateOptionsMenu();
         }
 
@@ -337,36 +334,30 @@ public class CharacterSheet extends AppCompatActivity
 
     // CHARACTER MANAGEMENT
 
-    /**
-     * Set the current character and update all views/fragments
-     *
-     * @param character the character to display
-     */
-    public void setActiveCharacter(CharacterModel character) {
-        this.activeCharacter = character;
-
+    // CharacterControl Listener Implementation
+    @Override
+    public void onCharacterChanged() {
         updateCharacter();
     }
 
     private void updateCharacter() {
 
         // Set activeCharacter name as title
-        if (activeCharacter != null) {
-            getSupportActionBar().setTitle(activeCharacter.name);
-            activeCharacter.hasChanges = true;
-            overviewFragment.getView().setVisibility(View.VISIBLE);
+        if (CharacterControl.getInstance().getCharacter() != null) {
+            getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().name);
+            CharacterControl.getInstance().getCharacter().hasChanges = true;
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
-            overviewFragment.getView().setVisibility(View.GONE);
         }
 
         // Update the options menu accordingly
         updateOptionsMenu();
 
-        // Notify the listening fragments
-        for (OnCharacterChangedListener characterChangedListener : characterChangedListeners) {
-            characterChangedListener.onCharacterChanged();
-        }
+//        // Notify the listening fragments
+//        for (CharacterControl.Listener characterChangedListener : characterChangedListeners) {
+//            characterChangedListener.onCharacterChanged();
+//        }
+
     }
 
     private void populateCharacterMenu() {
@@ -408,44 +399,53 @@ public class CharacterSheet extends AppCompatActivity
         MenuItem saveAction = optionsMenu.findItem(R.id.action_save);
         MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
 
-        optionsMenu.setGroupVisible(R.id.action_group, activeCharacter != null);
+        optionsMenu.setGroupVisible(R.id.action_group, CharacterControl.getCurrentCharacter() != null);
 
-        if (activeCharacter == null) {
+        if (CharacterControl.getCurrentCharacter() == null) {
             // Disable menu
 
         } else {
 
-            saveAction.setVisible(EditControl.isEditMode() && activeCharacter.hasChanges);
+            saveAction.setVisible(EditControl.isEditMode()
+                    && CharacterControl.getCurrentCharacter().hasChanges);
             editAction.setVisible(!EditControl.isEditMode());
         }
     }
 
 
-    // SHARED CHARACTER DATA IMPLEMENTATION
+    public static class CharacterSheetPageAdapter extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 2;
 
-    @Override
-    public CharacterModel getCharacter() {
-        return activeCharacter;
-    }
+        public CharacterSheetPageAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
 
-    @Override
-    public void setCharacter(CharacterModel character) {
-        activeCharacter = character;
-    }
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
 
-    @Override
-    public void CharacterUpdated() {
-        updateCharacter();
-    }
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                default:
+                case 0:
+                    return CharacterOverview.newInstance();
+                case 1:
+                    return SpellSheetOverview.newInstance();
+            }
+        }
 
-    // INTERFACES
-
-    public interface OnCharacterChangedListener {
-
-        /**
-         * Notify that the character has changed
-         */
-        void onCharacterChanged();
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                default:
+                case 0:
+                    return "Overview";
+                case 1:
+                    return "Spells";
+            }
+        }
     }
 
     // TEST
@@ -505,4 +505,6 @@ public class CharacterSheet extends AppCompatActivity
         CharacterFileUtil.saveCharacter(this, character2);
 
     }
+
+
 }
