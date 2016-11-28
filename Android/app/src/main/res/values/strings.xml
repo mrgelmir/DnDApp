@@ -50,10 +50,11 @@
     <!-- Ability edit values -->
 
     <!-- Weapon values -->
+    <string name="weapon_tag">tag_weapon</string>
     <string name="weapon_default_nickname">Nickname</string>
     <string name="weapon_default_type">WeaponType</string>
     <string name="weapon_default_to_hit">+X</string>
-    <string name="weapon_default_damage">XdY + Z</string>
+    <string name="weapon_default_damage">XdY + Z type</string>
 
     <!-- Weapon edit values -->
     <string name="weapon_edit_add">Add Weapon</string>
@@ -63,6 +64,7 @@
     <string name="weapon_edit_damage">Weapon damage (XdY + Z damageType)</string>
 
     <!-- Feature values -->
+    <string name="feature_tag">tag_feature</string>
     <string name="feature_default_title">Feature title</string>
     <string name="feature_default_description">Feature description</string>
 
@@ -70,6 +72,7 @@
     <string name="feature_edit_add">Add Feature</string>
 
     <!-- Expendable values -->
+    <string name="expendable_tag">tag_expendable</string>
     <string name="expendable_title_placeholder">Expendable title</string>
     <string name="expendable_value_placeholder">10/10</string>
     <string name="expendable_value">%1$d/%2$d</string>

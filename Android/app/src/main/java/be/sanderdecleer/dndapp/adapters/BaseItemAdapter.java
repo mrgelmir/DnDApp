@@ -1,21 +1,26 @@
 package be.sanderdecleer.dndapp.adapters;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.BaseItem;
+import be.sanderdecleer.dndapp.view.BaseItemView;
+import be.sanderdecleer.dndapp.view.ExpendableView;
+import be.sanderdecleer.dndapp.view.FeatureView;
 
 /**
  * Created by SD on 22/11/2016.
+ * Adapter for showing all different items (Features, weapons, spells ...)
  */
 
-public class BaseItemAdapter extends ArrayAdapter<BaseItem> {
+public class BaseItemAdapter extends ArrayAdapter<BaseItem>
+        implements View.OnClickListener {
     public BaseItemAdapter(Context context, int resource, List<BaseItem> objects) {
         super(context, resource, objects);
     }
@@ -37,42 +42,49 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        BaseItem feature = getItem(position);
+        BaseItem item = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            // Get the data item type for this position
-            int type = getItemViewType(position);
-            // Inflate XML layout based on the type
-            convertView = getInflatedLayoutForType(type);
+        BaseItemView itemView = (BaseItemView) convertView;
+        if (itemView == null) {
+            itemView = getInflatedLayoutForItem(item);
         }
-//        // Lookup view for data population
-//        TextView tvLabel = (TextView) convertView.findViewById(R.id.tvLabel);
-//        if (tvLabel != null) {
-//            // Populate the data into the template view using the data object
-//            tvLabel.setText(color.label);
-//        }
+
+        // set the data on the view now
+        itemView.setItem(item);
+
         // Return the completed view to render on screen
-        return convertView;
+        return itemView;
     }
 
-    private View getInflatedLayoutForType(int type) {
+    private BaseItemView getInflatedLayoutForItem(BaseItem item) {
 
-        // Temporarily do this here, should be abstracted later
-        int resourceID;
+        BaseItem.Type type = item.getType();
+        BaseItemView view;
 
-        if (type == BaseItem.Type.Weapon.getValue()) {
-            resourceID = R.layout.item_weapon_view;
-        } else if (type == BaseItem.Type.Feature.getValue()) {
-            resourceID = R.layout.item_feature_view;
-        } else if (type == BaseItem.Type.Expendable.getValue()) {
-            resourceID = R.layout.item_expendable_view;
-        } else {
-            return null;
+        switch (type) {
+            case Expendable:
+                view = new ExpendableView(getContext());
+                break;
+            case Feature:
+                view = new FeatureView(getContext());
+                break;
+            case Item:
+            case Weapon:
+            default:
+                return null;
         }
 
-        return LayoutInflater.from(getContext()).inflate(resourceID, null);
+        // TODO: Move this to style somewhere
+        view.setMinimumHeight(150);
+
+        return view;
     }
 
-    // TODO: 22/11/2016 ViewHolders for each type
+    @Override
+    public void onClick(View v) {
+        Log.i("BaseItemAdapter", v.getId() + "tapped");
+    }
+
+
 }

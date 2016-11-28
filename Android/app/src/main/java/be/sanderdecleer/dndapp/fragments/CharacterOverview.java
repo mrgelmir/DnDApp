@@ -1,8 +1,8 @@
 package be.sanderdecleer.dndapp.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Parcel;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +12,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
+import be.sanderdecleer.dndapp.model.BaseItem;
+import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.model.ExpendableModel;
+import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.activities.CharacterSheet;
 import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
-import be.sanderdecleer.dndapp.adapters.ExpendableAdapter;
-import be.sanderdecleer.dndapp.adapters.FeatureAdapter;
-import be.sanderdecleer.dndapp.adapters.WeaponAdapter;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
@@ -37,11 +38,7 @@ public class CharacterOverview extends CharacterFragment {
     // Keep track of all adapters that use character data
     private ArrayList<BaseCharacterAdapter> characterAdapters;
 
-    // Views
-    private AdapterView abilitiesView;
-    private AdapterView expendableView;
-    private View expendableSeparator;
-
+    private BaseItemAdapter baseItemAdapter;
 
     public CharacterOverview() {
         // Required empty public constructor
@@ -68,36 +65,32 @@ public class CharacterOverview extends CharacterFragment {
     @Override
     protected void setup() {
 
-        // ADAPTERS
-        characterAdapters = new ArrayList<>(3);
+        ArrayList<BaseItem> items = new ArrayList<>();
+        if (characterProvider.getCharacter() != null) {
+//            items.addAll(characterProvider.getCharacter().weapons);
+            items.addAll(characterProvider.getCharacter().expendables);
+            items.addAll(characterProvider.getCharacter().abilities);
+        }
+        baseItemAdapter = new BaseItemAdapter(getActivity(), R.layout.item_base, items);
 
-        // Create feature adapter and link to view
-        FeatureAdapter featureAdapter = new FeatureAdapter(getActivity(), R.layout.item_feature_view);
-        characterAdapters.add(featureAdapter);
-        abilitiesView = (AdapterView) findViewById(R.id.feature_list);
-        if (abilitiesView != null) {
-            abilitiesView.setAdapter(featureAdapter);
+        AdapterView adapterView = (AdapterView) findViewById(R.id.item_list);
+        if (adapterView != null) {
+            adapterView.setAdapter(baseItemAdapter);
         }
 
-        // Create weapon adapter and link to view
-        WeaponAdapter weaponAdapter = new WeaponAdapter(getActivity(), R.layout.item_weapon_view);
-        characterAdapters.add(weaponAdapter);
-        AdapterView weaponView = (AdapterView) findViewById(R.id.weapon_list);
-        if (weaponView != null) {
-            weaponView.setAdapter(weaponAdapter);
-        }
+        adapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("BROL", view.toString());
+            }
+        });
 
-        // Create expandable view and link to view
-        ExpendableAdapter expendableAdapter = new ExpendableAdapter(getActivity(), R.layout.item_expendable_view);
-        characterAdapters.add(expendableAdapter);
-        expendableView = (AdapterView) findViewById(R.id.expendables_list);
-        if (expendableView != null) {
-            expendableView.setAdapter(expendableAdapter);
-        }
-        expendableSeparator = findViewById(R.id.expendables_separator);
+        /*
 
-        // Attach click listeners for both regular and edit use
+        // todo Attach click listeners for both regular and edit use
         attachClickListeners();
+
+        */
     }
 
     @Override
@@ -137,19 +130,23 @@ public class CharacterOverview extends CharacterFragment {
                 characterProvider.getCharacter().speed);
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
-        // Set adapter visibility (Always visible when in edit mode?)
-        if (EditControl.isEditMode() || characterProvider.getCharacter().expendables.size() > 0) {
-            expendableView.setVisibility(View.VISIBLE);
-            expendableSeparator.setVisibility(View.VISIBLE);
-        } else {
-            expendableView.setVisibility(View.GONE);
-            expendableSeparator.setVisibility(View.GONE);
-        }
 
-        // Update the adapters
-        for (BaseCharacterAdapter adapter : characterAdapters) {
-            adapter.setCharacter(characterProvider.getCharacter());
+//        // Update the adapters
+//        for (BaseCharacterAdapter adapter : characterAdapters) {
+//            adapter.setCharacter(characterProvider.getCharacter());
+//    }
+//
+
+        ArrayList<BaseItem> items = new ArrayList<>();
+
+        if (characterProvider.getCharacter() != null) {
+//            items.addAll(characterProvider.getCharacter().weapons);
+            items.addAll(characterProvider.getCharacter().expendables);
+            items.addAll(characterProvider.getCharacter().abilities);
         }
+        baseItemAdapter.clear();
+        baseItemAdapter.addAll(items);
+        baseItemAdapter.notifyDataSetChanged();
 
         findViewById(R.id.scroll_view).invalidate();
     }

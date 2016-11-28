@@ -1,6 +1,8 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
+import android.os.Parcel;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,8 @@ public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CharacterControl.Listener,
         EditControl.EditModeChangedListener {
+
+    private static final String CHARACTER_KEY = "CharacterSheet.CharacterKey";
 
     private ArrayList<CharacterControl.Listener> characterChangedListeners;
 
@@ -80,8 +85,6 @@ public class CharacterSheet extends AppCompatActivity
         // FRAGMENTS
         // TODO: 17/09/2016
         // create a no-character fragment/view to display when no character is selected at the start
-        // TODO: 21/11/2016
-        // Add this fragment to the viewPager
 
         // Viewpager setup
         mAdapter = new CharacterSheetPageAdapter(getSupportFragmentManager());
@@ -96,21 +99,8 @@ public class CharacterSheet extends AppCompatActivity
         // create character changed listeners array
         characterChangedListeners = new ArrayList<>();
 
-/*
-        // NOTE -> some fragments won't be needed for some characters
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-
-        // Create the character overview fragment and subscribe where necessary
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        You can then add a fragment using the add() method, specifying the fragment to add and the view in which to insert it. For example:
-        overviewFragment = new CharacterOverview();
-        fragmentTransaction.add(R.id.pager, overviewFragment);
-        fragmentTransaction.commit();
-
-        characterChangedListeners.add(this.overviewFragment);
-        EditControl.addListener(this.overviewFragment);
-*/
+        // TEMP
+        createTestData();
 
         // Load saved characters
         populateCharacterMenu();
@@ -118,18 +108,20 @@ public class CharacterSheet extends AppCompatActivity
         // Subscribe to edit mode changes
         EditControl.addListener(this);
 
-
+        // Get character if it exists
+        try {
+            CharacterControl.setCurrentCharacter((CharacterModel) savedInstanceState.getParcelable(CHARACTER_KEY));
+//            Parcel characterParcel = savedInstanceState.getParcelable(CHARACTER_KEY);
+//            CharacterControl.getInstance().setCharacter(new CharacterModel(characterParcel));
+        } catch (NullPointerException e) {
+            // No character -> todo
+        }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Set given character, or null if none is present (always for now)
-        CharacterControl.getInstance().setCharacter(null);
-
-        // TEMP
-//        createTestData();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(CHARACTER_KEY, CharacterControl.getInstance().getCharacter());
     }
 
     @Override
@@ -275,6 +267,11 @@ public class CharacterSheet extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+        // Stop editing if editing
+        if (EditControl.isEditMode())
+            EditControl.setEditMode(false);
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

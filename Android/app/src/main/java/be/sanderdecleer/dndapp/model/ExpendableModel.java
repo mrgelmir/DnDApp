@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by SD on 29/05/2016.
  */
-public class ExpendableModel {
+public class ExpendableModel extends BaseItem {
 
     public String title;
     public int expendables_max;
@@ -33,5 +33,10 @@ public class ExpendableModel {
 
     public static ExpendableModel getEmpty(Context context) {
         return new ExpendableModel("temp", 0, 0);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.Expendable;
     }
 }

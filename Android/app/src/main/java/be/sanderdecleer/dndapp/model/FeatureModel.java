@@ -8,7 +8,7 @@ import be.sanderdecleer.dndapp.R;
  * Created by SD on 20/05/2016.
  * Holds all data of a feature.
  */
-public class FeatureModel {
+public class FeatureModel extends BaseItem {
 
     public String title;
     public String description;
@@ -23,5 +23,10 @@ public class FeatureModel {
     public static FeatureModel getEmpty(Context context) {
         return new FeatureModel(context.getString(R.string.feature_default_title),
                 context.getString(R.string.feature_default_description));
+    }
+
+    @Override
+    public Type getType() {
+        return Type.Feature;
     }
 }

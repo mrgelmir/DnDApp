@@ -8,7 +8,7 @@ package be.sanderdecleer.dndapp.model;
 public abstract class BaseItem {
 
     public enum Type {
-        Weapon(0), Feature(1), Expendable(2); //,Spell(3);
+        Weapon(0), Feature(1), Expendable(2), Item(4); //,Spell(3);
 
         private int value;
 

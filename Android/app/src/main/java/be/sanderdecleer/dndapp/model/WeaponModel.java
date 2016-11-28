@@ -8,7 +8,7 @@ import be.sanderdecleer.dndapp.R;
  * Created by SD on 23/05/2016.
  * Holds all data of a weapon.
  */
-public class WeaponModel {
+public class WeaponModel extends BaseItem {
 
 
     public String nickname;
@@ -38,4 +38,8 @@ public class WeaponModel {
         return weaponModel;
     }
 
+    @Override
+    public Type getType() {
+        return Type.Weapon;
+    }
 }

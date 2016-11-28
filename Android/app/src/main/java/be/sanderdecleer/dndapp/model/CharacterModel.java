@@ -81,7 +81,7 @@ public class CharacterModel implements Parcelable {
         }
     };
 
-    private CharacterModel(Parcel in) {
+    public CharacterModel(Parcel in) {
         // Read data
         name = in.readString();
         STR_base = in.readInt();

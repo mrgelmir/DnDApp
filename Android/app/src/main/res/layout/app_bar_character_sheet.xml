@@ -20,10 +20,11 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <!-- todo: how can this be side-by-side with the Toolbar? -->
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
             app:layout_anchor="@+id/toolbar"
@@ -46,8 +47,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- View pager which will hold all sub-fragments -->
-
     <!-- Floating action Button -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -62,6 +61,6 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

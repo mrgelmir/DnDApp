@@ -10,11 +10,12 @@
 
     <RelativeLayout
         android:id="@+id/overview_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:background="@color/colorBackground"
         android:elevation="2dp"
+        android:gravity="start"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -25,31 +26,24 @@
         <include
             android:id="@+id/overview_ability_scores"
             layout="@layout/p_ability_scores"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentStart="true" />
 
-        <include
-            android:id="@+id/overview_ability_scores_separator"
-            layout="@layout/p_separator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/overview_ability_scores" />
 
         <LinearLayout
             android:id="@+id/overview_various_todo"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/overview_ability_scores_separator"
+            android:layout_toEndOf="@+id/overview_ability_scores"
+            android:orientation="vertical"
             android:padding="@dimen/padding_narrow">
 
             <!-- AC -->
             <TextView
                 android:id="@+id/character_AC"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/character_AC"
                 android:textAlignment="center" />
@@ -57,8 +51,8 @@
             <!-- Movement -->
             <TextView
                 android:id="@+id/character_Speed"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/character_Speed"
                 android:textAlignment="center" />
@@ -66,7 +60,7 @@
             <TextView
                 android:id="@+id/character_HP"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/character_HP"
                 android:textAlignment="center" />
@@ -85,8 +79,9 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/overview_top"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/overview_top"
+        android:gravity="end"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
