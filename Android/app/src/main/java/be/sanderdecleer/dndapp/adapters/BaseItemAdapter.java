@@ -13,6 +13,7 @@ import be.sanderdecleer.dndapp.model.BaseItem;
 import be.sanderdecleer.dndapp.view.BaseItemView;
 import be.sanderdecleer.dndapp.view.ExpendableView;
 import be.sanderdecleer.dndapp.view.FeatureView;
+import be.sanderdecleer.dndapp.view.WeaponView;
 
 /**
  * Created by SD on 22/11/2016.
@@ -62,6 +63,7 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
         BaseItem.Type type = item.getType();
         BaseItemView view;
 
+        // TODO: 29/11/2016 Make this more flexible
         switch (type) {
             case Expendable:
                 view = new ExpendableView(getContext());
@@ -69,13 +71,14 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
             case Feature:
                 view = new FeatureView(getContext());
                 break;
-            case Item:
             case Weapon:
+                view = new WeaponView(getContext());
+                break;
             default:
+            case Item:
                 return null;
         }
 
-        // TODO: Move this to style somewhere
         view.setMinimumHeight(150);
 
         return view;

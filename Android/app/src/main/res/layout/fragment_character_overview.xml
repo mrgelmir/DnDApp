@@ -8,17 +8,40 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".fragments.CharacterOverview">
 
+    <LinearLayout
+        android:id="@+id/scroll_view"
+        style="@style/BasePadding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/overview_top"
+        android:orientation="vertical"
+        android:paddingTop="0dp">
+
+        <!-- Weapons & Attacks -->
+        <ListView
+            android:id="@+id/item_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:listitem="@layout/item_weapon_view" />
+
+
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/overview_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@color/colorBackground"
         android:elevation="2dp"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
 
         <!-- Attributes -->
@@ -73,36 +96,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <!--<include-->
-    <!--android:id="@+id/overview_various_todo_separator"-->
-    <!--layout="@layout/p_separator"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/overview_various_todo" />-->
-
-    <LinearLayout
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/overview_top"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <!-- Weapons & Attacks -->
-        <ListView
-            android:id="@+id/item_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            tools:listitem="@layout/item_weapon_view" />
-
-
-    </LinearLayout>
 
 
 </RelativeLayout>

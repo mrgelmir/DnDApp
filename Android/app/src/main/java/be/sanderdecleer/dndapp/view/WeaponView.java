@@ -10,10 +10,10 @@ import be.sanderdecleer.dndapp.model.WeaponModel;
 
 /**
  * Created by SD on 22/11/2016.
- * Holds the view elements of a weapon
+ * Holds the view elements of a {@link WeaponModel}
  */
 
-public class WeaponView extends BaseItemView {
+public class WeaponView extends BaseItemView<WeaponModel> {
 
     private TextView displayLabel;
     private TextView toHitLabel;
@@ -35,11 +35,6 @@ public class WeaponView extends BaseItemView {
     public void setItem(BaseItem item) {
         super.setItem(item);
 
-        // Check if item is of desired type
-        WeaponModel data = getData(item);
-        if (data == null)
-            return;
-
         // Do actual setup
         displayLabel.setText(data.getDisplayName());
         damageLabel.setText(data.weaponDamage);
@@ -47,12 +42,14 @@ public class WeaponView extends BaseItemView {
     }
 
     @Override
-    public void setupChildren() {
-        super.setupChildren();
+    public void setupItemView() {
+        super.setupItemView();
         displayLabel = (TextView) findViewById(R.id.weapon_display_name);
         toHitLabel = (TextView) findViewById(R.id.weapon_to_hit);
         damageLabel = (TextView) findViewById(R.id.weapon_damage);
     }
+
+
 
     @Override
     public int getResourceId() {

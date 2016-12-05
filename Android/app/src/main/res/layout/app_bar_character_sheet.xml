@@ -61,6 +61,13 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/placeholder"
+        layout="@layout/fragment_no_character"
+        android:visibility="gone"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

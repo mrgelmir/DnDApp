@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Replace merge with RelativeLayout for design purposes -->
+<?xml version="1.0" encoding="utf-8"?><!-- Replace merge with RelativeLayout for design purposes -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    tools:parentTag="RelativeLayout">
 
     <TextView
         android:id="@+id/expendable_title"
@@ -39,7 +39,8 @@
         android:contentDescription="@string/content_description_increase"
         android:paddingEnd="@dimen/padding_narrow"
         android:paddingStart="@dimen/padding_narrow"
-        android:src="@drawable/ic_add_black_24dp" />
+        android:src="@drawable/ic_add_black_24dp"
+        android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/expendable_btn_decrease"
@@ -50,6 +51,7 @@
         android:contentDescription="@string/content_description_decrease"
         android:paddingEnd="@dimen/padding_narrow"
         android:paddingStart="@dimen/padding_narrow"
-        android:src="@drawable/ic_remove_black_24dp" />
+        android:src="@drawable/ic_remove_black_24dp"
+        android:visibility="visible" />
 
 </merge>

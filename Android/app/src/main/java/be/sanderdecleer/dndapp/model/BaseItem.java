@@ -1,11 +1,13 @@
 package be.sanderdecleer.dndapp.model;
 
+import android.os.Parcelable;
+
 /**
  * Created by SD on 22/11/2016.
  * Base class of which all features inherit from
  */
 
-public abstract class BaseItem {
+public abstract class BaseItem implements Parcelable {
 
     public enum Type {
         Weapon(0), Feature(1), Expendable(2), Item(4); //,Spell(3);
@@ -22,4 +24,5 @@ public abstract class BaseItem {
     }
 
     public abstract Type getType();
+
 }

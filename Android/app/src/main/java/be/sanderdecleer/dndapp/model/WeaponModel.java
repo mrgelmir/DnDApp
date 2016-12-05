@@ -1,6 +1,8 @@
 package be.sanderdecleer.dndapp.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import be.sanderdecleer.dndapp.R;
 
@@ -17,6 +19,32 @@ public class WeaponModel extends BaseItem {
     public String weaponDamage; // maybe swap to a dice representation later
     public String weaponFeatures;
 
+    public static WeaponModel getEmpty(Context context) {
+        WeaponModel weaponModel = new WeaponModel();
+        weaponModel.weaponType = context.getString(R.string.weapon_default_type);
+        weaponModel.weaponToHit = context.getString(R.string.weapon_default_to_hit);
+        weaponModel.weaponDamage = context.getString(R.string.weapon_default_damage);
+        return weaponModel;
+    }
+
+    public static WeaponModel getEmpty() {
+        WeaponModel weaponModel = new WeaponModel();
+        // Add default things here
+        return weaponModel;
+    }
+
+    private WeaponModel() {
+        // Empty private constructor
+    }
+
+    private WeaponModel(Parcel in) {
+        nickname = in.readString();
+        weaponType = in.readString();
+        weaponToHit = in.readString();
+        weaponDamage = in.readString();
+        weaponFeatures = in.readString();
+    }
+
     /***
      * Shows the name of the weapon fit for display purposes.
      *
@@ -30,16 +58,35 @@ public class WeaponModel extends BaseItem {
         }
     }
 
-    public static WeaponModel getEmpty(Context context) {
-        WeaponModel weaponModel = new WeaponModel();
-        weaponModel.weaponType = context.getString(R.string.weapon_default_type);
-        weaponModel.weaponToHit = context.getString(R.string.weapon_default_to_hit);
-        weaponModel.weaponDamage = context.getString(R.string.weapon_default_damage);
-        return weaponModel;
-    }
-
     @Override
     public Type getType() {
         return Type.Weapon;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nickname);
+        dest.writeString(weaponType);
+        dest.writeString(weaponToHit);
+        dest.writeString(weaponDamage);
+        dest.writeString(weaponFeatures);
+    }
+
+    public static final Parcelable.Creator<WeaponModel> CREATOR
+            = new Creator<WeaponModel>() {
+        @Override
+        public WeaponModel createFromParcel(Parcel source) {
+            return null;
+        }
+
+        @Override
+        public WeaponModel[] newArray(int size) {
+            return new WeaponModel[size];
+        }
+    };
 }

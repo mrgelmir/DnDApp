@@ -82,6 +82,7 @@ public class CharacterModel implements Parcelable {
     };
 
     public CharacterModel(Parcel in) {
+
         // Read data
         name = in.readString();
         STR_base = in.readInt();
@@ -90,6 +91,11 @@ public class CharacterModel implements Parcelable {
         INT_base = in.readInt();
         WIS_base = in.readInt();
         CHA_base = in.readInt();
+
+        speed = in.readInt();
+        AC = in.readInt();
+        HP_max = in.readInt();
+        HP_current = in.readInt();
     }
 
     @Override
@@ -99,6 +105,7 @@ public class CharacterModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         // Write all data
         dest.writeString(name);
         dest.writeInt(STR_base);
@@ -107,6 +114,11 @@ public class CharacterModel implements Parcelable {
         dest.writeInt(INT_base);
         dest.writeInt(WIS_base);
         dest.writeInt(CHA_base);
+
+        dest.writeInt(speed);
+        dest.writeInt(AC);
+        dest.writeInt(HP_max);
+        dest.writeInt(HP_current);
 
         // TODO: All the rest :)
     }

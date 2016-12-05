@@ -24,6 +24,7 @@ import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
+import be.sanderdecleer.dndapp.view.BaseItemView;
 
 
 /**
@@ -67,7 +68,7 @@ public class CharacterOverview extends CharacterFragment {
 
         ArrayList<BaseItem> items = new ArrayList<>();
         if (characterProvider.getCharacter() != null) {
-//            items.addAll(characterProvider.getCharacter().weapons);
+            items.addAll(characterProvider.getCharacter().weapons);
             items.addAll(characterProvider.getCharacter().expendables);
             items.addAll(characterProvider.getCharacter().abilities);
         }
@@ -81,16 +82,17 @@ public class CharacterOverview extends CharacterFragment {
         adapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("BROL", view.toString());
+                BaseItemView itemView = (BaseItemView) view;
+                if (itemView != null)
+                    itemView.onClick();
             }
         });
 
-        /*
 
         // todo Attach click listeners for both regular and edit use
         attachClickListeners();
 
-        */
+
     }
 
     @Override
@@ -130,17 +132,10 @@ public class CharacterOverview extends CharacterFragment {
                 characterProvider.getCharacter().speed);
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
-
-//        // Update the adapters
-//        for (BaseCharacterAdapter adapter : characterAdapters) {
-//            adapter.setCharacter(characterProvider.getCharacter());
-//    }
-//
-
+        // Update items
         ArrayList<BaseItem> items = new ArrayList<>();
-
         if (characterProvider.getCharacter() != null) {
-//            items.addAll(characterProvider.getCharacter().weapons);
+            items.addAll(characterProvider.getCharacter().weapons);
             items.addAll(characterProvider.getCharacter().expendables);
             items.addAll(characterProvider.getCharacter().abilities);
         }

@@ -67,6 +67,7 @@
     <string name="feature_tag">tag_feature</string>
     <string name="feature_default_title">Feature title</string>
     <string name="feature_default_description">Feature description</string>
+    <string name="feature_default_description_long">Long feature description. This should only be shown when sufficient space is provided for this information, like a multiline field</string>
 
     <!-- Feature edit values -->
     <string name="feature_edit_add">Add Feature</string>

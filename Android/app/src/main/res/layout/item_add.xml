@@ -5,6 +5,8 @@
     android:orientation="horizontal"
     android:padding="@dimen/padding_narrow">
 
+    <!-- Not used at this time -->
+
     <!-- Icon -->
     <ImageView
         android:src="@drawable/ic_add_circle_outline_black_24dp"

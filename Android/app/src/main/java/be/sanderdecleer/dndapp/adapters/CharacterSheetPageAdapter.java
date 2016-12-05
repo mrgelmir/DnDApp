@@ -13,9 +13,9 @@ import be.sanderdecleer.dndapp.fragments.SpellSheetOverview;
 public class CharacterSheetPageAdapter extends FragmentPagerAdapter {
 
     // todo make this dependant on the availability of spells, items ...
-    private static int NUM_ITEMS = 2;
+    private static final int NUM_ITEMS = 2;
 
-    CharacterSheetPageAdapter(FragmentManager fragmentManager) {
+    public CharacterSheetPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

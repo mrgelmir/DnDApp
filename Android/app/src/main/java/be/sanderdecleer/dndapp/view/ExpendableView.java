@@ -1,9 +1,8 @@
 package be.sanderdecleer.dndapp.view;
 
 import android.content.Context;
-import android.os.IBinder;
+import android.provider.CalendarContract;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -13,9 +12,10 @@ import be.sanderdecleer.dndapp.model.ExpendableModel;
 
 /**
  * Created by SD on 22/11/2016.
+ * View for the {@link ExpendableModel} class
  */
 
-public class ExpendableView extends BaseItemView {
+public class ExpendableView extends BaseItemView<ExpendableModel> {
 
     private TextView titleView;
     private TextView valueView;
@@ -35,8 +35,8 @@ public class ExpendableView extends BaseItemView {
     }
 
     @Override
-    public void setupChildren() {
-        super.setupChildren();
+    public void setupItemView() {
+        super.setupItemView();
         // Do stuff here
         titleView = (TextView) findViewById(R.id.expendable_title);
         valueView = (TextView) findViewById(R.id.expendable_value);
@@ -47,11 +47,6 @@ public class ExpendableView extends BaseItemView {
     @Override
     public void setItem(BaseItem item) {
         super.setItem(item);
-
-        ExpendableModel data = this.getData(item);
-        // TODO: 24/11/2016 throw error or something
-        if(data == null)
-            return;
 
         // Do actual setup
         titleView.setText(data.title);

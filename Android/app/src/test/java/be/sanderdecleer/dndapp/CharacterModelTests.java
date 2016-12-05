@@ -53,13 +53,13 @@ public class CharacterModelTests {
         character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
         character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
         character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        WeaponModel shortSword = new WeaponModel();
+        WeaponModel shortSword = WeaponModel.getEmpty();
         shortSword.nickname = "";
         shortSword.weaponType = "Short sword";
         shortSword.weaponDamage = "1d6 + 3 slashing";
         shortSword.weaponToHit = "+5";
         shortSword.weaponFeatures = "finesse, light";
-        WeaponModel dagger = new WeaponModel();
+        WeaponModel dagger = WeaponModel.getEmpty();
         dagger.weaponType = "Dagger";
         dagger.weaponDamage = "1d4 + 3 piercing";
         dagger.weaponToHit = "+5";
@@ -84,7 +84,7 @@ public class CharacterModelTests {
         character2.speed = 30;
         character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
         character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
-        WeaponModel dagger2 = new WeaponModel();
+        WeaponModel dagger2 = WeaponModel.getEmpty();
         dagger2.nickname = "lil' edge";
         dagger2.weaponType = "Dagger";
         dagger2.weaponDamage = "1d4 + 3 piercing";

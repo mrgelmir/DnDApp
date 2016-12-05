@@ -1,14 +1,12 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
-import android.os.Parcel;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.view.SubMenu;
@@ -23,14 +21,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.sanderdecleer.dndapp.fragments.SpellSheetOverview;
+import be.sanderdecleer.dndapp.adapters.CharacterSheetPageAdapter;
+import be.sanderdecleer.dndapp.dialog_fragments.InfoDialogFragment;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.fragments.CharacterOverview;
 import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.model.CharacterModel;
@@ -53,6 +50,8 @@ public class CharacterSheet extends AppCompatActivity
 
     private ViewPager mPager;
     private FragmentPagerAdapter mAdapter;
+    private TabLayout mTabLayout;
+    private View mPlaceholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +82,6 @@ public class CharacterSheet extends AppCompatActivity
 
 
         // FRAGMENTS
-        // TODO: 17/09/2016
-        // create a no-character fragment/view to display when no character is selected at the start
 
         // Viewpager setup
         mAdapter = new CharacterSheetPageAdapter(getSupportFragmentManager());
@@ -92,15 +89,17 @@ public class CharacterSheet extends AppCompatActivity
         mPager.setAdapter(mAdapter);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(mPager);
+        mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        mTabLayout.setupWithViewPager(mPager);
 
+        // Get the placeholder
+        mPlaceholder = findViewById(R.id.placeholder);
 
         // create character changed listeners array
         characterChangedListeners = new ArrayList<>();
 
         // TEMP
-        createTestData();
+//        createTestData();
 
         // Load saved characters
         populateCharacterMenu();
@@ -108,14 +107,19 @@ public class CharacterSheet extends AppCompatActivity
         // Subscribe to edit mode changes
         EditControl.addListener(this);
 
+        // Subscribe to character changed
+        CharacterControl.getInstance().addListener(this);
+
         // Get character if it exists
         try {
             CharacterControl.setCurrentCharacter((CharacterModel) savedInstanceState.getParcelable(CHARACTER_KEY));
 //            Parcel characterParcel = savedInstanceState.getParcelable(CHARACTER_KEY);
 //            CharacterControl.getInstance().setCharacter(new CharacterModel(characterParcel));
         } catch (NullPointerException e) {
+            onCharacterChanged();
             // No character -> todo
         }
+
     }
 
     @Override
@@ -335,6 +339,15 @@ public class CharacterSheet extends AppCompatActivity
     @Override
     public void onCharacterChanged() {
         updateCharacter();
+        mAdapter.notifyDataSetChanged();
+
+        // Show pager or placeholder
+        boolean hasCharacter = CharacterControl.getCurrentCharacter() != null;
+
+        mPager.setVisibility(hasCharacter? View.VISIBLE : View.GONE);
+        mPlaceholder.setVisibility(hasCharacter? View.GONE : View.VISIBLE);
+        // Maybe animate this later
+        mTabLayout.setVisibility(hasCharacter? View.VISIBLE : View.GONE);
     }
 
     private void updateCharacter() {
@@ -409,42 +422,6 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
-
-    public static class CharacterSheetPageAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 2;
-
-        public CharacterSheetPageAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                default:
-                case 0:
-                    return CharacterOverview.newInstance();
-                case 1:
-                    return SpellSheetOverview.newInstance();
-            }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                default:
-                case 0:
-                    return "Overview";
-                case 1:
-                    return "Spells";
-            }
-        }
-    }
-
     // TEST
 
     // Not really needed -> (re-)move?
@@ -461,13 +438,13 @@ public class CharacterSheet extends AppCompatActivity
         character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
         character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
         character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        WeaponModel shortSword = new WeaponModel();
+        WeaponModel shortSword = WeaponModel.getEmpty(this);
         shortSword.nickname = "";
         shortSword.weaponType = "Short sword";
         shortSword.weaponDamage = "1d6 + 3 slashing";
         shortSword.weaponToHit = "+5";
         shortSword.weaponFeatures = "finesse, light";
-        WeaponModel dagger = new WeaponModel();
+        WeaponModel dagger = WeaponModel.getEmpty(this);
         dagger.weaponType = "Dagger";
         dagger.weaponDamage = "1d4 + 3 piercing";
         dagger.weaponToHit = "+5";
@@ -489,7 +466,7 @@ public class CharacterSheet extends AppCompatActivity
         character2.speed = 30;
         character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
         character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
-        WeaponModel dagger2 = new WeaponModel();
+        WeaponModel dagger2 = WeaponModel.getEmpty(this);
         dagger2.nickname = "lil' edge";
         dagger2.weaponType = "Dagger";
         dagger2.weaponDamage = "1d4 + 3 piercing";
