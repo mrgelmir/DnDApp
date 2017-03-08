@@ -1,7 +1,7 @@
 package be.sanderdecleer.dndapp.adapters;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +10,15 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.view.BaseItemView;
-import be.sanderdecleer.dndapp.view.ExpendableView;
-import be.sanderdecleer.dndapp.view.FeatureView;
-import be.sanderdecleer.dndapp.view.WeaponView;
+import be.sanderdecleer.dndapp.views.BaseItemView;
+import be.sanderdecleer.dndapp.views.ExpendableView;
+import be.sanderdecleer.dndapp.views.FeatureView;
+import be.sanderdecleer.dndapp.views.WeaponView;
 
 /**
  * Created by SD on 22/11/2016.
  * Adapter for showing all different items (Features, weapons, spells ...)
  */
-
 public class BaseItemAdapter extends ArrayAdapter<BaseItem>
         implements View.OnClickListener {
     public BaseItemAdapter(Context context, int resource, List<BaseItem> objects) {
@@ -40,8 +39,8 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
     }
 
     // Get a View that displays the data at the specified position in the data set.
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override @NonNull
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         BaseItem item = getItem(position);
 
@@ -53,6 +52,12 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
 
         // set the data on the view now
         itemView.setItem(item);
+        itemView.setListener(new BaseItemView.DataUpdateListener() {
+            @Override
+            public void DataUpdated(BaseItem data) {
+                // TODO listen to data updates and propagate
+            }
+        });
 
         // Return the completed view to render on screen
         return itemView;

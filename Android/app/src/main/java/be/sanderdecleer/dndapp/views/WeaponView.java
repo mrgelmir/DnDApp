@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.view;
+package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

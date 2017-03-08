@@ -7,13 +7,22 @@ import be.sanderdecleer.dndapp.model.CharacterModel;
  */
 public interface CharacterProvider {
 
-    CharacterModel getCharacter();
+    boolean hasCharacter();
+
+    /**
+     *
+     * @return The current character if available
+     * @throws NullPointerException if no character is available
+     */
+    CharacterModel getCharacter() throws NullPointerException;
 
     void setCharacter(CharacterModel character);
 
     void addListener(Listener listener);
 
     void removeListener(Listener listener);
+
+    void characterChanged();
 
     interface Listener {
 

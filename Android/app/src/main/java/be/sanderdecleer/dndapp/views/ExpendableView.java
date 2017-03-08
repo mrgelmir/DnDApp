@@ -1,8 +1,9 @@
-package be.sanderdecleer.dndapp.view;
+package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
-import android.provider.CalendarContract;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -45,6 +46,12 @@ public class ExpendableView extends BaseItemView<ExpendableModel> {
     }
 
     @Override
+    public void setupInfoView(View view) {
+        super.setupInfoView(view);
+
+    }
+
+    @Override
     public void setItem(BaseItem item) {
         super.setItem(item);
 
@@ -54,10 +61,47 @@ public class ExpendableView extends BaseItemView<ExpendableModel> {
                 data.expendables_current, data.expendables_max));
 
         // TODO: hook up buttons
+        increaseButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.expendables_current += 1;
+                dataUpdated();
+            }
+        });
+        decreaseButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.expendables_current -= 1;
+                dataUpdated();
+            }
+        });
+    }
+
+    @Override
+    public boolean hasTitle() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return data.title;
     }
 
     @Override
     public int getResourceId() {
         return R.layout.item_expendable_view;
+    }
+
+    @Override
+    public int getDialogResourceId() {
+        return super.getDialogResourceId();
+    }
+
+    @Override
+    protected void dataUpdated() {
+        super.dataUpdated();
+        // TODO: remove. Adapter should decide to redraw if needed
+        valueView.setText(String.format(getContext().getString(R.string.expendable_value),
+                data.expendables_current, data.expendables_max));
     }
 }

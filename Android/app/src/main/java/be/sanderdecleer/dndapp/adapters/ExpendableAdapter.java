@@ -17,6 +17,7 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 /**
  * Adapter for Expendables
  */
+@Deprecated
 public class ExpendableAdapter extends BaseCharacterAdapter<ExpendableModel>
         implements EditControl.EditModeChangedListener {
 

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.MenuView;
 import android.text.InputType;
 import android.view.SubMenu;
 import android.view.View;
@@ -43,8 +44,6 @@ public class CharacterSheet extends AppCompatActivity
 
     private static final String CHARACTER_KEY = "CharacterSheet.CharacterKey";
 
-    private ArrayList<CharacterControl.Listener> characterChangedListeners;
-
     private SubMenu characterSubMenu;
     private Menu optionsMenu;
 
@@ -76,10 +75,10 @@ public class CharacterSheet extends AppCompatActivity
             drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Listen to navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null)
             navigationView.setNavigationItemSelectedListener(this);
-
 
         // FRAGMENTS
 
@@ -95,8 +94,6 @@ public class CharacterSheet extends AppCompatActivity
         // Get the placeholder
         mPlaceholder = findViewById(R.id.placeholder);
 
-        // create character changed listeners array
-        characterChangedListeners = new ArrayList<>();
 
         // TEMP
 //        createTestData();
@@ -112,9 +109,8 @@ public class CharacterSheet extends AppCompatActivity
 
         // Get character if it exists
         try {
-            CharacterControl.setCurrentCharacter((CharacterModel) savedInstanceState.getParcelable(CHARACTER_KEY));
-//            Parcel characterParcel = savedInstanceState.getParcelable(CHARACTER_KEY);
-//            CharacterControl.getInstance().setCharacter(new CharacterModel(characterParcel));
+            CharacterControl.setCurrentCharacter(
+                    (CharacterModel) savedInstanceState.getParcelable(CHARACTER_KEY));
         } catch (NullPointerException e) {
             onCharacterChanged();
             // No character -> todo
@@ -125,7 +121,9 @@ public class CharacterSheet extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(CHARACTER_KEY, CharacterControl.getInstance().getCharacter());
+        if (CharacterControl.getInstance().hasCharacter()) {
+            outState.putParcelable(CHARACTER_KEY, CharacterControl.getInstance().getCharacter());
+        }
     }
 
     @Override
@@ -234,8 +232,6 @@ public class CharacterSheet extends AppCompatActivity
                 break;
             case R.id.action_delete:
 
-                // TODO: 15/09/2016
-
                 DialogInterface.OnClickListener deleteListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -279,53 +275,59 @@ public class CharacterSheet extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        // Catch specific actions here
-        if (id == R.id.nav_add_character) {
+        switch (id) {
+            case R.id.nav_add_character:
+                LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
+                        getString(R.string.name_default), new LayoutUtils.TextResultCallback() {
+                            @Override
+                            public void GetTextResult(String string) {
+                                CharacterModel newModel = new CharacterModel(string);
+                                CharacterControl.getInstance().setCharacter(newModel);
+                            }
+                        });
 
-            LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
-                    getString(R.string.name_default), new LayoutUtils.TextResultCallback() {
-                        @Override
-                        public void GetTextResult(String string) {
-                            CharacterModel newModel = new CharacterModel(string);
-                            CharacterControl.getInstance().setCharacter(newModel);
-                        }
-                    });
+                EditControl.setEditMode(true);
+                break;
+            case R.id.nav_clear_character:
+                // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
+                CharacterControl.getInstance().setCharacter(null);
+                break;
 
-            EditControl.setEditMode(true);
+            case R.id.nav_create_test_data:
+                // Create test data
+                createTestData();
+                // Reload character menu
+                populateCharacterMenu();
+                break;
+            default:
+                // This is (probably) a character being selected
+                // Load corresponding file and display
 
-        } else if (id == R.id.nav_clear_character) {
-
-            // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
-            CharacterControl.getInstance().setCharacter(null);
-        } else {
-            // This is (probably) a character being selected
-            // Load corresponding file and display
-
-            // Do a dirty 'loop' over characterSubMenu children and un-check
-            int index = 0;
-            MenuItem otherItem = characterSubMenu.getItem(index);
-            try {
-                while (otherItem != null) {
-                    otherItem.setChecked(false);
-                    otherItem = characterSubMenu.getItem(index);
-                    ++index;
+                // Do a dirty 'loop' over characterSubMenu children and un-check
+                int index = 0;
+                MenuItem otherItem = characterSubMenu.getItem(index);
+                try {
+                    while (otherItem != null) {
+                        otherItem.setChecked(false);
+                        otherItem = characterSubMenu.getItem(index);
+                        ++index;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    // silently fail here
                 }
-            } catch (IndexOutOfBoundsException e) {
-                // silently fail here
-            }
 
-            // Check this item to see current
-            item.setChecked(true);
+                // Check this item to see current
+                item.setChecked(true);
 
-            // TEMP load item from filename given
-            CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
-            CharacterControl.getInstance().setCharacter(loadedCharacter);
+                // TEMP load item from filename given
+                CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
+                CharacterControl.getInstance().setCharacter(loadedCharacter);
 
-            // Dirty way of keeping the save button hidden. Loaded characters have no changes
-            CharacterControl.getInstance().getCharacter().hasChanges = false;
-            updateOptionsMenu();
+                // Dirty way of keeping the save button hidden. Loaded characters have no changes
+                CharacterControl.getInstance().getCharacter().hasChanges = false;
+                updateOptionsMenu();
+                break;
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null)
@@ -342,18 +344,18 @@ public class CharacterSheet extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
 
         // Show pager or placeholder
-        boolean hasCharacter = CharacterControl.getCurrentCharacter() != null;
+        boolean hasCharacter = CharacterControl.hasCurrentCharacter();
 
-        mPager.setVisibility(hasCharacter? View.VISIBLE : View.GONE);
-        mPlaceholder.setVisibility(hasCharacter? View.GONE : View.VISIBLE);
+        mPager.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
+        mPlaceholder.setVisibility(hasCharacter ? View.GONE : View.VISIBLE);
         // Maybe animate this later
-        mTabLayout.setVisibility(hasCharacter? View.VISIBLE : View.GONE);
+        mTabLayout.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
     }
 
     private void updateCharacter() {
 
         // Set activeCharacter name as title
-        if (CharacterControl.getInstance().getCharacter() != null) {
+        if (CharacterControl.getInstance().hasCharacter()) {
             getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().name);
             CharacterControl.getInstance().getCharacter().hasChanges = true;
         } else {
@@ -362,11 +364,6 @@ public class CharacterSheet extends AppCompatActivity
 
         // Update the options menu accordingly
         updateOptionsMenu();
-
-//        // Notify the listening fragments
-//        for (CharacterControl.Listener characterChangedListener : characterChangedListeners) {
-//            characterChangedListener.onCharacterChanged();
-//        }
 
     }
 

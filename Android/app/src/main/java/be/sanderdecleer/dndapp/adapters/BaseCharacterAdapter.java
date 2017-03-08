@@ -9,6 +9,7 @@ import be.sanderdecleer.dndapp.model.CharacterModel;
  * Base Adapter for character-based collections
  * Keeps a reference to a given character and updates
  */
+@Deprecated
 public class BaseCharacterAdapter<T> extends ArrayAdapter<T> {
 
     protected int layoutResourceId;

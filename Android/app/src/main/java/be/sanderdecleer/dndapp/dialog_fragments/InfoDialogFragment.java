@@ -1,17 +1,14 @@
 package be.sanderdecleer.dndapp.dialog_fragments;
 
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.view.BaseItemView;
 
 
 /**
@@ -69,9 +66,16 @@ public class InfoDialogFragment extends DialogFragment {
         View contentView = parentView.findViewById(R.id.info_content);
         inflater.inflate(resourceId, (ViewGroup) contentView);
 
-        // TODO set or hide title
-
         if (viewSetup != null) {
+            // Handle the title
+            TextView title = (TextView) parentView.findViewById(R.id.info_title);
+            if(viewSetup.hasTitle()) {
+                title.setText(viewSetup.getTitle());
+            } else {
+                title.setVisibility(View.GONE);
+            }
+
+            // Let the setup setup its own content
             viewSetup.setupInfoView(contentView);
         }
 
@@ -80,5 +84,7 @@ public class InfoDialogFragment extends DialogFragment {
 
     public interface ViewSetup {
         void setupInfoView(View view);
+        boolean hasTitle();
+        String getTitle();
     }
 }

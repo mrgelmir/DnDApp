@@ -1,11 +1,8 @@
 package be.sanderdecleer.dndapp.fragments;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -14,17 +11,14 @@ import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
 import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.model.CharacterModel;
-import be.sanderdecleer.dndapp.model.ExpendableModel;
 import be.sanderdecleer.dndapp.model.FeatureModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
-import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
-import be.sanderdecleer.dndapp.view.BaseItemView;
+import be.sanderdecleer.dndapp.views.BaseItemView;
 
 
 /**
@@ -35,9 +29,6 @@ import be.sanderdecleer.dndapp.view.BaseItemView;
  * create an instance of this fragment.
  */
 public class CharacterOverview extends CharacterFragment {
-
-    // Keep track of all adapters that use character data
-    private ArrayList<BaseCharacterAdapter> characterAdapters;
 
     private BaseItemAdapter baseItemAdapter;
 
@@ -67,7 +58,7 @@ public class CharacterOverview extends CharacterFragment {
     protected void setup() {
 
         ArrayList<BaseItem> items = new ArrayList<>();
-        if (characterProvider.getCharacter() != null) {
+        if (characterProvider.hasCharacter()) {
             items.addAll(characterProvider.getCharacter().weapons);
             items.addAll(characterProvider.getCharacter().expendables);
             items.addAll(characterProvider.getCharacter().abilities);
@@ -79,14 +70,9 @@ public class CharacterOverview extends CharacterFragment {
             adapterView.setAdapter(baseItemAdapter);
         }
 
-        adapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BaseItemView itemView = (BaseItemView) view;
-                if (itemView != null)
-                    itemView.onClick();
-            }
-        });
+        // Handle item interaction
+        adapterView.setOnItemClickListener(itemClickListener);
+        adapterView.setOnItemLongClickListener(itemClickListener);
 
 
         // todo Attach click listeners for both regular and edit use
@@ -99,8 +85,8 @@ public class CharacterOverview extends CharacterFragment {
     public void onCharacterChanged() {
 
         // Update data if character is valid
-        if (characterProvider.getCharacter() == null) {
-            // TODO: 16/06/2016 Clear fields? -> us a null character?
+        if (!characterProvider.hasCharacter()) {
+            // TODO: 16/06/2016 Clear fields? -> use a null character?
             return;
         }
 
@@ -134,7 +120,7 @@ public class CharacterOverview extends CharacterFragment {
 
         // Update items
         ArrayList<BaseItem> items = new ArrayList<>();
-        if (characterProvider.getCharacter() != null) {
+        if (characterProvider.hasCharacter()) {
             items.addAll(characterProvider.getCharacter().weapons);
             items.addAll(characterProvider.getCharacter().expendables);
             items.addAll(characterProvider.getCharacter().abilities);
@@ -181,6 +167,7 @@ public class CharacterOverview extends CharacterFragment {
                 return getString(R.string.ability_score_STR);
             }
         });
+
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
@@ -261,6 +248,20 @@ public class CharacterOverview extends CharacterFragment {
                 return getString(R.string.ability_score_CHA);
             }
         });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (characterProvider.hasCharacter()) {
+                        characterProvider.getCharacter().
+                                addAbility(new FeatureModel("title", "description"));
+                        characterProvider.characterChanged();
+                    }
+                }
+            });
+        }
     }
 
     private void setupAbilityView(int viewId, final AbilityAccessor abilityAccessor) {
@@ -274,7 +275,7 @@ public class CharacterOverview extends CharacterFragment {
                         public void onClick(View v) {
 
                             // Only show dialog when a character is present
-                            if (characterProvider.getCharacter() == null)
+                            if (characterProvider.hasCharacter())
                                 return;
 
                             LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
@@ -314,4 +315,25 @@ public class CharacterOverview extends CharacterFragment {
         String getName();
     }
 
+    private ItemClickListener itemClickListener = new ItemClickListener();
+
+    private static class ItemClickListener
+            implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            BaseItemView itemView = (BaseItemView) view;
+            if (itemView != null)
+                itemView.onClick();
+        }
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            BaseItemView itemView = (BaseItemView) view;
+            if (itemView != null) {
+                itemView.onLongClick();
+                return true;
+            }
+            return false;
+        }
+    }
 }

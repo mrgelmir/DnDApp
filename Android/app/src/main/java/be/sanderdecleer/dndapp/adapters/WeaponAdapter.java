@@ -17,6 +17,7 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 /**
  * Adapter for weapon views
  */
+@Deprecated
 public class WeaponAdapter extends BaseCharacterAdapter<WeaponModel>
         implements EditControl.EditModeChangedListener {
 

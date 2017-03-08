@@ -22,4 +22,6 @@
         app:headerLayout="@layout/nav_header_character_sheet"
         app:menu="@menu/activity_character_sheet_drawer" />
 
+
+
 </android.support.v4.widget.DrawerLayout>

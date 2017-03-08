@@ -23,6 +23,10 @@ public class CharacterControl implements CharacterProvider {
         return instance;
     }
 
+    public static boolean hasCurrentCharacter (){
+        return getInstance().hasCharacter();
+    }
+
     public static CharacterModel getCurrentCharacter() {
         return getInstance().currentCharacter;
     }
@@ -37,14 +41,15 @@ public class CharacterControl implements CharacterProvider {
         listeners = new HashSet<>();
     }
 
-    public void characterChanged() {
-        for (Listener l:listeners){
-            l.onCharacterChanged();
-        }
+    @Override
+    public boolean hasCharacter() {
+        return currentCharacter != null;
     }
 
     @Override
     public CharacterModel getCharacter() {
+        if(currentCharacter == null)
+            throw new NullPointerException("There is no character present");
         return currentCharacter;
     }
 
@@ -64,5 +69,10 @@ public class CharacterControl implements CharacterProvider {
         listeners.remove(listener);
     }
 
-
+    @Override
+    public void characterChanged() {
+        for (Listener l:listeners){
+            l.onCharacterChanged();
+        }
+    }
 }

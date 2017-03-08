@@ -17,6 +17,7 @@ import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 /**
  * Adapter for feature views
  */
+@Deprecated
 public class FeatureAdapter extends BaseCharacterAdapter<FeatureModel>
         implements EditControl.EditModeChangedListener {
 

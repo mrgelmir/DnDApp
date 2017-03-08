@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.view;
+package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -51,16 +51,18 @@ public class FeatureView extends BaseItemView<FeatureModel> {
     @Override
     public void setupInfoView(View view) {
         super.setupInfoView(view);
-        TextView titleLabel = (TextView) view.findViewById(R.id.ability_title);
         TextView descriptionLabel = (TextView) view.findViewById(R.id.ability_description);
-
-        titleLabel.setText(data.title);
         descriptionLabel.setText(data.description);
     }
 
     @Override
-    public void onClick() {
-        super.onClick();
+    public boolean hasTitle() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return data.title;
     }
 
     @Override

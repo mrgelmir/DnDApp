@@ -1,12 +1,14 @@
-package be.sanderdecleer.dndapp.view;
+package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.dialog_fragments.InfoDialogFragment;
@@ -20,6 +22,7 @@ import be.sanderdecleer.dndapp.model.BaseItem;
 public class BaseItemView<T extends BaseItem> extends RelativeLayout implements InfoDialogFragment.ViewSetup {
 
     T data;
+    DataUpdateListener<T> listener;
 
     public BaseItemView(Context context) {
         super(context);
@@ -42,7 +45,7 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
     }
 
     public void setItem(BaseItem item) {
-        // Check if item is of desired type
+        // TODO Check if item is of desired type
         data = getData(item);
         if (data == null)
             return;
@@ -55,8 +58,17 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
     public void setupInfoView(View view) {
     }
 
+    @Override
+    public boolean hasTitle() {
+        return false;
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
     public void onClick() {
-//        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         // Get activity from context
         FragmentActivity a = (FragmentActivity) getContext();
@@ -70,12 +82,21 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
 
     }
 
+    public void onLongClick() {
+        // open edit panel
+        Toast.makeText(getContext(), "EDIT VIEW HERE", Toast.LENGTH_SHORT).show();
+    }
+
     public int getResourceId() {
         return R.layout.item_empty;
     }
 
     public int getDialogResourceId() {
         return R.layout.item_empty;
+    }
+
+    public void setListener(DataUpdateListener<T> listener){
+        this.listener = listener;
     }
 
     protected T getData(BaseItem item) {
@@ -98,5 +119,13 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
             return null;
         }
 
+    }
+
+    protected void dataUpdated(){
+        // TODO figure out how to propagate the changes to the model
+    }
+
+    public interface DataUpdateListener<U extends BaseItem>{
+        void DataUpdated(U data);
     }
 }
