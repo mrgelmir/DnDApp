@@ -54,7 +54,7 @@ public class TestCharacterProvider {
     public static CharacterModel createTestSpellcaster() {
 
         // Test character 2
-        CharacterModel character = new CharacterModel("Mike the Mage")
+        CharacterModel character = new CharacterModel("Mike the Magic Mage")
                 .setAbilityScores(10, 12, 8, 20, 17, 16)
                 .setHP_current(8)
                 .setHP_max(8)

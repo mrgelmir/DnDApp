@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -15,9 +18,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.sanderdecleer.dndapp.model.CharacterDescription;
 import be.sanderdecleer.dndapp.model.character.CharacterModel;
 
 /**
@@ -27,6 +32,7 @@ import be.sanderdecleer.dndapp.model.character.CharacterModel;
 public class CharacterFileUtil {
 
     private static final String LOG_TOKEN = "CFU";
+    private static final int CHARACTER_NAME_BYTES = 103;
 
 //  ref:  https://developer.android.com/training/basics/data-storage/files.html
 
@@ -64,18 +70,18 @@ public class CharacterFileUtil {
 
         // TODO: Query free space
 
-
         // Create the Json
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String jsonString = gson.toJson(character);
 
         // Write the file
-        Log.i(LOG_TOKEN, "Trying to write to " + file);
+//        Log.i(LOG_TOKEN, "Trying to write to " + file);
 
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(new FileOutputStream(file));
+            // Write the JSON file
             out.write(jsonString.getBytes());
 
         } catch (FileNotFoundException e) {
@@ -94,36 +100,45 @@ public class CharacterFileUtil {
     }
 
     public static CharacterModel loadCharacter(Context context, String characterName) {
+        return loadCharacter(getFile(context, characterName));
+    }
 
-        File file = getFile(context, characterName);
+    public static CharacterModel loadCharacter(File file) {
+        String contents = stringFromFile(file);
 
+//        Log.i(LOG_TOKEN, contents);
+
+        Gson gson = new Gson();
+        return gson.fromJson(contents, CharacterModel.class);
+    }
+
+    private static CharacterDescription loadCharacterDescription(Context context, File characterFile) {
+
+        String contents = stringFromFile(characterFile);
+
+        // Just get the name from the json for the description
+        // Do we really need to load the entire json file for this?
+        JsonElement element = new JsonParser().parse(contents);
+        JsonObject o = element.getAsJsonObject();
+
+        return new CharacterDescription(characterFile, o.get("name").getAsString());
+    }
+
+    @NonNull
+    private static String stringFromFile(File file) {
         // Reading the file
-
         int length = (int) file.length();
         byte[] bytes = new byte[length];
 
-        try {
+        try (FileInputStream in = new FileInputStream(file)) {
 
-            FileInputStream in = new FileInputStream(file);
-            try {
-                in.read(bytes);
-            } catch (IOException e) {
-                // TODO: 30/05/2016
-            } finally {
-                in.close();
-            }
+            in.read(bytes);
+            in.close();
         } catch (IOException e) {
             // TODO: 30/05/2016
+            Log.e(LOG_TOKEN, e.getMessage());
         }
-
-        String contents = new String(bytes);
-
-        Log.i(LOG_TOKEN, contents);
-
-        Gson gson = new Gson();
-        CharacterModel character = gson.fromJson(contents, CharacterModel.class);
-
-        return character;
+        return new String(bytes);
     }
 
     public static void deleteCharacter(Context context, CharacterModel character) {
@@ -134,23 +149,28 @@ public class CharacterFileUtil {
 
         File file = getFile(context, characterNameToFileName(character.getName()));
 
-        if(!file.delete()) {
+        if (!file.delete()) {
             // Something went wrong here.
         }
     }
 
     // TODO: 30/05/2016 Replace with character preview data?
-    public static List<String> getAvailableCharacters(Context context) {
+    public static List<CharacterDescription> getAvailableCharacters(Context context) {
 
         File fileDir = getFilesDir(context);
 
-        List<String> fileNames = new ArrayList<>();
+//        List<String> fileNames = new ArrayList<>();
+//        for (File file : fileDir.listFiles()) {
+//            fileNames.add(file.getName());
+//        }
+//        return fileNames;
 
+        List<CharacterDescription> characterDescriptions = new ArrayList<>();
         for (File file : fileDir.listFiles()) {
-            fileNames.add(file.getName());
+            characterDescriptions.add(loadCharacterDescription(context, file));
         }
 
-        return fileNames;
+        return characterDescriptions;
     }
 
     /* Checks if external storage is available for read and write */

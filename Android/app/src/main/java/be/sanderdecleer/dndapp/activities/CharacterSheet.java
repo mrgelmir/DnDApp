@@ -1,12 +1,16 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ActionProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,6 +26,7 @@ import android.widget.EditText;
 import java.util.List;
 
 import be.sanderdecleer.dndapp.adapters.CharacterSheetPageAdapter;
+import be.sanderdecleer.dndapp.model.CharacterDescription;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.CharacterModel;
@@ -297,6 +302,7 @@ public class CharacterSheet extends AppCompatActivity
                 populateCharacterMenu();
                 break;
             default:
+
                 // This is (probably) a character being selected
                 // Load corresponding file and display
 
@@ -316,9 +322,9 @@ public class CharacterSheet extends AppCompatActivity
                 // Check this item to see current
                 item.setChecked(true);
 
-                // TEMP load item from filename given
-                CharacterModel loadedCharacter = CharacterFileUtil.loadCharacter(this, item.getTitle().toString());
-                CharacterControl.getInstance().setCharacter(loadedCharacter);
+                // Get the action provider and run the default action we added
+                // (ie. loading the character)
+                MenuItemCompat.getActionProvider(item).onPerformDefaultAction();
 
                 // Dirty way of keeping the save button hidden. Loaded characters have no changes
                 CharacterControl.getInstance().getCharacter().hasChanges = false;
@@ -366,8 +372,9 @@ public class CharacterSheet extends AppCompatActivity
 
     private void populateCharacterMenu() {
 
-        // get the saved characters
-        List<String> characters = CharacterFileUtil.getAvailableCharacters(this);
+        // get the characters saved on the device
+        final List<CharacterDescription> characterDescriptions =
+                CharacterFileUtil.getAvailableCharacters(this);
 
         // get a reference to the navigation
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
@@ -376,8 +383,28 @@ public class CharacterSheet extends AppCompatActivity
             characterSubMenu = nav.getMenu().findItem(R.id.nav_character_list).getSubMenu();
             characterSubMenu.clear();
 
-            for (int i = 0; i < characters.size(); ++i) {
-                characterSubMenu.add(0, i, 0, characters.get(i));
+            for (int i = 0; i < characterDescriptions.size(); ++i) {
+
+                final CharacterDescription characterDescription = characterDescriptions.get(i);
+                MenuItem menuItem = characterSubMenu.add(0, i, 0, characterDescription.getCharacterName());
+
+                // Set an actionProvider and use this to hack our load action in
+                // Not the correct way to do this I think
+                MenuItemCompat.setActionProvider(menuItem, new ActionProvider(this) {
+                    @Override
+                    public View onCreateActionView() {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean onPerformDefaultAction() {
+                        CharacterModel loadedCharacter = CharacterFileUtil.
+                                loadCharacter(characterDescription.getCharacterFile());
+                        CharacterControl.getInstance().setCharacter(loadedCharacter);
+                        return true;
+                    }
+                });
+
             }
 
             // Make sure the menu redraws
@@ -415,7 +442,6 @@ public class CharacterSheet extends AppCompatActivity
             editAction.setVisible(!EditControl.isEditMode());
         }
     }
-
 
 
 }

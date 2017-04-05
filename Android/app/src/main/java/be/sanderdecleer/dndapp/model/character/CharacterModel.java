@@ -20,9 +20,6 @@ public class CharacterModel implements Parcelable {
     public List<WeaponModel> weapons = new ArrayList<>();
     public List<ExpendableModel> expendables = new ArrayList<>();
 
-    // TODO: 21/11/2016 Change all the public variables to privates to allow for modifications
-    // via modifiers, items, skills, boons...
-
     // Ability scores
     private int STR_base;
     private int DEX_base;
@@ -156,6 +153,9 @@ public class CharacterModel implements Parcelable {
 
         return other.getName().equals(getName());
     }
+
+
+    // Getters and Setters below
 
     public String getName() {
         return name;

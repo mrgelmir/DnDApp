@@ -12,7 +12,16 @@ public class CharacterDescription {
     private String characterName;
     private File characterFile;
 
-    public CharacterDescription() {
+    public CharacterDescription(File characterFile, String characterName) {
+        this.characterName = characterName;
+        this.characterFile = characterFile;
+    }
 
+    public String getCharacterName() {
+        return characterName;
+    }
+
+    public File getCharacterFile() {
+        return characterFile;
     }
 }
