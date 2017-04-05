@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/padding_narrow">
 
-    <!-- Not used at this time -->
+    <!-- Not used at this time, replaced by Floating Action Button -->
 
     <!-- Icon -->
     <ImageView

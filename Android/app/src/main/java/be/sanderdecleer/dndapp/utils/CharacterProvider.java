@@ -1,6 +1,6 @@
 package be.sanderdecleer.dndapp.utils;
 
-import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 
 /**
  * Created by SD on 17/06/2016.

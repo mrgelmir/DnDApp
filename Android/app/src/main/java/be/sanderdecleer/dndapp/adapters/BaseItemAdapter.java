@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-import be.sanderdecleer.dndapp.model.BaseItem;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.views.BaseItemView;
 import be.sanderdecleer.dndapp.views.ExpendableView;
 import be.sanderdecleer.dndapp.views.FeatureView;
@@ -84,6 +84,7 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
                 return null;
         }
 
+        // TODO fix this
         view.setMinimumHeight(150);
 
         return view;

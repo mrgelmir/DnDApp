@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.model;
+package be.sanderdecleer.dndapp.model.character;
 
 import android.content.Context;
 import android.os.Parcel;

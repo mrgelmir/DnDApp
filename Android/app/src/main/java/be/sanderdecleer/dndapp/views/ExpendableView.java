@@ -3,13 +3,12 @@ package be.sanderdecleer.dndapp.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.model.ExpendableModel;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.ExpendableModel;
 
 /**
  * Created by SD on 22/11/2016.

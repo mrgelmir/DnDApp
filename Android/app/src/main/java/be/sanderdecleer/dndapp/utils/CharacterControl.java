@@ -2,7 +2,7 @@ package be.sanderdecleer.dndapp.utils;
 
 import java.util.HashSet;
 
-import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 
 /**
  * Created by SD on 21/11/2016.

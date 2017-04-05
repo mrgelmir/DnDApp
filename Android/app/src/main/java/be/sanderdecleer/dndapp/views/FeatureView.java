@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.model.FeatureModel;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.FeatureModel;
 
 /**
  * Created by SD on 22/11/2016.

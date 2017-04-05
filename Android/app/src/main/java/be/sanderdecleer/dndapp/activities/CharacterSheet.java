@@ -4,11 +4,8 @@ import android.app.AlertDialog;
 import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuView;
 import android.text.InputType;
 import android.view.SubMenu;
 import android.view.View;
@@ -22,20 +19,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import be.sanderdecleer.dndapp.adapters.CharacterSheetPageAdapter;
-import be.sanderdecleer.dndapp.dialog_fragments.InfoDialogFragment;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.model.ExpendableModel;
-import be.sanderdecleer.dndapp.model.FeatureModel;
-import be.sanderdecleer.dndapp.model.CharacterModel;
-import be.sanderdecleer.dndapp.model.WeaponModel;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
+import be.sanderdecleer.dndapp.utils.TestCharacterProvider;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -209,7 +202,7 @@ public class CharacterSheet extends AppCompatActivity
                             public void EditView(View view) {
                                 EditText textView = (EditText) view.findViewById(R.id.edit_field);
                                 if (textView != null) {
-                                    textView.setText(CharacterControl.getCurrentCharacter().name);
+                                    textView.setText(CharacterControl.getCurrentCharacter().getName());
                                     textView.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 
                                     textView.selectAll();
@@ -222,7 +215,7 @@ public class CharacterSheet extends AppCompatActivity
                             public void OnDialogDismissed(View view) {
                                 EditText textView = (EditText) view.findViewById(R.id.edit_field);
                                 if (textView != null) {
-                                    CharacterControl.getCurrentCharacter().name = textView.getText().toString();
+                                    CharacterControl.getCurrentCharacter().setName(textView.getText().toString());
                                     updateCharacter();
                                 }
                             }
@@ -295,7 +288,11 @@ public class CharacterSheet extends AppCompatActivity
 
             case R.id.nav_create_test_data:
                 // Create test data
-                createTestData();
+
+                // Temp save characters as base characters
+                CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestMonk());
+                CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestSpellcaster());
+
                 // Reload character menu
                 populateCharacterMenu();
                 break;
@@ -356,7 +353,7 @@ public class CharacterSheet extends AppCompatActivity
 
         // Set activeCharacter name as title
         if (CharacterControl.getInstance().hasCharacter()) {
-            getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().name);
+            getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().getName());
             CharacterControl.getInstance().getCharacter().hasChanges = true;
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
@@ -419,63 +416,6 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
-    // TEST
-
-    // Not really needed -> (re-)move?
-    private void createTestData() {
-
-        // Test character 1
-        CharacterModel character1 = new CharacterModel("Guy Stormcrow");
-        character1.setAbilityScores(14, 16, 14, 11, 14, 13);
-        character1.HP_current = 8;
-        character1.HP_max = 13;
-        character1.hitDice_max = "2d8";
-        character1.AC = 15;
-        character1.speed = 40;
-        character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
-        character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
-        character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
-        WeaponModel shortSword = WeaponModel.getEmpty(this);
-        shortSword.nickname = "";
-        shortSword.weaponType = "Short sword";
-        shortSword.weaponDamage = "1d6 + 3 slashing";
-        shortSword.weaponToHit = "+5";
-        shortSword.weaponFeatures = "finesse, light";
-        WeaponModel dagger = WeaponModel.getEmpty(this);
-        dagger.weaponType = "Dagger";
-        dagger.weaponDamage = "1d4 + 3 piercing";
-        dagger.weaponToHit = "+5";
-        dagger.weaponFeatures = "finesse, light, range(30/60ft)";
-        character1.addWeapon(dagger);
-        character1.addWeapon(shortSword);
-        ExpendableModel kiExpendable = new ExpendableModel("KI points", 2, 1);
-        ExpendableModel superiorityExpendable = new ExpendableModel("Superiority Dice", 10, 5);
-        character1.addExpendable(kiExpendable);
-        character1.addExpendable(superiorityExpendable);
-
-        // Test character 2
-        CharacterModel character2 = new CharacterModel("Derek the Dude");
-        character2.setAbilityScores(10, 12, 8, 20, 17, 16);
-        character2.HP_current = 8;
-        character2.HP_max = 8;
-        character2.hitDice_max = "2d6";
-        character2.AC = 13;
-        character2.speed = 30;
-        character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
-        character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
-        WeaponModel dagger2 = WeaponModel.getEmpty(this);
-        dagger2.nickname = "lil' edge";
-        dagger2.weaponType = "Dagger";
-        dagger2.weaponDamage = "1d4 + 3 piercing";
-        dagger2.weaponToHit = "+5";
-        dagger2.weaponFeatures = "finesse, light, range(30/60ft)";
-        character2.addWeapon(dagger2);
-
-        // Temp save these two characters as base characters
-        CharacterFileUtil.saveCharacter(this, character1);
-        CharacterFileUtil.saveCharacter(this, character2);
-
-    }
 
 
 }

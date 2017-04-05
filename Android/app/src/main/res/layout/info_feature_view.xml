@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:parentTag="RelativeLayout">
 
-    <!-- Description -->
+    <!-- Description (title is set elsewhere) -->
     <TextView
         android:id="@+id/ability_description"
         android:layout_width="wrap_content"

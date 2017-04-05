@@ -1,15 +1,11 @@
 package be.sanderdecleer.dndapp.fragments;
 
-import android.os.Parcel;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import be.sanderdecleer.dndapp.model.CharacterModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.utils.EditControl;

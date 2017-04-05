@@ -1,13 +1,11 @@
 package be.sanderdecleer.dndapp;
 
-import android.os.Parcel;
-
 import org.junit.Test;
 
-import be.sanderdecleer.dndapp.model.CharacterModel;
-import be.sanderdecleer.dndapp.model.ExpendableModel;
-import be.sanderdecleer.dndapp.model.FeatureModel;
-import be.sanderdecleer.dndapp.model.WeaponModel;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
+import be.sanderdecleer.dndapp.model.character.ExpendableModel;
+import be.sanderdecleer.dndapp.model.character.FeatureModel;
+import be.sanderdecleer.dndapp.model.character.WeaponModel;
 
 import static org.junit.Assert.*;
 
@@ -45,11 +43,11 @@ public class CharacterModelTests {
         // Test character 1
         CharacterModel character1 = new CharacterModel("Guy Stormcrow");
         character1.setAbilityScores(14, 16, 14, 11, 14, 13);
-        character1.HP_current = 8;
-        character1.HP_max = 13;
-        character1.hitDice_max = "2d8";
-        character1.AC = 15;
-        character1.speed = 40;
+        character1.setHP_current(8);
+        character1.setHP_max(13);
+        character1.setHitDice_max("2d8");
+        character1.setAC(15);
+        character1.setSpeed(40);
         character1.addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"));
         character1.addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"));
         character1.addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
@@ -77,11 +75,11 @@ public class CharacterModelTests {
     private CharacterModel getTestCharacter2() {
         CharacterModel character2 = new CharacterModel("Derek the Dude");
         character2.setAbilityScores(10, 12, 8, 20, 17, 16);
-        character2.HP_current = 8;
-        character2.HP_max = 8;
-        character2.hitDice_max = "2d6";
-        character2.AC = 13;
-        character2.speed = 30;
+        character2.setHP_current(8);
+        character2.setHP_max(8);
+        character2.setHitDice_max("2d6");
+        character2.setAC(13);
+        character2.setSpeed(30);
         character2.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
         character2.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
         WeaponModel dagger2 = WeaponModel.getEmpty();

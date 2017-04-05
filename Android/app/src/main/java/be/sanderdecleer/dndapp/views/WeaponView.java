@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.model.WeaponModel;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.WeaponModel;
 
 /**
  * Created by SD on 22/11/2016.

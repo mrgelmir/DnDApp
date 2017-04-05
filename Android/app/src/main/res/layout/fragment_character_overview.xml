@@ -95,15 +95,12 @@
 
         <!-- Weapons & Attacks -->
         <ListView
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
             android:id="@+id/item_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-
-            tools:listitem="@layout/item_weapon_view" />
+            tools:listitem="@layout/item_feature_view"/>
 
 
     </LinearLayout>

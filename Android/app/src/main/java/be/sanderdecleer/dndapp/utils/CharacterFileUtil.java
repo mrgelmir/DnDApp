@@ -2,7 +2,6 @@ package be.sanderdecleer.dndapp.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,18 +15,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.sanderdecleer.dndapp.model.CharacterModel;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 
 /**
  * Save Characters to the system
  * Load characters from the system
  */
 public class CharacterFileUtil {
-    private static String LOG_TOKEN = "CFU";
+
+    private static final String LOG_TOKEN = "CFU";
 
 //  ref:  https://developer.android.com/training/basics/data-storage/files.html
 
@@ -53,7 +52,7 @@ public class CharacterFileUtil {
             return;
         }
 
-        File file = getFile(context, characterNameToFileName(character.name));
+        File file = getFile(context, characterNameToFileName(character.getName()));
 
         if (file.getParentFile().mkdirs() || file.getParentFile().isDirectory()) {
             Log.e(LOG_TOKEN, "Directory exists: " + file.getParentFile().getPath());
@@ -133,7 +132,7 @@ public class CharacterFileUtil {
             return;
         }
 
-        File file = getFile(context, characterNameToFileName(character.name));
+        File file = getFile(context, characterNameToFileName(character.getName()));
 
         if(!file.delete()) {
             // Something went wrong here.
@@ -155,13 +154,13 @@ public class CharacterFileUtil {
     }
 
     /* Checks if external storage is available for read and write */
-    public static boolean isExternalStorageWritable() {
+    private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
-    public static boolean isExternalStorageReadable() {
+    private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
@@ -208,4 +207,6 @@ public class CharacterFileUtil {
 
         return sb.toString() + ".dnd";
     }
+
+
 }

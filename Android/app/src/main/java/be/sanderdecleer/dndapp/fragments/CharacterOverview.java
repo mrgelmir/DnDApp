@@ -2,7 +2,6 @@ package be.sanderdecleer.dndapp.fragments;
 
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -10,12 +9,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
-import be.sanderdecleer.dndapp.model.BaseItem;
-import be.sanderdecleer.dndapp.model.FeatureModel;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.FeatureModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.adapters.BaseCharacterAdapter;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 import be.sanderdecleer.dndapp.views.BaseItemView;
@@ -92,30 +90,30 @@ public class CharacterOverview extends CharacterFragment {
 
         // Update Ability scores
         setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
-                characterProvider.getCharacter().STR_base);
+                characterProvider.getCharacter().getSTR());
         setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
-                characterProvider.getCharacter().DEX_base);
+                characterProvider.getCharacter().getDEX());
         setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
-                characterProvider.getCharacter().CON_base);
+                characterProvider.getCharacter().getCON());
         setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
-                characterProvider.getCharacter().INT_base);
+                characterProvider.getCharacter().getINT());
         setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
-                characterProvider.getCharacter().WIS_base);
+                characterProvider.getCharacter().getWIS());
         setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
-                characterProvider.getCharacter().CHA_base);
+                characterProvider.getCharacter().getCHA());
 
 
         // Update other stats
         String formattedAC = String.format(getResources().getString(R.string.character_AC),
-                characterProvider.getCharacter().AC);
+                characterProvider.getCharacter().getAC());
         ((TextView) findViewById(R.id.character_AC)).setText(formattedAC);
 
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
-                characterProvider.getCharacter().HP_current, characterProvider.getCharacter().HP_max);
+                characterProvider.getCharacter().getHP_current(), characterProvider.getCharacter().getHP_max());
         ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
 
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
-                characterProvider.getCharacter().speed);
+                characterProvider.getCharacter().getSpeed());
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
         // Update items
@@ -154,12 +152,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().STR_base;
+                return characterProvider.getCharacter().getSTR();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().STR_base = value;
+                characterProvider.getCharacter().setSTR(value);
             }
 
             @Override
@@ -171,12 +169,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().DEX_base;
+                return characterProvider.getCharacter().getDEX();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().DEX_base = value;
+                characterProvider.getCharacter().setDEX(value);
             }
 
             @Override
@@ -187,12 +185,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().CON_base;
+                return characterProvider.getCharacter().getCON();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().CON_base = value;
+                characterProvider.getCharacter().setCON(value);
             }
 
             @Override
@@ -203,12 +201,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().INT_base;
+                return characterProvider.getCharacter().getINT();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().INT_base = value;
+                characterProvider.getCharacter().setINT(value);
             }
 
             @Override
@@ -219,12 +217,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().WIS_base;
+                return characterProvider.getCharacter().getWIS();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().WIS_base = value;
+                characterProvider.getCharacter().setWIS(value);
             }
 
             @Override
@@ -235,12 +233,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().CHA_base;
+                return characterProvider.getCharacter().getCHA();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().CHA_base = value;
+                characterProvider.getCharacter().setCHA(value);
             }
 
             @Override

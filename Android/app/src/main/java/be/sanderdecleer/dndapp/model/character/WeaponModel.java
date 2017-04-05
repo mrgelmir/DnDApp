@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.model;
+package be.sanderdecleer.dndapp.model.character;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -12,13 +12,13 @@ import be.sanderdecleer.dndapp.R;
  */
 public class WeaponModel extends BaseItem {
 
-
     public String nickname;
     public String weaponType;
-    public String weaponToHit;
-    public String weaponDamage; // maybe swap to a dice representation later
+    public String weaponToHit; // TODO calculate from bonuses
+    public String weaponDamage; // TODO swap to a dice representation
     public String weaponFeatures;
 
+    // TODO move this method to a factory. The context should not be used here
     public static WeaponModel getEmpty(Context context) {
         WeaponModel weaponModel = new WeaponModel();
         weaponModel.weaponType = context.getString(R.string.weapon_default_type);
@@ -30,6 +30,10 @@ public class WeaponModel extends BaseItem {
     public static WeaponModel getEmpty() {
         WeaponModel weaponModel = new WeaponModel();
         // Add default things here
+        weaponModel.nickname = "nickname";
+        weaponModel.weaponType = "weaponType";
+
+
         return weaponModel;
     }
 
@@ -81,7 +85,7 @@ public class WeaponModel extends BaseItem {
             = new Creator<WeaponModel>() {
         @Override
         public WeaponModel createFromParcel(Parcel source) {
-            return null;
+            return new WeaponModel(source);
         }
 
         @Override

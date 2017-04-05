@@ -1,18 +1,21 @@
 package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.dialog_fragments.InfoDialogFragment;
-import be.sanderdecleer.dndapp.model.BaseItem;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
 
 /**
  * Created by SD on 22/11/2016.
@@ -42,10 +45,11 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
     private void setup(Context context) {
         LayoutInflater.from(context).inflate(getResourceId(), this, true);
         setupItemView();
+
     }
 
     public void setItem(BaseItem item) {
-        // TODO Check if item is of desired type
+        // TODO Check if item is of desired type and throw error
         data = getData(item);
         if (data == null)
             return;
@@ -95,7 +99,7 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
         return R.layout.item_empty;
     }
 
-    public void setListener(DataUpdateListener<T> listener){
+    public void setListener(DataUpdateListener<T> listener) {
         this.listener = listener;
     }
 
@@ -121,11 +125,11 @@ public class BaseItemView<T extends BaseItem> extends RelativeLayout implements 
 
     }
 
-    protected void dataUpdated(){
+    protected void dataUpdated() {
         // TODO figure out how to propagate the changes to the model
     }
 
-    public interface DataUpdateListener<U extends BaseItem>{
+    public interface DataUpdateListener<U extends BaseItem> {
         void DataUpdated(U data);
     }
 }

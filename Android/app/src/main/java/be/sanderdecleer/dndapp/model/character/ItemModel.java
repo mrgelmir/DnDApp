@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.model;
+package be.sanderdecleer.dndapp.model.character;
 
 import android.os.Parcel;
 import android.os.Parcelable;
