@@ -165,7 +165,6 @@ public class CharacterOverview extends CharacterFragment {
                 return getString(R.string.ability_score_STR);
             }
         });
-
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
@@ -264,43 +263,75 @@ public class CharacterOverview extends CharacterFragment {
 
     private void setupAbilityView(int viewId, final AbilityAccessor abilityAccessor) {
 
-        final View strView = findViewById(viewId);
-        if (strView != null) {
-            strView.setOnClickListener(new OnClickListenerEditable(
-                    null, // No default click listeners
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+        final View abilityView = findViewById(viewId);
+        if (abilityView != null) {
 
-                            // Only show dialog when a character is present
-                            if (characterProvider.hasCharacter())
-                                return;
+            abilityView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    // Only show dialog when a character is present
+                    if (!characterProvider.hasCharacter())
+                        return false;
 
-                            LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
-                                    abilityAccessor.getName(),
-                                    new LayoutUtils.EditViewCallback() {
-                                        @Override
-                                        public void EditView(View view) {
-                                            // Set values of the picker
-                                            NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-                                            picker.setMinValue(0);
-                                            picker.setMaxValue(24);
-                                            picker.setWrapSelectorWheel(false);
-                                            picker.setValue(abilityAccessor.get());
-                                        }
-                                    }, new LayoutUtils.DismissDialogCallback() {
-                                        @Override
-                                        public void OnDialogDismissed(View view) {
-                                            // Confirm values
-                                            NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-                                            abilityAccessor.set(picker.getValue());
-                                            // TODO fix line below: character should listen for this itself?
-                                            CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
-                                        }
-                                    });
+                    LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
+                            abilityAccessor.getName(),
+                            new LayoutUtils.EditViewCallback() {
+                                @Override
+                                public void EditView(View view) {
+                                    // Set values of the picker
+                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+                                    picker.setMinValue(0);
+                                    picker.setMaxValue(24);
+                                    picker.setWrapSelectorWheel(false);
+                                    picker.setValue(abilityAccessor.get());
+                                }
+                            }, new LayoutUtils.DismissDialogCallback() {
+                                @Override
+                                public void OnDialogDismissed(View view) {
+                                    // Confirm values
+                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+                                    abilityAccessor.set(picker.getValue());
+                                    // TODO fix line below: character should listen for this itself?
+                                    CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
+                                }
+                            });
+                    return true;
+                }
+            });
 
-                        }
-                    }));
+//            abilityView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    // Only show dialog when a character is present
+//                    if (!characterProvider.hasCharacter())
+//                        return;
+//
+//                    LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
+//                            abilityAccessor.getName(),
+//                            new LayoutUtils.EditViewCallback() {
+//                                @Override
+//                                public void EditView(View view) {
+//                                    // Set values of the picker
+//                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+//                                    picker.setMinValue(0);
+//                                    picker.setMaxValue(24);
+//                                    picker.setWrapSelectorWheel(false);
+//                                    picker.setValue(abilityAccessor.get());
+//                                }
+//                            }, new LayoutUtils.DismissDialogCallback() {
+//                                @Override
+//                                public void OnDialogDismissed(View view) {
+//                                    // Confirm values
+//                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
+//                                    abilityAccessor.set(picker.getValue());
+//                                    // TODO fix line below: character should listen for this itself?
+//                                    CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
+//                                }
+//                            });
+//
+//                }
+//            });
         }
     }
 

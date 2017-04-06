@@ -39,7 +39,8 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
     }
 
     // Get a View that displays the data at the specified position in the data set.
-    @Override @NonNull
+    @Override
+    @NonNull
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         BaseItem item = getItem(position);
@@ -65,22 +66,25 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
 
     private BaseItemView getInflatedLayoutForItem(BaseItem item) {
 
+        // Get item type for customisation
         BaseItem.Type type = item.getType();
-        BaseItemView view;
 
-        // TODO: 29/11/2016 Make this more flexible
+        // Create basic view
+        BaseItemView view = new BaseItemView(getContext());
+
+        // Customise view based on ItemViewController implementations
         switch (type) {
             case Expendable:
-                view = new ExpendableView(getContext());
+                view.setup(new ExpendableView());
                 break;
             case Feature:
-                view = new FeatureView(getContext());
+                view.setup(new FeatureView());
                 break;
             case Weapon:
-                view = new WeaponView(getContext());
+                view.setup(new WeaponView());
                 break;
             default:
-            case Item:
+            case Item: // todo
                 return null;
         }
 

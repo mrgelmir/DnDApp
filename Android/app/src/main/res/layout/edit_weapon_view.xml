@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/weapon_edit_nickname"
-        android:text="@string/weapon_edit_nickname" />
+        android:text="@string/weapon_edit_nickname"
+        android:id="@+id/textView" />
 
     <EditText
         android:id="@+id/weapon_edit_nickname"

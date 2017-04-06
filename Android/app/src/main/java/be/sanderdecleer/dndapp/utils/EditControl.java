@@ -28,7 +28,8 @@ public class EditControl {
     }
 
     public static void toggleEditMode() {
-        setEditMode(!editMode);
+        // For now no edit mode, we edit on long press
+//        setEditMode(!editMode);
     }
 
     public static void addListener(EditModeChangedListener listener) {

@@ -5,6 +5,7 @@
         android:id="@+id/action_group">
 
         <item
+            android:enabled="false"
             android:id="@+id/action_edit"
             android:icon="@drawable/ic_mode_edit_white_24dp"
             android:orderInCategory="2"

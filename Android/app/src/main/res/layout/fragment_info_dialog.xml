@@ -21,10 +21,42 @@
     <RelativeLayout
         android:id="@+id/info_content"
         style="@style/BasePadding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_negative"
         android:layout_below="@+id/info_title">
 
+
+
     </RelativeLayout>
+    <Button
+        android:id="@+id/button_dismiss"
+        style="@style/Base.Widget.AppCompat.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="DISMISS"
+        android:textColor="@color/colorPrimary" />
+    <Button
+        android:id="@+id/button_negative"
+        style="@style/Base.Widget.AppCompat.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/button_positive"
+        android:text="CANCEL"
+        android:textColor="@color/colorAccent" />
+    <Button
+        android:id="@+id/button_positive"
+        style="@style/Base.Widget.AppCompat.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="CONFIRM EDITS"
+        android:textColor="@color/colorPrimary" />
+
+
 
 </RelativeLayout>

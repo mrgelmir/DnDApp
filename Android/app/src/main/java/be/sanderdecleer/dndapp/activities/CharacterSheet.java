@@ -1,7 +1,6 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -34,6 +33,8 @@ import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
 import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.TestCharacterProvider;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -353,6 +354,10 @@ public class CharacterSheet extends AppCompatActivity
         mPlaceholder.setVisibility(hasCharacter ? View.GONE : View.VISIBLE);
         // Maybe animate this later
         mTabLayout.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
+
+        if(getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE){
+            mTabLayout.setVisibility(View.GONE);
+        }
     }
 
     private void updateCharacter() {
@@ -437,9 +442,12 @@ public class CharacterSheet extends AppCompatActivity
 
         } else {
 
-            saveAction.setVisible(EditControl.isEditMode()
-                    && CharacterControl.getCurrentCharacter().hasChanges);
-            editAction.setVisible(!EditControl.isEditMode());
+            //For now do not show edit items: edit on long tap
+//            saveAction.setVisible(EditControl.isEditMode()
+//                    && CharacterControl.getCurrentCharacter().hasChanges);
+//            editAction.setVisible(!EditControl.isEditMode());
+            saveAction.setVisible(false);
+            editAction.setVisible(false);
         }
     }
 
