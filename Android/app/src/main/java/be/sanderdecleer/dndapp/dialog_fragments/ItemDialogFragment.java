@@ -2,6 +2,7 @@ package be.sanderdecleer.dndapp.dialog_fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -10,16 +11,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.views.ItemViewController;
 
 
 /**
  * A simple {@link DialogFragment} subclass.
- * Use the {@link InfoDialogFragment#newInstance} factory method to
+ * Use the {@link ItemDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InfoDialogFragment extends DialogFragment {
+public class ItemDialogFragment extends DialogFragment {
+
+    @IntDef({VIEW_TYPE_EDIT, VIEW_TYPE_INFO})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ViewType {}
 
     public static final int VIEW_TYPE_INFO = 1;
     public static final int VIEW_TYPE_EDIT = 2;
@@ -32,7 +40,7 @@ public class InfoDialogFragment extends DialogFragment {
     private int viewType;
     private ItemViewController viewSetup = null;
 
-    public InfoDialogFragment() {
+    public ItemDialogFragment() {
         // Required empty public constructor
     }
 
@@ -47,10 +55,10 @@ public class InfoDialogFragment extends DialogFragment {
      * @param resourceId Resource Id.
      * @param viewType   the type of view, determines setup function called
      *                   (Choose from VIEW_TYPE_INFO or VIEW_TYPE_EDIT)
-     * @return A new instance of fragment InfoDialogFragment.
+     * @return A new instance of fragment ItemDialogFragment.
      */
-    public static InfoDialogFragment newInstance(@LayoutRes int resourceId, int viewType) {
-        InfoDialogFragment fragment = new InfoDialogFragment();
+    public static ItemDialogFragment newInstance(@LayoutRes int resourceId, @ViewType int viewType) {
+        ItemDialogFragment fragment = new ItemDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_RESOURCE_ID, resourceId);
         args.putInt(ARG_VIEW_TYPE, viewType);
@@ -89,23 +97,27 @@ public class InfoDialogFragment extends DialogFragment {
                 title.setVisibility(View.GONE);
             }
 
-            // Let the setup setup its own content
-            // TODO enable/disable buttons depending on type
+            // Get buttons
+            Button dismissBtn = (Button) parentView.findViewById(R.id.button_dismiss);
+            Button confirmBtn = (Button) parentView.findViewById(R.id.button_positive);
+            Button cancelBtn = (Button) parentView.findViewById(R.id.button_negative);
 
-            Button dismissBtn;
-            Button confirmBtn;
-            Button cancelBtn;
-
+            // Let the setup manage its own content
+            // Enable/disable buttons depending on type
             switch (viewType) {
+                default:
                 case VIEW_TYPE_INFO:
                     // Show dismiss button
                     // Set cancel to INVISIBLE instead of gone for layout purposes
                     confirmBtn.setVisibility(View.GONE);
                     cancelBtn.setVisibility(View.INVISIBLE);
+                    dismissBtn.setVisibility(View.VISIBLE);
                     viewSetup.setupInfoView(contentView);
                 case VIEW_TYPE_EDIT:
                     // Show cancel and confirm buttons
                     dismissBtn.setVisibility(View.GONE);
+                    confirmBtn.setVisibility(View.VISIBLE);
+                    cancelBtn.setVisibility(View.VISIBLE);
                     viewSetup.setupEditView(contentView);
                     break;
             }

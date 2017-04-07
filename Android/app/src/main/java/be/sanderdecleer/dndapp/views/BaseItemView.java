@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 
-import be.sanderdecleer.dndapp.dialog_fragments.InfoDialogFragment;
+import be.sanderdecleer.dndapp.R;
+import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 
 /**
@@ -50,21 +50,21 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
     }
 
     public void onClick() {
-        CreateDialog(viewController.getInfoResourceId(), InfoDialogFragment.VIEW_TYPE_INFO, "info_dialog");
+        CreateDialog(viewController.getInfoResourceId(), ItemDialogFragment.VIEW_TYPE_INFO, "info_dialog");
     }
 
     public void onLongClick() {
-        CreateDialog(viewController.getEditResourceId(), InfoDialogFragment.VIEW_TYPE_EDIT, "edit_dialog");
+        CreateDialog(viewController.getEditResourceId(), ItemDialogFragment.VIEW_TYPE_EDIT, "edit_dialog");
     }
 
-    private void CreateDialog(@LayoutRes int resourceId, int viewType, String tag) {
+    private void CreateDialog(@LayoutRes int resourceId, @ItemDialogFragment.ViewType int viewType, String tag) {
         // Get activity from context
         FragmentActivity a = (FragmentActivity) getContext();
         // Get fragment transaction
         FragmentTransaction ft = a.getSupportFragmentManager().beginTransaction();
 
         // Create dialog using inherited resources and show
-        InfoDialogFragment newFragment = InfoDialogFragment.newInstance(resourceId, viewType);
+        ItemDialogFragment newFragment = ItemDialogFragment.newInstance(resourceId, viewType);
         newFragment.setViewSetup(viewController);
         newFragment.show(ft, tag);
     }
