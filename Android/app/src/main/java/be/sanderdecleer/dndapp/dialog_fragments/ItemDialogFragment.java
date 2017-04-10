@@ -1,6 +1,7 @@
 package be.sanderdecleer.dndapp.dialog_fragments;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
@@ -38,7 +39,10 @@ public class ItemDialogFragment extends DialogFragment {
 
     private int resourceId;
     private int viewType;
+
     private ItemViewController viewSetup = null;
+    private View contentView = null;
+
 
     public ItemDialogFragment() {
         // Required empty public constructor
@@ -85,7 +89,7 @@ public class ItemDialogFragment extends DialogFragment {
 
 
         // Inflate child view
-        View contentView = parentView.findViewById(R.id.info_content);
+        contentView = parentView.findViewById(R.id.info_content);
         inflater.inflate(resourceId, (ViewGroup) contentView);
 
         if (viewSetup != null) {
@@ -112,18 +116,47 @@ public class ItemDialogFragment extends DialogFragment {
                     confirmBtn.setVisibility(View.GONE);
                     cancelBtn.setVisibility(View.INVISIBLE);
                     dismissBtn.setVisibility(View.VISIBLE);
+
+                    // Hook up buttons
+                    dismissBtn.setOnClickListener(dismissClickListener);
+
                     viewSetup.setupInfoView(contentView);
+                    break;
                 case VIEW_TYPE_EDIT:
                     // Show cancel and confirm buttons
                     dismissBtn.setVisibility(View.GONE);
                     confirmBtn.setVisibility(View.VISIBLE);
                     cancelBtn.setVisibility(View.VISIBLE);
+
+                    // Hook up buttons
+                    cancelBtn.setOnClickListener(dismissClickListener);
+                    confirmBtn.setOnClickListener(saveClickListener);
+
                     viewSetup.setupEditView(contentView);
                     break;
             }
         }
 
+        // Intro animation?
+
         return parentView;
     }
+
+    private View.OnClickListener dismissClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dismiss();
+        }
+    };
+
+    private View.OnClickListener saveClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(contentView != null)
+                viewSetup.resolveEditView(contentView);
+            dismiss();
+        }
+    };
+
 
 }

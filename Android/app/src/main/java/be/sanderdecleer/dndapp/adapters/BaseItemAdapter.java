@@ -10,6 +10,10 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.ExpendableModel;
+import be.sanderdecleer.dndapp.model.character.FeatureModel;
+import be.sanderdecleer.dndapp.model.character.WeaponModel;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.views.BaseItemView;
 import be.sanderdecleer.dndapp.views.ExpendableView;
 import be.sanderdecleer.dndapp.views.FeatureView;
@@ -43,7 +47,7 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
     @NonNull
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        BaseItem item = getItem(position);
+        final BaseItem item = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         BaseItemView itemView = (BaseItemView) convertView;
@@ -57,6 +61,21 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
             @Override
             public void DataUpdated(BaseItem data) {
                 // TODO listen to data updates and propagate
+                switch (data.getType()) {
+                    case Expendable:
+                        CharacterControl.getCurrentCharacter().addExpendable((ExpendableModel) data);
+                        break;
+                    case Feature:
+                        CharacterControl.getCurrentCharacter().addAbility((FeatureModel) data);
+                        break;
+                    case Item:
+                        break;
+                    case Weapon:
+                        CharacterControl.getCurrentCharacter().addWeapon((WeaponModel) data);
+                        break;
+                }
+
+                notifyDataSetChanged();
             }
         });
 

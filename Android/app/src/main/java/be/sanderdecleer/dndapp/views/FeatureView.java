@@ -14,29 +14,29 @@ import be.sanderdecleer.dndapp.model.character.FeatureModel;
  * Controls the view element of a {@link FeatureModel} via the {@link BaseItemView}
  */
 
-public class FeatureView implements  ItemViewController {
+public class FeatureView implements ItemViewController {
 
     private FeatureModel data;
 
-    // ItemView views
-    private TextView titleLabel;
-    private TextView descriptionLabel;
+    @Override
+    public void setDataChangedListener(DataChangedListener listener) {
 
+    }
 
     @Override
     public void setItem(BaseItem item) {
         data = (FeatureModel) item;
-
-        // Do actual setup
-        titleLabel.setText(data.title);
-        descriptionLabel.setText(data.getShortDescription());
     }
 
     @Override
     public void setupItemView(View itemView) {
 
-        titleLabel = (TextView) itemView.findViewById(R.id.ability_title);
-        descriptionLabel = (TextView) itemView.findViewById(R.id.ability_description);
+        TextView titleLabel = (TextView) itemView.findViewById(R.id.ability_title);
+        TextView descriptionLabel = (TextView) itemView.findViewById(R.id.ability_description);
+
+        // Do actual setup
+        titleLabel.setText(data.title);
+        descriptionLabel.setText(data.getShortDescription());
     }
 
     @Override
@@ -48,6 +48,11 @@ public class FeatureView implements  ItemViewController {
 
     @Override
     public void setupEditView(View editView) {
+
+    }
+
+    @Override
+    public void resolveEditView(View editView) {
 
     }
 

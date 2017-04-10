@@ -33,13 +33,13 @@ public class TestCharacterProvider {
         shortSword.weaponType = "Short sword";
         shortSword.weaponDamage = "1d6 + 3 slashing";
         shortSword.weaponToHit = "+5";
-        shortSword.weaponFeatures = "finesse, light";
+        shortSword.weaponFeatures = new String[]{"finesse", "light"};
 
         WeaponModel dagger = WeaponModel.getEmpty();
         dagger.weaponType = "Dagger";
         dagger.weaponDamage = "1d4 + 3 piercing";
         dagger.weaponToHit = "+5";
-        dagger.weaponFeatures = "finesse, light, range(30/60ft)";
+        dagger.weaponFeatures = new String []{"finesse", "light", "range(30/60ft)"};
         character.addWeapon(dagger);
         character.addWeapon(shortSword);
 
@@ -70,7 +70,7 @@ public class TestCharacterProvider {
         dagger2.weaponType = "Dagger";
         dagger2.weaponDamage = "1d4 + 3 piercing";
         dagger2.weaponToHit = "+5";
-        dagger2.weaponFeatures = "finesse, light, range(30/60ft)";
+        dagger2.weaponFeatures = new String []{"finesse", "light", "range(30/60ft)"};
         character.addWeapon(dagger2);
 
         return character;

@@ -16,7 +16,7 @@ public class WeaponModel extends BaseItem {
     public String weaponType;
     public String weaponToHit; // TODO calculate from bonuses
     public String weaponDamage; // TODO swap to a dice representation
-    public String weaponFeatures;
+    public String[] weaponFeatures;
 
     // TODO move this method to a factory. The context should not be used here
     public static WeaponModel getEmpty(Context context) {
@@ -24,6 +24,7 @@ public class WeaponModel extends BaseItem {
         weaponModel.weaponType = context.getString(R.string.weapon_default_type);
         weaponModel.weaponToHit = context.getString(R.string.weapon_default_to_hit);
         weaponModel.weaponDamage = context.getString(R.string.weapon_default_damage);
+        weaponModel.weaponFeatures = new String[0];
         return weaponModel;
     }
 
@@ -32,8 +33,9 @@ public class WeaponModel extends BaseItem {
         // Add default things here
         weaponModel.nickname = "nickname";
         weaponModel.weaponType = "weaponType";
-
-
+        weaponModel.weaponToHit = "+X";
+        weaponModel.weaponDamage = "XdY+Z";
+        weaponModel.weaponFeatures = new String[0];
         return weaponModel;
     }
 
@@ -46,7 +48,7 @@ public class WeaponModel extends BaseItem {
         weaponType = in.readString();
         weaponToHit = in.readString();
         weaponDamage = in.readString();
-        weaponFeatures = in.readString();
+        weaponFeatures = in.createStringArray();
     }
 
     /***
@@ -78,7 +80,9 @@ public class WeaponModel extends BaseItem {
         dest.writeString(weaponType);
         dest.writeString(weaponToHit);
         dest.writeString(weaponDamage);
-        dest.writeString(weaponFeatures);
+        dest.writeStringArray(weaponFeatures);
+
+
     }
 
     public static final Parcelable.Creator<WeaponModel> CREATOR

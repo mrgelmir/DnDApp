@@ -20,33 +20,18 @@ public class ExpendableView implements ItemViewController {
 
     private ExpendableModel data;
 
-    private TextView titleView;
-    private TextView valueView;
-    private ImageButton increaseButton;
-    private ImageButton decreaseButton;
+    @Override
+    public void setDataChangedListener(DataChangedListener listener) {
+
+    }
 
     @Override
     public void setupItemView(View itemView) {
 
-        titleView = (TextView) itemView.findViewById(R.id.expendable_title);
-        valueView = (TextView) itemView.findViewById(R.id.expendable_value);
-        increaseButton = (ImageButton) itemView.findViewById(R.id.expendable_btn_increase);
-        decreaseButton = (ImageButton) itemView.findViewById(R.id.expendable_btn_decrease);
-    }
-
-    @Override
-    public void setupInfoView(View view) {
-
-    }
-
-    @Override
-    public void setupEditView(View editView) {
-
-    }
-
-    @Override
-    public void setItem(BaseItem item) {
-        data = (ExpendableModel) item;
+        TextView titleView = (TextView) itemView.findViewById(R.id.expendable_title);
+        TextView valueView = (TextView) itemView.findViewById(R.id.expendable_value);
+        ImageButton increaseButton = (ImageButton) itemView.findViewById(R.id.expendable_btn_increase);
+        ImageButton decreaseButton = (ImageButton) itemView.findViewById(R.id.expendable_btn_decrease);
 
         // Do actual setup
         titleView.setText(data.title);
@@ -70,6 +55,28 @@ public class ExpendableView implements ItemViewController {
                 dataUpdated();
             }
         });
+    }
+
+    @Override
+    public void setupInfoView(View view) {
+
+    }
+
+    @Override
+    public void setupEditView(View editView) {
+
+    }
+
+    @Override
+    public void resolveEditView(View editView) {
+
+    }
+
+    @Override
+    public void setItem(BaseItem item) {
+        data = (ExpendableModel) item;
+
+
     }
 
     @Override

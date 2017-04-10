@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 
@@ -17,7 +17,8 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
  * The base for all listView items
  */
 
-public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
+public final class BaseItemView<T extends BaseItem> extends RelativeLayout
+        implements ItemViewController.DataChangedListener {
 
     /**
      * The view controller determining which views will be loaded and how they will be set up.
@@ -40,13 +41,13 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
     public void setup(ItemViewController viewController) {
         this.viewController = viewController;
+        this.viewController.setDataChangedListener(this);
         LayoutInflater.from(getContext()).inflate(viewController.getItemResourceId(), this, true);
-        viewController.setupItemView(this);
-
     }
 
     public void setItem(BaseItem item) {
         viewController.setItem(item);
+        viewController.setupItemView(this);
     }
 
     public void onClick() {
@@ -58,15 +59,29 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
     }
 
     private void CreateDialog(@LayoutRes int resourceId, @ItemDialogFragment.ViewType int viewType, String tag) {
-        // Get activity from context
-        FragmentActivity a = (FragmentActivity) getContext();
-        // Get fragment transaction
-        FragmentTransaction ft = a.getSupportFragmentManager().beginTransaction();
 
-        // Create dialog using inherited resources and show
-        ItemDialogFragment newFragment = ItemDialogFragment.newInstance(resourceId, viewType);
-        newFragment.setViewSetup(viewController);
-        newFragment.show(ft, tag);
+        // Get FragmentManager
+        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+
+        // Create dialog using inherited resources
+        ItemDialogFragment itemDialogFragment = ItemDialogFragment.newInstance(resourceId, viewType);
+        itemDialogFragment.setViewSetup(viewController);
+
+        // TODO: 10/04/2017 move to resources or something
+        boolean fullScreen = false;
+
+        // Get fragment transaction
+        if (fullScreen) {
+            // TODO: 10/04/2017 Add a background here
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.add(android.R.id.content, itemDialogFragment)
+                    .addToBackStack(null).commit();
+        } else {
+            itemDialogFragment.show(fragmentManager, tag);
+        }
+
+
     }
 
 
@@ -98,8 +113,10 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
     }
 
-    protected void dataUpdated() {
+    public void dataChanged(BaseItem data) {
         // TODO figure out how to propagate the changes to the model
+        if (listener != null)
+            listener.DataUpdated((T) data);
     }
 
     public interface DataUpdateListener<U extends BaseItem> {
