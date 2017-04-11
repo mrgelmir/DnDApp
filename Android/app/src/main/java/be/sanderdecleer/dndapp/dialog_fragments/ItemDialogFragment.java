@@ -1,7 +1,10 @@
 package be.sanderdecleer.dndapp.dialog_fragments;
 
 
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
@@ -86,8 +89,6 @@ public class ItemDialogFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View parentView = inflater.inflate(R.layout.fragment_info_dialog, container, false);
 
-//        setShowsDialog(false);
-
         // Inflate child view
         contentView = parentView.findViewById(R.id.info_content);
         inflater.inflate(resourceId, (ViewGroup) contentView);
@@ -140,6 +141,20 @@ public class ItemDialogFragment extends DialogFragment {
         // Intro animation?
 
         return parentView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            // TODO how to make the dialog fit around the content??
+            dialog.getWindow().setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        }
     }
 
     private View.OnClickListener dismissClickListener = new View.OnClickListener() {

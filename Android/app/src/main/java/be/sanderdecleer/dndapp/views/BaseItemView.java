@@ -27,16 +27,20 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
     public BaseItemView(Context context) {
         super(context);
-        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        init();
     }
 
     public BaseItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        init();
     }
 
     public BaseItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init (){
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
