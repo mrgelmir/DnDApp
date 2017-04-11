@@ -30,7 +30,6 @@ import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.CharacterModel;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
-import be.sanderdecleer.dndapp.utils.EditControl;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.TestCharacterProvider;
 
@@ -38,8 +37,7 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class CharacterSheet extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CharacterControl.Listener,
-        EditControl.EditModeChangedListener {
+        CharacterControl.Listener {
 
     private static final String CHARACTER_KEY = "CharacterSheet.CharacterKey";
 
@@ -99,9 +97,6 @@ public class CharacterSheet extends AppCompatActivity
 
         // Load saved characters
         populateCharacterMenu();
-
-        // Subscribe to edit mode changes
-        EditControl.addListener(this);
 
         // Subscribe to character changed
         CharacterControl.getInstance().addListener(this);
@@ -165,14 +160,7 @@ public class CharacterSheet extends AppCompatActivity
             // Toggle between regular and edit mode
             case R.id.action_edit:
 
-                // toggle edit mode
-                EditControl.toggleEditMode();
-
-                // Set corresponding title.
-                // TODO: Move this to an EditControl.EditModeChangedListener later
-                item.setTitle(getString(EditControl.isEditMode() ?
-                        R.string.action_edit_done :
-                        R.string.action_edit));
+                // Not used for now
 
                 handled = true;
                 break;
@@ -184,17 +172,15 @@ public class CharacterSheet extends AppCompatActivity
                 CharacterFileUtil.saveCharacter(this, CharacterControl.getCurrentCharacter());
                 handled = true;
 
-                // If we are currently editing: Stop editing
-                if (EditControl.isEditMode()) {
-                    EditControl.setEditMode(false);
-                }
-
-                // Update the options menu to hide the save icon if nothing went wrong
                 CharacterControl.getCurrentCharacter().hasChanges = false;
-                updateOptionsMenu();
 
                 // Just in case this is a newly added character -> Update menu
-                populateCharacterMenu();
+//                populateCharacterMenu();
+
+                // Hide button
+                item.setEnabled(false);
+
+                handled = true;
                 break;
 
             // Rename character
@@ -267,10 +253,6 @@ public class CharacterSheet extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        // Stop editing if editing
-        if (EditControl.isEditMode())
-            EditControl.setEditMode(false);
-
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -284,8 +266,6 @@ public class CharacterSheet extends AppCompatActivity
                                 CharacterControl.getInstance().setCharacter(newModel);
                             }
                         });
-
-                EditControl.setEditMode(true);
                 break;
             case R.id.nav_clear_character:
                 // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
@@ -344,6 +324,7 @@ public class CharacterSheet extends AppCompatActivity
     // CharacterControl Listener Implementation
     @Override
     public void onCharacterChanged() {
+
         updateCharacter();
         mAdapter.notifyDataSetChanged();
 
@@ -355,8 +336,17 @@ public class CharacterSheet extends AppCompatActivity
         // Maybe animate this later
         mTabLayout.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
 
-        if(getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE){
+        if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
             mTabLayout.setVisibility(View.GONE);
+        }
+
+        // Show save icon
+        if (optionsMenu != null) {
+            MenuItem saveItem = optionsMenu.findItem(R.id.action_save);
+
+            int i = 5;
+
+            saveItem.setEnabled(true);
         }
     }
 
@@ -417,11 +407,6 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
-    @Override
-    public void OnEditModeChanged(boolean isEditMode) {
-        updateCharacter();
-    }
-
     // OPTION MENU FUNCTIONALITY
     private void updateOptionsMenu() {
 
@@ -430,25 +415,19 @@ public class CharacterSheet extends AppCompatActivity
             return;
         }
 
-//        MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
 //        MenuItem editNameAction = optionsMenu.findItem(R.id.action_edit_name);
         MenuItem saveAction = optionsMenu.findItem(R.id.action_save);
         MenuItem editAction = optionsMenu.findItem(R.id.action_edit);
 
         optionsMenu.setGroupVisible(R.id.action_group, CharacterControl.getCurrentCharacter() != null);
 
-        if (CharacterControl.getCurrentCharacter() == null) {
-            // Disable menu
-
-        } else {
-
-            //For now do not show edit items: edit on long tap
-//            saveAction.setVisible(EditControl.isEditMode()
-//                    && CharacterControl.getCurrentCharacter().hasChanges);
-//            editAction.setVisible(!EditControl.isEditMode());
-            saveAction.setVisible(false);
-            editAction.setVisible(false);
+        if (!CharacterControl.hasCurrentCharacter()) {
+            saveAction.setEnabled(false);
         }
+
+        //For now do not show edit items: edit on long tap\
+        editAction.setVisible(false);
+
     }
 
 

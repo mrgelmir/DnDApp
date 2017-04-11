@@ -55,29 +55,8 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
             itemView = getInflatedLayoutForItem(item);
         }
 
-        // set the data on the view now
+        // Bind the data to the view
         itemView.setItem(item);
-        itemView.setListener(new BaseItemView.DataUpdateListener() {
-            @Override
-            public void DataUpdated(BaseItem data) {
-                // TODO listen to data updates and propagate
-                switch (data.getType()) {
-                    case Expendable:
-                        CharacterControl.getCurrentCharacter().addExpendable((ExpendableModel) data);
-                        break;
-                    case Feature:
-                        CharacterControl.getCurrentCharacter().addAbility((FeatureModel) data);
-                        break;
-                    case Item:
-                        break;
-                    case Weapon:
-                        CharacterControl.getCurrentCharacter().addWeapon((WeaponModel) data);
-                        break;
-                }
-
-                notifyDataSetChanged();
-            }
-        });
 
         // Return the completed view to render on screen
         return itemView;

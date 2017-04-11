@@ -18,13 +18,8 @@ import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 public class WeaponView implements ItemViewController {
 
+    // Reference to data
     private WeaponModel data;
-    DataChangedListener listener;
-
-    @Override
-    public void setDataChangedListener(DataChangedListener listener) {
-        this.listener = listener;
-    }
 
     @Override
     public void setItem(BaseItem item) {
@@ -94,13 +89,10 @@ public class WeaponView implements ItemViewController {
         data.weaponToHit = toHitLabel.getText().toString();
         data.weaponDamage = damageLabel.getText().toString();
 
-        // TODO: 10/04/2017 Add this directly to character (find out how to replace in List)
-
         // Propagate changes
-        if(listener != null)
-            listener.dataChanged(data);
-
-//        CharacterControl.getCurrentCharacter().addWeapon(data);
+        if(CharacterControl.hasCurrentCharacter()){
+            CharacterControl.getInstance().characterChanged();
+        }
     }
 
     @Override

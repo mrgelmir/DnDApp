@@ -17,15 +17,12 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
  * The base for all listView items
  */
 
-public final class BaseItemView<T extends BaseItem> extends RelativeLayout
-        implements ItemViewController.DataChangedListener {
+public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
     /**
      * The view controller determining which views will be loaded and how they will be set up.
      */
     private ItemViewController viewController;
-
-    DataUpdateListener<T> listener;
 
     public BaseItemView(Context context) {
         super(context);
@@ -41,7 +38,6 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout
 
     public void setup(ItemViewController viewController) {
         this.viewController = viewController;
-        this.viewController.setDataChangedListener(this);
         LayoutInflater.from(getContext()).inflate(viewController.getItemResourceId(), this, true);
     }
 
@@ -82,44 +78,5 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout
         }
 
 
-    }
-
-
-    // TODO move data stuff to viewController
-
-    public void setListener(DataUpdateListener<T> listener) {
-        this.listener = listener;
-    }
-
-    protected T getData(BaseItem item) {
-        T data;
-
-        // Check if item is of desired type
-//        if (item instanceof T) {
-//            // Type cast to DerivedNode to access bar
-//            data = (T) item;
-//        } else {
-//            // Throw exception or what ever
-//            throw new RuntimeException("Invalid Object Type");
-//        }
-
-        try {
-            // how to fix this...
-            data = (T) item;
-            return data;
-        } catch (ClassCastException e) {
-            return null;
-        }
-
-    }
-
-    public void dataChanged(BaseItem data) {
-        // TODO figure out how to propagate the changes to the model
-        if (listener != null)
-            listener.DataUpdated((T) data);
-    }
-
-    public interface DataUpdateListener<U extends BaseItem> {
-        void DataUpdated(U data);
     }
 }

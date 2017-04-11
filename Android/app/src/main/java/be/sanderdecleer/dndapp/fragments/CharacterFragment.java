@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
-import be.sanderdecleer.dndapp.utils.EditControl;
 
 /**
  * A {@link Fragment} subclass.
@@ -17,8 +16,7 @@ import be.sanderdecleer.dndapp.utils.EditControl;
  */
 
 abstract class CharacterFragment extends Fragment
-        implements CharacterControl.Listener,
-        EditControl.EditModeChangedListener {
+        implements CharacterControl.Listener{
 
     // The object (probably activity) which holds the character data
     // TODO make sure this survives screen rotation =O
@@ -50,13 +48,6 @@ abstract class CharacterFragment extends Fragment
     public void onResume() {
         super.onResume();
         setup();
-        onCharacterChanged();
-    }
-
-    // EditModeChangedListener implementation
-    @Override
-    public void OnEditModeChanged(boolean isEditMode) {
-        // For now update character to show edit specific things, maybe later change this
         onCharacterChanged();
     }
 

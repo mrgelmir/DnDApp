@@ -60,10 +60,4 @@ public interface ItemViewController {
     @LayoutRes
     int getEditResourceId();
 
-    void setDataChangedListener(DataChangedListener listener);
-
-    interface DataChangedListener {
-        void dataChanged(BaseItem data);
-    }
-
 }

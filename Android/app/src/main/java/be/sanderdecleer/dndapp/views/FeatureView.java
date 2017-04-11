@@ -3,11 +3,13 @@ package be.sanderdecleer.dndapp.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.FeatureModel;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
  * Created by SD on 22/11/2016.
@@ -17,11 +19,6 @@ import be.sanderdecleer.dndapp.model.character.FeatureModel;
 public class FeatureView implements ItemViewController {
 
     private FeatureModel data;
-
-    @Override
-    public void setDataChangedListener(DataChangedListener listener) {
-
-    }
 
     @Override
     public void setItem(BaseItem item) {
@@ -48,12 +45,23 @@ public class FeatureView implements ItemViewController {
 
     @Override
     public void setupEditView(View editView) {
+        EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
+        EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
 
+        titleLabel.setText(data.title);
+        descriptionLabel.setText(data.description);
     }
 
     @Override
     public void resolveEditView(View editView) {
+        EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
+        EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
 
+        data.title = titleLabel.getText().toString();
+        data.description = descriptionLabel.getText().toString();
+
+        if (CharacterControl.hasCurrentCharacter())
+            CharacterControl.getInstance().characterChanged();
     }
 
     @Override

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group
-        android:id="@+id/action_group">
+    <group android:id="@+id/action_group">
 
         <item
-            android:enabled="false"
             android:id="@+id/action_edit"
+            android:enabled="false"
             android:icon="@drawable/ic_mode_edit_white_24dp"
             android:orderInCategory="2"
             android:title="@string/action_edit"
@@ -17,7 +16,7 @@
             android:orderInCategory="1"
             android:title="@string/action_save"
             android:visible="true"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always" />
 
         <item
             android:id="@+id/action_edit_name"

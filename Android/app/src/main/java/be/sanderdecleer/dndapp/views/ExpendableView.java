@@ -21,11 +21,6 @@ public class ExpendableView implements ItemViewController {
     private ExpendableModel data;
 
     @Override
-    public void setDataChangedListener(DataChangedListener listener) {
-
-    }
-
-    @Override
     public void setupItemView(View itemView) {
 
         TextView titleView = (TextView) itemView.findViewById(R.id.expendable_title);

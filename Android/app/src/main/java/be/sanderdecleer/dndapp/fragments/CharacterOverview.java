@@ -15,7 +15,6 @@ import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
-import be.sanderdecleer.dndapp.utils.OnClickListenerEditable;
 import be.sanderdecleer.dndapp.views.BaseItemView;
 
 
