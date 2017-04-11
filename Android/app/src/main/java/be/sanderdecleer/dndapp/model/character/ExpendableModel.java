@@ -12,17 +12,28 @@ public class ExpendableModel extends BaseItem {
     public String title;
     public int expendables_max;
     public int expendables_current;
+    /**
+     * The format in which the expendable is presented
+     * eg. "%1$d/%2$d" (default)
+     */
+    public String format;
 
     public ExpendableModel(String title, int maxExpendables, int currentExpendables) {
+        this(title, maxExpendables, currentExpendables, "%1$d/%2$d");
+    }
+
+    public ExpendableModel(String title, int maxExpendables, int currentExpendables, String format) {
         this.title = title;
         this.expendables_max = maxExpendables;
         this.expendables_current = currentExpendables;
+        this.format = format;
     }
 
     private ExpendableModel(Parcel in) {
         title = in.readString();
         expendables_max = in.readInt();
         expendables_current = in.readInt();
+        format = in.readString();
     }
 
     public void decrease() {
@@ -58,6 +69,7 @@ public class ExpendableModel extends BaseItem {
         dest.writeString(title);
         dest.writeInt(expendables_max);
         dest.writeInt(expendables_current);
+        dest.writeString(format);
     }
 
     public static final Parcelable.Creator<ExpendableModel> CREATOR

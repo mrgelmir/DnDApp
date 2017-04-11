@@ -28,7 +28,8 @@ public class ItemDialogFragment extends DialogFragment {
 
     @IntDef({VIEW_TYPE_EDIT, VIEW_TYPE_INFO})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ViewType {}
+    public @interface ViewType {
+    }
 
     public static final int VIEW_TYPE_INFO = 1;
     public static final int VIEW_TYPE_EDIT = 2;
@@ -80,13 +81,12 @@ public class ItemDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View parentView = inflater.inflate(R.layout.fragment_info_dialog, container, false);
 
 //        setShowsDialog(false);
-
 
         // Inflate child view
         contentView = parentView.findViewById(R.id.info_content);
@@ -152,7 +152,7 @@ public class ItemDialogFragment extends DialogFragment {
     private View.OnClickListener saveClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(contentView != null)
+            if (contentView != null)
                 viewSetup.resolveEditView(contentView);
             dismiss();
         }

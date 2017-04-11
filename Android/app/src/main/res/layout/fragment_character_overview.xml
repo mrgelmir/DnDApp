@@ -100,7 +100,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            tools:listitem="@layout/item_feature_view"/>
+            tools:listitem="@layout/item_feature_view" />
 
 
     </LinearLayout>

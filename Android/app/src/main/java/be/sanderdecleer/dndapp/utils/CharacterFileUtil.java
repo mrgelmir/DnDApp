@@ -60,12 +60,10 @@ public class CharacterFileUtil {
 
         File file = getFile(context, characterNameToFileName(character.getName()));
 
-        if (file.getParentFile().mkdirs() || file.getParentFile().isDirectory()) {
-            Log.e(LOG_TOKEN, "Directory exists: " + file.getParentFile().getPath());
-
-        } else {
+        if (!(file.getParentFile().mkdirs() || file.getParentFile().isDirectory())) {
             // TODO: Error handling
             Log.e(LOG_TOKEN, "Directory not created: " + file.getPath());
+            return;
         }
 
         // TODO: Query free space
@@ -76,8 +74,6 @@ public class CharacterFileUtil {
         String jsonString = gson.toJson(character);
 
         // Write the file
-//        Log.i(LOG_TOKEN, "Trying to write to " + file);
-
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(new FileOutputStream(file));
@@ -97,10 +93,6 @@ public class CharacterFileUtil {
                 }
             }
         }
-    }
-
-    public static CharacterModel loadCharacter(Context context, String characterName) {
-        return loadCharacter(getFile(context, characterName));
     }
 
     public static CharacterModel loadCharacter(File file) {
@@ -159,12 +151,6 @@ public class CharacterFileUtil {
 
         File fileDir = getFilesDir(context);
 
-//        List<String> fileNames = new ArrayList<>();
-//        for (File file : fileDir.listFiles()) {
-//            fileNames.add(file.getName());
-//        }
-//        return fileNames;
-
         List<CharacterDescription> characterDescriptions = new ArrayList<>();
         for (File file : fileDir.listFiles()) {
             characterDescriptions.add(loadCharacterDescription(context, file));
@@ -173,13 +159,13 @@ public class CharacterFileUtil {
         return characterDescriptions;
     }
 
-    /* Checks if external storage is available for read and write */
+    /** Checks if external storage is available for read and write */
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    /* Checks if external storage is available to at least read */
+    /** Checks if external storage is available to at least read */
     private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||

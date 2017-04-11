@@ -2,6 +2,7 @@ package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.StringBuilderPrinter;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.ExpendableModel;
 import be.sanderdecleer.dndapp.model.character.FeatureModel;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
  * Created by SD on 22/11/2016.
@@ -31,23 +33,23 @@ public class ExpendableView implements ItemViewController {
         // Do actual setup
         titleView.setText(data.title);
 
-        // TODO
-//        valueView.setText(String.format(getContext().getString(R.string.expendable_value),
-//                data.expendables_current, data.expendables_max));
+        valueView.setText(String.format(data.format, data.expendables_current, data.expendables_max));
 
-        // TODO: hook up buttons
+        // Hook up buttons
         increaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.expendables_current += 1;
-                dataUpdated();
+                data.increase();
+                if(CharacterControl.hasCurrentCharacter())
+                    CharacterControl.getInstance().characterChanged();
             }
         });
         decreaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.expendables_current -= 1;
-                dataUpdated();
+                data.decrease();
+                if(CharacterControl.hasCurrentCharacter())
+                    CharacterControl.getInstance().characterChanged();
             }
         });
     }
@@ -99,10 +101,4 @@ public class ExpendableView implements ItemViewController {
         return R.layout.edit_expendable_view;
     }
 
-    private void dataUpdated() {
-
-        // TODO: remove. Adapter should decide to redraw if needed
-//        valueView.setText(String.format(getContext().getString(R.string.expendable_value),
-//                data.expendables_current, data.expendables_max));
-    }
 }

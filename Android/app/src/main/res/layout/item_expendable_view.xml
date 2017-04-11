@@ -29,7 +29,6 @@
         android:paddingStart="@dimen/padding_narrow"
         android:text="@string/expendable_value_placeholder" />
 
-
     <ImageButton
         android:id="@+id/expendable_btn_increase"
         android:layout_width="@dimen/button_width_small"

@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment">
 
     <!-- Title -->
@@ -21,9 +21,8 @@
     <RelativeLayout
         android:id="@+id/info_content"
         style="@style/BasePadding"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_negative"
         android:layout_below="@+id/info_title">
 
 
@@ -60,6 +59,5 @@
         android:layout_alignParentEnd="true"
         android:text="CONFIRM EDITS"
         android:textColor="@color/colorPrimary" />
-
 
 </RelativeLayout>

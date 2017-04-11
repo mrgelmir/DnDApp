@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
@@ -26,14 +27,17 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
     public BaseItemView(Context context) {
         super(context);
+        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
     public BaseItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
     public BaseItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
     public void setup(ItemViewController viewController) {
