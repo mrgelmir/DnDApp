@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -149,11 +150,13 @@ public class ItemDialogFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
         if (dialog != null) {
-            // TODO how to make the dialog fit around the content??
-            dialog.getWindow().setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
+
+            // Make the dialog fit the content
+            Window dialogWindow = dialog.getWindow();
+            dialogWindow.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+            dialogWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_corners));
         }
     }
 

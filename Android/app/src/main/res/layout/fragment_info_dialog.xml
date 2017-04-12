@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment">
+    tools:context="be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment"
+    tools:parentTag="RelativeLayout">
 
     <!-- Title -->
     <TextView
@@ -24,8 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/info_title"
-        android:minHeight="50dp"
-        android:layout_above="@+id/button_dismiss">
+        android:minHeight="50dp">
 
 
     </RelativeLayout>
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/info_content"
         android:text="DISMISS"
         android:textColor="@color/colorPrimary" />
 
@@ -47,7 +47,7 @@
         style="@style/Base.Widget.AppCompat.ActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/info_content"
         android:layout_toStartOf="@+id/button_positive"
         android:text="CANCEL"
         android:textColor="@color/colorAccent" />
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/info_content"
         android:text="CONFIRM EDITS"
         android:textColor="@color/colorPrimary" />
 

@@ -23,7 +23,7 @@ public class CharacterControl implements CharacterProvider {
         return instance;
     }
 
-    public static boolean hasCurrentCharacter (){
+    public static boolean hasCurrentCharacter() {
         return getInstance().hasCharacter();
     }
 
@@ -35,11 +35,27 @@ public class CharacterControl implements CharacterProvider {
         getInstance().setCharacter(character);
     }
 
+    /**
+     * Attempts to propagate the character changed event
+     * Checks if a character is available first
+     * if not, nothing happens
+     * NOTE: I do not like this name; TODO find better name
+     * @return has the character changed event been sent
+     */
+    public static boolean tryCharacterChanged() {
+        if (hasCurrentCharacter()) {
+            getInstance().characterChanged();
+            return true;
+        }
+        return false;
+    }
+
     private CharacterControl() {
         // Private constructor for singleton
         instance = this;
         listeners = new HashSet<>();
     }
+
 
     @Override
     public boolean hasCharacter() {
@@ -48,7 +64,7 @@ public class CharacterControl implements CharacterProvider {
 
     @Override
     public CharacterModel getCharacter() {
-        if(currentCharacter == null)
+        if (currentCharacter == null)
             throw new NullPointerException("There is no character present");
         return currentCharacter;
     }
@@ -71,7 +87,7 @@ public class CharacterControl implements CharacterProvider {
 
     @Override
     public void characterChanged() {
-        for (Listener l:listeners){
+        for (Listener l : listeners) {
             l.onCharacterChanged();
         }
     }

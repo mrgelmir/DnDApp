@@ -76,7 +76,7 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
 
         // Get fragment transaction
         if (fullScreen) {
-            // TODO: 10/04/2017 Add a background here
+            // TODO: 10/04/2017 Add/set a background here
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.add(android.R.id.content, itemDialogFragment)

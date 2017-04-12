@@ -28,9 +28,9 @@ public class WeaponView implements ItemViewController {
 
     @Override
     public void setupItemView(View itemView) {
-        TextView displayLabel = (TextView) itemView.findViewById(R.id.weapon_display_name);
-        TextView toHitLabel = (TextView) itemView.findViewById(R.id.weapon_to_hit);
-        TextView damageLabel = (TextView) itemView.findViewById(R.id.weapon_damage);
+        final TextView displayLabel = (TextView) itemView.findViewById(R.id.weapon_display_name);
+        final TextView toHitLabel = (TextView) itemView.findViewById(R.id.weapon_to_hit);
+        final TextView damageLabel = (TextView) itemView.findViewById(R.id.weapon_damage);
 
         // Do actual setup
         displayLabel.setText(data.getDisplayName());
@@ -40,10 +40,10 @@ public class WeaponView implements ItemViewController {
 
     @Override
     public void setupInfoView(View infoView) {
-        TextView typeLabel = (TextView) infoView.findViewById(R.id.weapon_type);
-        TextView toHitLabel = (TextView) infoView.findViewById(R.id.weapon_to_hit);
-        TextView damageLabel = (TextView) infoView.findViewById(R.id.weapon_damage);
-        TextView featureLabel = (TextView) infoView.findViewById(R.id.weapon_features);
+        final TextView typeLabel = (TextView) infoView.findViewById(R.id.weapon_type);
+        final TextView toHitLabel = (TextView) infoView.findViewById(R.id.weapon_to_hit);
+        final TextView damageLabel = (TextView) infoView.findViewById(R.id.weapon_damage);
+        final TextView featureLabel = (TextView) infoView.findViewById(R.id.weapon_features);
 
         typeLabel.setText(data.weaponType);
         toHitLabel.setText(data.weaponToHit);
@@ -62,10 +62,10 @@ public class WeaponView implements ItemViewController {
     public void setupEditView(View editView) {
 
         // Set field data
-        EditText nicknameLabel = (EditText) editView.findViewById(R.id.weapon_edit_nickname);
-        EditText typeLabel = (EditText) editView.findViewById(R.id.weapon_edit_type);
-        EditText toHitLabel = (EditText) editView.findViewById(R.id.weapon_edit_to_hit);
-        EditText damageLabel = (EditText) editView.findViewById(R.id.weapon_edit_damage);
+        final EditText nicknameLabel = (EditText) editView.findViewById(R.id.weapon_edit_nickname);
+        final EditText typeLabel = (EditText) editView.findViewById(R.id.weapon_edit_type);
+        final EditText toHitLabel = (EditText) editView.findViewById(R.id.weapon_edit_to_hit);
+        final EditText damageLabel = (EditText) editView.findViewById(R.id.weapon_edit_damage);
 
         nicknameLabel.setText(data.nickname);
         typeLabel.setText(data.weaponType);
@@ -76,13 +76,11 @@ public class WeaponView implements ItemViewController {
     @Override
     public void resolveEditView(View editView) {
 
-//        CharacterControl.getCurrentCharacter().removeWeapon(data);
-
         // Get data from fields
-        EditText nicknameLabel = (EditText) editView.findViewById(R.id.weapon_edit_nickname);
-        EditText typeLabel = (EditText) editView.findViewById(R.id.weapon_edit_type);
-        EditText toHitLabel = (EditText) editView.findViewById(R.id.weapon_edit_to_hit);
-        EditText damageLabel = (EditText) editView.findViewById(R.id.weapon_edit_damage);
+        final EditText nicknameLabel = (EditText) editView.findViewById(R.id.weapon_edit_nickname);
+        final EditText typeLabel = (EditText) editView.findViewById(R.id.weapon_edit_type);
+        final EditText toHitLabel = (EditText) editView.findViewById(R.id.weapon_edit_to_hit);
+        final EditText damageLabel = (EditText) editView.findViewById(R.id.weapon_edit_damage);
 
         data.nickname = nicknameLabel.getText().toString();
         data.weaponType = typeLabel.getText().toString();
@@ -90,9 +88,7 @@ public class WeaponView implements ItemViewController {
         data.weaponDamage = damageLabel.getText().toString();
 
         // Propagate changes
-        if(CharacterControl.hasCurrentCharacter()){
-            CharacterControl.getInstance().characterChanged();
-        }
+        CharacterControl.tryCharacterChanged();
     }
 
     @Override
@@ -112,7 +108,7 @@ public class WeaponView implements ItemViewController {
 
     @Override
     public boolean hasTitle() {
-        return false;
+        return true;
     }
 
     @Override

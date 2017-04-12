@@ -1,11 +1,17 @@
 package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.util.StringBuilderPrinter;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
@@ -40,7 +46,7 @@ public class ExpendableView implements ItemViewController {
             @Override
             public void onClick(View v) {
                 data.increase();
-                if(CharacterControl.hasCurrentCharacter())
+                if (CharacterControl.hasCurrentCharacter())
                     CharacterControl.getInstance().characterChanged();
             }
         });
@@ -48,25 +54,79 @@ public class ExpendableView implements ItemViewController {
             @Override
             public void onClick(View v) {
                 data.decrease();
-                if(CharacterControl.hasCurrentCharacter())
-                    CharacterControl.getInstance().characterChanged();
+                CharacterControl.tryCharacterChanged();
             }
         });
     }
 
     @Override
-    public void setupInfoView(View view) {
+    public void setupInfoView(View infoView) {
 
+        final NumberPicker currentAmount = (NumberPicker) infoView.findViewById(R.id.expendable_current);
+        final TextView maxAmount = (TextView) infoView.findViewById(R.id.expendable_max);
+        final Button resetButton = (Button) infoView.findViewById(R.id.expendable_reset);
+
+        currentAmount.setMinValue(0);
+        currentAmount.setMaxValue(data.expendables_max);
+        currentAmount.setValue(data.expendables_current);
+
+        maxAmount.setText(String.format (Locale.getDefault() ,"%1$d", data.expendables_max));
+
+        currentAmount.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                data.expendables_current = newVal;
+                CharacterControl.tryCharacterChanged();
+            }
+        });
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.reset();
+                currentAmount.setValue(data.expendables_current);
+                CharacterControl.tryCharacterChanged();
+            }
+        });
     }
 
     @Override
     public void setupEditView(View editView) {
+        final EditText titleLabel = (EditText) editView.findViewById(R.id.expendable_title);
+        final NumberPicker currentAmount = (NumberPicker) editView.findViewById(R.id.expendable_current);
+        final NumberPicker maxAmount = (NumberPicker) editView.findViewById(R.id.expendable_max);
+
+        titleLabel.setText(data.title);
+
+        currentAmount.setMinValue(0);
+        currentAmount.setMaxValue(data.expendables_max);
+        currentAmount.setValue(data.expendables_current);
+
+        maxAmount.setMinValue(1);
+        maxAmount.setMaxValue(100);
+        maxAmount.setValue(data.expendables_max);
+
+        maxAmount.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                currentAmount.setValue(Math.min(currentAmount.getValue(), newVal));
+                currentAmount.setMaxValue(newVal);
+            }
+        });
 
     }
 
     @Override
     public void resolveEditView(View editView) {
+        final EditText titleLabel = (EditText) editView.findViewById(R.id.expendable_title);
+        final NumberPicker currentAmount = (NumberPicker) editView.findViewById(R.id.expendable_current);
+        final NumberPicker maxAmount = (NumberPicker) editView.findViewById(R.id.expendable_max);
 
+        data.title = titleLabel.getText().toString();
+        data.expendables_current = currentAmount.getValue();
+        data.expendables_max = maxAmount.getValue();
+
+        CharacterControl.tryCharacterChanged();
     }
 
     @Override

@@ -28,8 +28,8 @@ public class FeatureView implements ItemViewController {
     @Override
     public void setupItemView(View itemView) {
 
-        TextView titleLabel = (TextView) itemView.findViewById(R.id.ability_title);
-        TextView descriptionLabel = (TextView) itemView.findViewById(R.id.ability_description);
+        final TextView titleLabel = (TextView) itemView.findViewById(R.id.ability_title);
+        final TextView descriptionLabel = (TextView) itemView.findViewById(R.id.ability_description);
 
         // Do actual setup
         titleLabel.setText(data.title);
@@ -39,14 +39,16 @@ public class FeatureView implements ItemViewController {
     @Override
     public void setupInfoView(View infoView) {
 
-        TextView descriptionLabel = (TextView) infoView.findViewById(R.id.ability_description);
+        final TextView descriptionLabel = (TextView) infoView.findViewById(R.id.ability_description);
+
         descriptionLabel.setText(data.description);
     }
 
     @Override
     public void setupEditView(View editView) {
-        EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
-        EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
+
+        final EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
+        final EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
 
         titleLabel.setText(data.title);
         descriptionLabel.setText(data.description);
@@ -54,14 +56,14 @@ public class FeatureView implements ItemViewController {
 
     @Override
     public void resolveEditView(View editView) {
-        EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
-        EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
+
+        final EditText titleLabel = (EditText) editView.findViewById(R.id.feature_edit_title);
+        final EditText descriptionLabel = (EditText) editView.findViewById(R.id.feature_edit_description);
 
         data.title = titleLabel.getText().toString();
         data.description = descriptionLabel.getText().toString();
 
-        if (CharacterControl.hasCurrentCharacter())
-            CharacterControl.getInstance().characterChanged();
+        CharacterControl.tryCharacterChanged();
     }
 
     @Override
