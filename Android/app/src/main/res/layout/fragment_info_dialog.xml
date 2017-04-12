@@ -34,7 +34,7 @@
 
     <Button
         android:id="@+id/button_dismiss"
-        style="@style/Base.Widget.AppCompat.ActionButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -44,7 +44,7 @@
 
     <Button
         android:id="@+id/button_negative"
-        style="@style/Base.Widget.AppCompat.ActionButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/info_content"
@@ -54,7 +54,7 @@
 
     <Button
         android:id="@+id/button_positive"
-        style="@style/Base.Widget.AppCompat.ActionButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

@@ -8,11 +8,22 @@
 
 
     <TextView
+        android:id="@+id/no_character_description"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:gravity="center"
+        android:padding="@dimen/activity_horizontal_margin"
         android:text="No character selected.\n
         Try the sidebar to load an existing character.\n
         Or create a new character." />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/no_character_description"
+        android:layout_centerHorizontal="true"
+        android:text="Use last character: 'Name'" />
 
 </RelativeLayout>

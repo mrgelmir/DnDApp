@@ -1,8 +1,12 @@
 package be.sanderdecleer.dndapp.fragments;
 
+import android.animation.Animator;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -54,6 +58,7 @@ public class CharacterOverview extends CharacterFragment {
     @Override
     protected void setup() {
 
+        // Create content
         ArrayList<BaseItem> items = new ArrayList<>();
         if (characterProvider.hasCharacter()) {
             items.addAll(characterProvider.getCharacter().weapons);
@@ -72,10 +77,7 @@ public class CharacterOverview extends CharacterFragment {
         adapterView.setOnItemLongClickListener(itemClickListener);
 
 
-        // todo Attach click listeners for both regular and edit use
         attachClickListeners();
-
-
     }
 
     @Override
@@ -147,6 +149,7 @@ public class CharacterOverview extends CharacterFragment {
 
     private void attachClickListeners() {
 
+        // TODO: 12/04/2017 Make this more pretty
         // Set up ability updating
         setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
             @Override
@@ -245,18 +248,94 @@ public class CharacterOverview extends CharacterFragment {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        final View.OnClickListener creationMenuToggleListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                toggleCreationMenu();
+
+            }
+        };
+
+        // Floating Action Button setup
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
         if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
+            fab.setOnClickListener(creationMenuToggleListener);
+        }
+
+        // Creation menu setup
+        final Button createWeaponButton = (Button) findViewById(R.id.create_weapon);
+        final Button createFeatureButton = (Button) findViewById(R.id.create_feature);
+        final Button createExpendableButton = (Button) findViewById(R.id.create_expendable);
+
+        createWeaponButton.setOnClickListener(creationMenuToggleListener);
+        createFeatureButton.setOnClickListener(creationMenuToggleListener);
+        createExpendableButton.setOnClickListener(creationMenuToggleListener);
+    }
+
+    private void toggleCreationMenu() {
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        // Creation menu revel setup
+        final View creationMenu = findViewById(R.id.overview_create_menu);
+
+        if (creationMenu.getVisibility() != View.VISIBLE) {
+
+            final int moveDuration = 200;
+
+            int[] activatorLocation = new int[2];
+            fab.getLocationOnScreen(activatorLocation);
+
+            int[] menuLocation = new int[2];
+            creationMenu.getLocationOnScreen(menuLocation);
+
+            TranslateAnimation moveAnim = new TranslateAnimation(
+                    0, menuLocation[0] - activatorLocation[0] + creationMenu.getWidth() / 2,
+                    0, menuLocation[1] - activatorLocation[1] + creationMenu.getHeight() / 2);
+
+            moveAnim.setDuration(moveDuration);
+
+            fab.startAnimation(moveAnim);
+
+            // get the center for the clipping circle
+            int cx = creationMenu.getWidth() / 2;
+            int cy = creationMenu.getHeight() / 2;
+
+            // get the final radius for the clipping circle
+            float finalRadius = (float) Math.hypot(cx, cy);
+
+            final Animator revealAnim = ViewAnimationUtils.createCircularReveal(creationMenu, cx, cy, 0, finalRadius);
+
+            revealAnim.setStartDelay(moveDuration);
+            revealAnim.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onClick(View v) {
-                    if (characterProvider.hasCharacter()) {
-                        characterProvider.getCharacter().
-                                addAbility(new FeatureModel("title", "description"));
-                        characterProvider.characterChanged();
-                    }
+                public void onAnimationStart(Animator animation) {
+
+                    creationMenu.setVisibility(View.VISIBLE);
+                    fab.hide();
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
                 }
             });
+            revealAnim.start();
+
+        } else {
+            // TODO
+            creationMenu.setVisibility(View.GONE);
+            fab.show();
         }
     }
 
@@ -334,7 +413,7 @@ public class CharacterOverview extends CharacterFragment {
         }
     }
 
-    interface AbilityAccessor {
+    private interface AbilityAccessor {
 
         void set(int value);
 

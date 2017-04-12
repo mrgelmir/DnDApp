@@ -1,6 +1,7 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -352,12 +353,17 @@ public class CharacterSheet extends AppCompatActivity
 
     private void updateCharacter() {
 
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+
         // Set activeCharacter name as title
         if (CharacterControl.getInstance().hasCharacter()) {
             getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().getName());
             CharacterControl.getInstance().getCharacter().hasChanges = true;
+
+            fab.show();
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
+            fab.hide();
         }
 
         // Update the options menu accordingly
