@@ -30,20 +30,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" />
 
-        <include
-            android:id="@+id/overview_ability_scores_separator"
-            layout="@layout/p_separator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/overview_ability_scores" />
 
         <LinearLayout
             android:id="@+id/overview_various_todo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/overview_ability_scores_separator"
+            android:layout_below="@+id/overview_ability_scores"
             android:padding="@dimen/padding_narrow">
 
             <!-- AC -->

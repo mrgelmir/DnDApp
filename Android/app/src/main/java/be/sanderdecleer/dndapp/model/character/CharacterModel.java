@@ -21,12 +21,12 @@ public class CharacterModel implements Parcelable {
     public List<ExpendableModel> expendables = new ArrayList<>();
 
     // Ability scores
-    private int STR_base;
-    private int DEX_base;
-    private int CON_base;
-    private int INT_base;
-    private int WIS_base;
-    private int CHA_base;
+    private AbilityModel STR = AbilityModel.getForAbility("STR");
+    private AbilityModel DEX = AbilityModel.getForAbility("DEX");
+    private AbilityModel CON = AbilityModel.getForAbility("CON");
+    private AbilityModel INT = AbilityModel.getForAbility("INT");
+    private AbilityModel WIS = AbilityModel.getForAbility("WIS");
+    private AbilityModel CHA = AbilityModel.getForAbility("CHA");
 
     private int speed;
     private int AC;
@@ -72,7 +72,7 @@ public class CharacterModel implements Parcelable {
         return this;
     }
 
-    public void removeWeapon (WeaponModel weaponModel) {
+    public void removeWeapon(WeaponModel weaponModel) {
         weapons.remove(weaponModel);
     }
 
@@ -103,12 +103,12 @@ public class CharacterModel implements Parcelable {
         // Read data
         setName(in.readString());
 
-        setSTR(in.readInt());
-        setDEX(in.readInt());
-        setCON(in.readInt());
-        setINT(in.readInt());
-        setWIS(in.readInt());
-        setCHA(in.readInt());
+        STR = in.readParcelable(AbilityModel.class.getClassLoader());
+        DEX = in.readParcelable(AbilityModel.class.getClassLoader());
+        CON = in.readParcelable(AbilityModel.class.getClassLoader());
+        INT = in.readParcelable(AbilityModel.class.getClassLoader());
+        WIS = in.readParcelable(AbilityModel.class.getClassLoader());
+        CHA = in.readParcelable(AbilityModel.class.getClassLoader());
 
         setSpeed(in.readInt());
         setAC(in.readInt());
@@ -130,12 +130,12 @@ public class CharacterModel implements Parcelable {
         // Do not use getters or setters because these may account for modifications
         dest.writeString(name);
 
-        dest.writeInt(STR_base);
-        dest.writeInt(DEX_base);
-        dest.writeInt(CON_base);
-        dest.writeInt(INT_base);
-        dest.writeInt(WIS_base);
-        dest.writeInt(CHA_base);
+        dest.writeParcelable(STR, 0);
+        dest.writeParcelable(DEX, 0);
+        dest.writeParcelable(CON, 0);
+        dest.writeParcelable(INT, 0);
+        dest.writeParcelable(WIS, 0);
+        dest.writeParcelable(CHA, 0);
 
         dest.writeInt(speed);
         dest.writeInt(AC);
@@ -161,7 +161,7 @@ public class CharacterModel implements Parcelable {
             return false;
         if (getClass() != o.getClass())
             return false;
-        CharacterModel other = (CharacterModel ) o;
+        CharacterModel other = (CharacterModel) o;
 
         return other.getName().equals(getName());
     }
@@ -178,57 +178,76 @@ public class CharacterModel implements Parcelable {
         return this;
     }
 
-    public int getSTR() {
-        return STR_base;
+    public AbilityModel getSTR() {
+        return STR;
     }
 
-    public CharacterModel setSTR(int STR_base) {
-        this.STR_base = STR_base;
+    public AbilityModel getDEX() {
+        return DEX;
+    }
+
+    public AbilityModel getCON() {
+        return CON;
+    }
+
+    public AbilityModel getINT() {
+        return INT;
+    }
+
+    public AbilityModel getWIS() {
+        return WIS;
+    }
+
+    public AbilityModel getCHA() {
+        return CHA;
+    }
+
+    public int getSTRValue() {
+        return STR.getScore();
+    }
+    public int getDEXValue() {
+        return DEX.getScore();
+    }
+    public int getCONValue() {
+        return CON.getScore();
+    }
+    public int getINTValue() {
+        return INT.getScore();
+    }
+    public int getWISValue() {
+        return WIS.getScore();
+    }
+    public int getCHAValue() {
+        return CHA.getScore();
+    }
+
+    public CharacterModel setSTR(int str_score) {
+        STR.setScore(str_score);
         return this;
     }
 
-    public int getDEX() {
-        return DEX_base;
-    }
-
-    public CharacterModel setDEX(int DEX_base) {
-        this.DEX_base = DEX_base;
+    public CharacterModel setDEX(int DEX_score) {
+        DEX.setScore(DEX_score);
         return this;
     }
 
-    public int getCON() {
-        return CON_base;
-    }
-
-    public CharacterModel setCON(int CON_base) {
-        this.CON_base = CON_base;
+    public CharacterModel setCON(int CON_score) {
+        CON.setScore(CON_score);
         return this;
     }
 
-    public int getINT() {
-        return INT_base;
-    }
-
-    public CharacterModel setINT(int INT_base) {
-        this.INT_base = INT_base;
+    public CharacterModel setINT(int INT_score) {
+        INT.setScore(INT_score);
         return this;
     }
 
-    public int getWIS() {
-        return WIS_base;
-    }
-
-    public CharacterModel setWIS(int WIS_base) {
-        this.WIS_base = WIS_base;
+    public CharacterModel setWIS(int WIS_score) {
+        WIS.setScore(WIS_score);
         return this;
     }
 
-    public int getCHA() {
-        return CHA_base;
-    }
-
-    public CharacterModel setCHA(int CHA_base) {
-        this.CHA_base = CHA_base;
+    public CharacterModel setCHA(int CHA_score) {
+        CHA.setScore(CHA_score);
         return this;
     }
 

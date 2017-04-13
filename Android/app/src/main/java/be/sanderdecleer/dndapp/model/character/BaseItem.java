@@ -10,7 +10,14 @@ import android.os.Parcelable;
 public abstract class BaseItem implements Parcelable {
 
     public enum Type {
-        Weapon(0), Feature(1), Expendable(2), Item(4); //,Spell(3);
+        Weapon(0),
+        Feature(1),
+        Expendable(2),
+        // Spell(3),
+        Item(4),
+        AbilityScore(10),
+        ArmorClass(11),
+        Speed(12);
 
         private int value;
 

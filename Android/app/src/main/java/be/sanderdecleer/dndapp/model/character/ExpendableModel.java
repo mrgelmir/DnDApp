@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 /**
  * Created by SD on 29/05/2016.
+ * Holds all data of an Expendable
  */
 public class ExpendableModel extends BaseItem {
 

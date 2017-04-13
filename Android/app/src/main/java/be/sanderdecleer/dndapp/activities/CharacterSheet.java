@@ -88,6 +88,8 @@ public class CharacterSheet extends AppCompatActivity
         // Give the TabLayout the ViewPager
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         mTabLayout.setupWithViewPager(mPager);
+        // Tabs gone for now: no spells
+        mTabLayout.setVisibility(View.GONE);
 
         // Get the placeholder
         mPlaceholder = findViewById(R.id.placeholder);
@@ -333,9 +335,12 @@ public class CharacterSheet extends AppCompatActivity
         boolean hasCharacter = CharacterControl.hasCurrentCharacter();
 
         mPager.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
+
         mPlaceholder.setVisibility(hasCharacter ? View.GONE : View.VISIBLE);
         // Maybe animate this later
         mTabLayout.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
+        // TODO remove (this is because spell tab isn't implemented)
+        mTabLayout.setVisibility(View.GONE);
 
         if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
             mTabLayout.setVisibility(View.GONE);

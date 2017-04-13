@@ -11,12 +11,14 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
+import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.ExpendableModel;
 import be.sanderdecleer.dndapp.model.character.FeatureModel;
@@ -25,6 +27,7 @@ import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
+import be.sanderdecleer.dndapp.views.AbilityView;
 import be.sanderdecleer.dndapp.views.BaseItemView;
 
 
@@ -94,19 +97,28 @@ public class CharacterOverview extends CharacterFragment {
             return;
         }
 
+        // TEST -> this is the way to go, but different
+        LinearLayout strView = (LinearLayout) findViewById(R.id.ability_score_STR);
+        AbilityModel strModel = AbilityModel.getEmpty();
+        strModel.setName("STR");
+        strModel.setScore(CharacterControl.getCurrentCharacter().getSTRValue());
+        AbilityView strViewController = new AbilityView();
+        strViewController.setItem(strModel);
+        strViewController.setupItemView(strView);
+
         // Update Ability scores
-        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
-                characterProvider.getCharacter().getSTR());
+//        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
+//                characterProvider.getCharacter().getSTRValue());
         setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
-                characterProvider.getCharacter().getDEX());
+                characterProvider.getCharacter().getDEXValue());
         setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
-                characterProvider.getCharacter().getCON());
+                characterProvider.getCharacter().getCONValue());
         setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
-                characterProvider.getCharacter().getINT());
+                characterProvider.getCharacter().getINTValue());
         setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
-                characterProvider.getCharacter().getWIS());
+                characterProvider.getCharacter().getWISValue());
         setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
-                characterProvider.getCharacter().getCHA());
+                characterProvider.getCharacter().getCHAValue());
 
 
         // Update other stats
@@ -159,7 +171,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getSTR();
+                return characterProvider.getCharacter().getSTRValue();
             }
 
             @Override
@@ -175,7 +187,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getDEX();
+                return characterProvider.getCharacter().getDEXValue();
             }
 
             @Override
@@ -191,7 +203,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getCON();
+                return characterProvider.getCharacter().getCONValue();
             }
 
             @Override
@@ -207,7 +219,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getINT();
+                return characterProvider.getCharacter().getINTValue();
             }
 
             @Override
@@ -223,7 +235,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getWIS();
+                return characterProvider.getCharacter().getWISValue();
             }
 
             @Override
@@ -239,7 +251,7 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getCHA();
+                return characterProvider.getCharacter().getCHAValue();
             }
 
             @Override

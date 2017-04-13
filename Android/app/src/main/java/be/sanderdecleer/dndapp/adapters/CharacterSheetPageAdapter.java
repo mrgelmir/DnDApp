@@ -14,7 +14,7 @@ import be.sanderdecleer.dndapp.utils.CharacterControl;
 public class CharacterSheetPageAdapter extends FragmentPagerAdapter {
 
     // TODO make this dependant on the availability of spells, items ...
-    private int NUM_ITEMS = 2;
+    private int NUM_ITEMS = 1;
 
     public CharacterSheetPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

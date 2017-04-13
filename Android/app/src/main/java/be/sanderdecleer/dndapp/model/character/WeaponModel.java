@@ -19,19 +19,19 @@ public class WeaponModel extends BaseItem {
     public String[] weaponFeatures;
 
     // TODO move this method to a factory. The context should not be used here
-    public static WeaponModel getEmpty(Context context) {
-        WeaponModel weaponModel = new WeaponModel();
-        weaponModel.weaponType = context.getString(R.string.weapon_default_type);
-        weaponModel.weaponToHit = context.getString(R.string.weapon_default_to_hit);
-        weaponModel.weaponDamage = context.getString(R.string.weapon_default_damage);
-        weaponModel.weaponFeatures = new String[0];
-        return weaponModel;
-    }
+//    public static WeaponModel getEmpty(Context context) {
+//        WeaponModel weaponModel = new WeaponModel();
+//        weaponModel.weaponType = context.getString(R.string.weapon_default_type);
+//        weaponModel.weaponToHit = context.getString(R.string.weapon_default_to_hit);
+//        weaponModel.weaponDamage = context.getString(R.string.weapon_default_damage);
+//        weaponModel.weaponFeatures = new String[0];
+//        return weaponModel;
+//    }
 
     public static WeaponModel getEmpty() {
         WeaponModel weaponModel = new WeaponModel();
         // Add default things here
-        weaponModel.nickname = "nickname";
+        weaponModel.nickname = "";
         weaponModel.weaponType = "weaponType";
         weaponModel.weaponToHit = "+X";
         weaponModel.weaponDamage = "XdY+Z";
