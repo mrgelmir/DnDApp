@@ -50,7 +50,7 @@ public class ExpendableModel extends BaseItem {
         expendables_current = expendables_max;
     }
 
-    public static ExpendableModel getEmpty(Context context) {
+    public static ExpendableModel getEmpty() {
         return new ExpendableModel("temp", 0, 0);
     }
 

@@ -47,6 +47,11 @@ public interface ItemViewController {
      */
     void resolveEditView(View editView);
 
+    /**
+     * Removes this object from the current character
+     */
+    void remove();
+
     boolean hasTitle();
 
     String getTitle();

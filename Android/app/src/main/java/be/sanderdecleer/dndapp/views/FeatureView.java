@@ -52,6 +52,8 @@ public class FeatureView implements ItemViewController {
 
         titleLabel.setText(data.title);
         descriptionLabel.setText(data.description);
+
+        titleLabel.requestFocus();
     }
 
     @Override
@@ -64,6 +66,14 @@ public class FeatureView implements ItemViewController {
         data.description = descriptionLabel.getText().toString();
 
         CharacterControl.tryCharacterChanged();
+    }
+
+    @Override
+    public void remove() {
+        if(CharacterControl.hasCurrentCharacter()) {
+            CharacterControl.getCurrentCharacter().removeFeature(data);
+            CharacterControl.getInstance().characterChanged();
+        }
     }
 
     @Override

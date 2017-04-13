@@ -7,6 +7,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="layout_dialog_width_min">240dp</dimen>
+
     <!-- small button padding -->
     <dimen name="padding_narrow">8dp</dimen>
     <dimen name="padding_regular">16dp</dimen>

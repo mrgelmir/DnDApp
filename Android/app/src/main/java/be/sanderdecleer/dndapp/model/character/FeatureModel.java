@@ -34,9 +34,8 @@ public class FeatureModel extends BaseItem {
         description = in.readString();
     }
 
-    public static FeatureModel getEmpty(Context context) {
-        return new FeatureModel(context.getString(R.string.feature_default_title),
-                context.getString(R.string.feature_default_description));
+    public static FeatureModel getEmpty() {
+        return new FeatureModel("", "");
     }
 
     @Override

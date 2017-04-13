@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import be.sanderdecleer.dndapp.R;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.views.ItemViewController;
 
 
@@ -104,9 +105,10 @@ public class ItemDialogFragment extends DialogFragment {
             }
 
             // Get buttons
-            Button dismissBtn = (Button) parentView.findViewById(R.id.button_dismiss);
-            Button confirmBtn = (Button) parentView.findViewById(R.id.button_positive);
-            Button cancelBtn = (Button) parentView.findViewById(R.id.button_negative);
+            final Button dismissBtn = (Button) parentView.findViewById(R.id.button_dismiss);
+            final Button confirmBtn = (Button) parentView.findViewById(R.id.button_positive);
+            final Button cancelBtn = (Button) parentView.findViewById(R.id.button_negative);
+            final Button removeButton = (Button) parentView.findViewById(R.id.button_remove);
 
             // Let the setup manage its own content
             // Enable/disable buttons depending on type
@@ -114,10 +116,10 @@ public class ItemDialogFragment extends DialogFragment {
                 default:
                 case VIEW_TYPE_INFO:
                     // Show dismiss button
-                    // Set cancel to INVISIBLE instead of gone for layout purposes
                     confirmBtn.setVisibility(View.GONE);
-                    cancelBtn.setVisibility(View.INVISIBLE);
+                    cancelBtn.setVisibility(View.GONE);
                     dismissBtn.setVisibility(View.VISIBLE);
+                    removeButton.setVisibility(View.GONE);
 
                     // Hook up buttons
                     dismissBtn.setOnClickListener(dismissClickListener);
@@ -129,17 +131,17 @@ public class ItemDialogFragment extends DialogFragment {
                     dismissBtn.setVisibility(View.GONE);
                     confirmBtn.setVisibility(View.VISIBLE);
                     cancelBtn.setVisibility(View.VISIBLE);
+                    removeButton.setVisibility(View.VISIBLE);
 
                     // Hook up buttons
                     cancelBtn.setOnClickListener(dismissClickListener);
                     confirmBtn.setOnClickListener(saveClickListener);
+                    removeButton.setOnClickListener(removeClickListener);
 
                     viewSetup.setupEditView(contentView);
                     break;
             }
         }
-
-        // Intro animation?
 
         return parentView;
     }
@@ -172,6 +174,15 @@ public class ItemDialogFragment extends DialogFragment {
         public void onClick(View v) {
             if (contentView != null)
                 viewSetup.resolveEditView(contentView);
+            dismiss();
+        }
+    };
+
+    private View.OnClickListener removeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO: 13/04/2017 remove this from the character
+            viewSetup.remove();
             dismiss();
         }
     };

@@ -26,12 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimary"
+            android:background="@color/color_primary"
             app:layout_anchor="@+id/toolbar"
             app:layout_anchorGravity="bottom"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/colorTextAlternative"
-            app:tabTextColor="@color/colorTextAlternative">
+            app:tabSelectedTextColor="@color/color_text_alternative"
+            app:tabTextColor="@color/color_text_alternative">
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"

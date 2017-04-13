@@ -114,6 +114,8 @@ public class ExpendableView implements ItemViewController {
             }
         });
 
+        titleLabel.requestFocus();
+
     }
 
     @Override
@@ -127,6 +129,14 @@ public class ExpendableView implements ItemViewController {
         data.expendables_max = maxAmount.getValue();
 
         CharacterControl.tryCharacterChanged();
+    }
+
+    @Override
+    public void remove() {
+        if(CharacterControl.hasCurrentCharacter()) {
+            CharacterControl.getCurrentCharacter().removeExpendable(data);
+            CharacterControl.getInstance().characterChanged();
+        }
     }
 
     @Override

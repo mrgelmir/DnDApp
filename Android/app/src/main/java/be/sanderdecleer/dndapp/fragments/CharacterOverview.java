@@ -1,6 +1,10 @@
 package be.sanderdecleer.dndapp.fragments;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -14,7 +18,9 @@ import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.ExpendableModel;
 import be.sanderdecleer.dndapp.model.character.FeatureModel;
+import be.sanderdecleer.dndapp.model.character.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
@@ -70,12 +76,11 @@ public class CharacterOverview extends CharacterFragment {
         AdapterView adapterView = (AdapterView) findViewById(R.id.item_list);
         if (adapterView != null) {
             adapterView.setAdapter(baseItemAdapter);
+
+            // Handle item interaction
+            adapterView.setOnItemClickListener(itemClickListener);
+            adapterView.setOnItemLongClickListener(itemClickListener);
         }
-
-        // Handle item interaction
-        adapterView.setOnItemClickListener(itemClickListener);
-        adapterView.setOnItemLongClickListener(itemClickListener);
-
 
         attachClickListeners();
     }
@@ -264,13 +269,51 @@ public class CharacterOverview extends CharacterFragment {
         }
 
         // Creation menu setup
+        final View creationMenu = findViewById(R.id.overview_create_menu);
         final Button createWeaponButton = (Button) findViewById(R.id.create_weapon);
         final Button createFeatureButton = (Button) findViewById(R.id.create_feature);
         final Button createExpendableButton = (Button) findViewById(R.id.create_expendable);
+        final Button dismissButton = (Button) findViewById(R.id.create_dismiss);
 
-        createWeaponButton.setOnClickListener(creationMenuToggleListener);
-        createFeatureButton.setOnClickListener(creationMenuToggleListener);
-        createExpendableButton.setOnClickListener(creationMenuToggleListener);
+        creationMenu.setVisibility(View.INVISIBLE);
+
+        createWeaponButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleCreationMenu();
+                if (CharacterControl.hasCurrentCharacter()) {
+                    CharacterControl.getCurrentCharacter().addWeapon(WeaponModel.getEmpty());
+                    CharacterControl.tryCharacterChanged();
+                }
+            }
+        });
+        createFeatureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleCreationMenu();
+                if (CharacterControl.hasCurrentCharacter()) {
+                    CharacterControl.getCurrentCharacter().addFeature(FeatureModel.getEmpty());
+                    CharacterControl.tryCharacterChanged();
+                }
+            }
+        });
+        createExpendableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleCreationMenu();
+                if (CharacterControl.hasCurrentCharacter()) {
+                    CharacterControl.getCurrentCharacter().addExpendable(ExpendableModel.getEmpty());
+                    CharacterControl.tryCharacterChanged();
+                }
+            }
+        });
+
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleCreationMenu();
+            }
+        });
     }
 
     private void toggleCreationMenu() {
@@ -306,13 +349,15 @@ public class CharacterOverview extends CharacterFragment {
 
             final Animator revealAnim = ViewAnimationUtils.createCircularReveal(creationMenu, cx, cy, 0, finalRadius);
 
+
             revealAnim.setStartDelay(moveDuration);
             revealAnim.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
 
                     creationMenu.setVisibility(View.VISIBLE);
-                    fab.hide();
+//                    fab.hide();
+                    fab.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -332,9 +377,46 @@ public class CharacterOverview extends CharacterFragment {
             });
             revealAnim.start();
 
+            final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(),
+                    getResources().getColor(R.color.color_accent),
+                    getResources().getColor(R.color.color_background));
+
+            colorAnimation.setDuration(revealAnim.getDuration());
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    creationMenu.setBackgroundTintList(ColorStateList.valueOf(
+                            (int) animation.getAnimatedValue()));
+                }
+            });
+            colorAnimation.setStartDelay(moveDuration);
+            colorAnimation.setDuration(revealAnim.getDuration());
+            colorAnimation.start();
+
+
         } else {
-            // TODO
-            creationMenu.setVisibility(View.GONE);
+
+            // get the center for the clipping circle
+            int cx = creationMenu.getMeasuredWidth() / 2;
+            int cy = creationMenu.getMeasuredHeight() / 2;
+
+            // get the initial radius for the clipping circle
+            int initialRadius = creationMenu.getWidth() / 2;
+
+            // create the animation (the final radius is zero)
+            Animator anim = ViewAnimationUtils.createCircularReveal(creationMenu, cx, cy, initialRadius, 0);
+
+            // make the view invisible when the animation is done
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    creationMenu.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            // start the animation
+            anim.start();
             fab.show();
         }
     }

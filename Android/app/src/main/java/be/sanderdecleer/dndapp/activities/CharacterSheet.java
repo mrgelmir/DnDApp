@@ -360,10 +360,12 @@ public class CharacterSheet extends AppCompatActivity
             getSupportActionBar().setTitle(CharacterControl.getInstance().getCharacter().getName());
             CharacterControl.getInstance().getCharacter().hasChanges = true;
 
-            fab.show();
+            if (fab != null)
+                fab.show();
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
-            fab.hide();
+            if (fab != null)
+                fab.setVisibility(View.INVISIBLE);
         }
 
         // Update the options menu accordingly

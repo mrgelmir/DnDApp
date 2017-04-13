@@ -24,9 +24,9 @@ public class TestCharacterProvider {
                 .setHitDice_max("2d8");
 
         character
-                .addAbility(new FeatureModel("Martial Arts", "Do bad-ass stuff"))
-                .addAbility(new FeatureModel("Wanderer", "Terrain stuff and such"))
-                .addAbility(new FeatureModel("Unarmored defense", "can't touch this"));
+                .addFeature(new FeatureModel("Martial Arts", "Do bad-ass stuff"))
+                .addFeature(new FeatureModel("Wanderer", "Terrain stuff and such"))
+                .addFeature(new FeatureModel("Unarmored defense", "can't touch this"));
 
         WeaponModel shortSword = WeaponModel.getEmpty();
         shortSword.nickname = "";
@@ -62,8 +62,8 @@ public class TestCharacterProvider {
                 .setSpeed(30)
                 .setHitDice_max("2d6");
 
-        character.addAbility(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
-        character.addAbility(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
+        character.addFeature(new FeatureModel("Spell 1", "This is an even more bad-ass skill description"));
+        character.addFeature(new FeatureModel("Magic bolt", "This is an even more bad-ass,\nmulti-line,\nskill description"));
 
         WeaponModel dagger2 = WeaponModel.getEmpty();
         dagger2.nickname = "lil' edge";

@@ -71,6 +71,8 @@ public class WeaponView implements ItemViewController {
         typeLabel.setText(data.weaponType);
         toHitLabel.setText(data.weaponToHit);
         damageLabel.setText(data.weaponDamage);
+
+        nicknameLabel.requestFocus();
     }
 
     @Override
@@ -89,6 +91,14 @@ public class WeaponView implements ItemViewController {
 
         // Propagate changes
         CharacterControl.tryCharacterChanged();
+    }
+
+    @Override
+    public void remove() {
+        if (CharacterControl.hasCurrentCharacter()) {
+            CharacterControl.getCurrentCharacter().removeWeapon(data);
+            CharacterControl.getInstance().characterChanged();
+        }
     }
 
     @Override

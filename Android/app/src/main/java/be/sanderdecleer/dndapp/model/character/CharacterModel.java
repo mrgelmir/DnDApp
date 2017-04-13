@@ -58,9 +58,13 @@ public class CharacterModel implements Parcelable {
         return this;
     }
 
-    public CharacterModel addAbility(FeatureModel ability) {
-        abilities.add(ability);
+    public CharacterModel addFeature(FeatureModel featureModel) {
+        abilities.add(featureModel);
         return this;
+    }
+
+    public void removeFeature(FeatureModel ability) {
+        abilities.remove(ability);
     }
 
     public CharacterModel addWeapon(WeaponModel weapon) {
@@ -68,9 +72,17 @@ public class CharacterModel implements Parcelable {
         return this;
     }
 
+    public void removeWeapon (WeaponModel weaponModel) {
+        weapons.remove(weaponModel);
+    }
+
     public CharacterModel addExpendable(ExpendableModel expendable) {
         expendables.add(expendable);
         return this;
+    }
+
+    public void removeExpendable(ExpendableModel expendable) {
+        expendables.remove(expendable);
     }
 
     // Parcelable implementations below
