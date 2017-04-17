@@ -46,7 +46,7 @@ public class CharacterSheet extends AppCompatActivity
     private Menu optionsMenu;
 
     private ViewPager mPager;
-    private FragmentPagerAdapter mAdapter;
+    private CharacterSheetPageAdapter mAdapter;
     private TabLayout mTabLayout;
     private View mPlaceholder;
 
@@ -125,11 +125,20 @@ public class CharacterSheet extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+        boolean backConsumed = false;
+
         // Close drawer if opened, otherwise do native back action
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+            backConsumed = true;
+        } else if(mAdapter.backPressed()){
+            backConsumed = true;
+        }
+
+
+        if(!backConsumed){
             super.onBackPressed();
         }
 

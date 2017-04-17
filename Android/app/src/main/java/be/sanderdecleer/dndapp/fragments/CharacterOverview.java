@@ -69,10 +69,10 @@ public class CharacterOverview extends CharacterFragment {
 
         // Create content
         ArrayList<BaseItem> items = new ArrayList<>();
-        if (characterProvider.hasCharacter()) {
-            items.addAll(characterProvider.getCharacter().weapons);
-            items.addAll(characterProvider.getCharacter().expendables);
-            items.addAll(characterProvider.getCharacter().abilities);
+        if (CharacterControl.hasCurrentCharacter()) {
+            items.addAll(CharacterControl.getCurrentCharacter().weapons);
+            items.addAll(CharacterControl.getCurrentCharacter().expendables);
+            items.addAll(CharacterControl.getCurrentCharacter().abilities);
         }
         baseItemAdapter = new BaseItemAdapter(getActivity(), R.layout.item_base, items);
 
@@ -92,7 +92,7 @@ public class CharacterOverview extends CharacterFragment {
     public void onCharacterChanged() {
 
         // Update data if character is valid
-        if (!characterProvider.hasCharacter()) {
+        if (!CharacterControl.hasCurrentCharacter()) {
             // TODO: 16/06/2016 Clear fields? -> use a null character?
             return;
         }
@@ -108,38 +108,39 @@ public class CharacterOverview extends CharacterFragment {
 
         // Update Ability scores
 //        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
-//                characterProvider.getCharacter().getSTRValue());
+//                CharacterControl.getCurrentCharacter().getSTRValue());
         setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
-                characterProvider.getCharacter().getDEXValue());
+                CharacterControl.getCurrentCharacter().getDEXValue());
         setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
-                characterProvider.getCharacter().getCONValue());
+                CharacterControl.getCurrentCharacter().getCONValue());
         setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
-                characterProvider.getCharacter().getINTValue());
+                CharacterControl.getCurrentCharacter().getINTValue());
         setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
-                characterProvider.getCharacter().getWISValue());
+                CharacterControl.getCurrentCharacter().getWISValue());
         setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
-                characterProvider.getCharacter().getCHAValue());
+                CharacterControl.getCurrentCharacter().getCHAValue());
 
 
         // Update other stats
         String formattedAC = String.format(getResources().getString(R.string.character_AC),
-                characterProvider.getCharacter().getAC());
+                CharacterControl.getCurrentCharacter().getAC());
         ((TextView) findViewById(R.id.character_AC)).setText(formattedAC);
 
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
-                characterProvider.getCharacter().getHP_current(), characterProvider.getCharacter().getHP_max());
+                CharacterControl.getCurrentCharacter().getHP_current(),
+                CharacterControl.getCurrentCharacter().getHP_max());
         ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
 
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
-                characterProvider.getCharacter().getSpeed());
+                CharacterControl.getCurrentCharacter().getSpeed());
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
         // Update items
         ArrayList<BaseItem> items = new ArrayList<>();
-        if (characterProvider.hasCharacter()) {
-            items.addAll(characterProvider.getCharacter().weapons);
-            items.addAll(characterProvider.getCharacter().expendables);
-            items.addAll(characterProvider.getCharacter().abilities);
+        if (CharacterControl.hasCurrentCharacter()) {
+            items.addAll(CharacterControl.getCurrentCharacter().weapons);
+            items.addAll(CharacterControl.getCurrentCharacter().expendables);
+            items.addAll(CharacterControl.getCurrentCharacter().abilities);
         }
         baseItemAdapter.clear();
         baseItemAdapter.addAll(items);
@@ -171,12 +172,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getSTRValue();
+                return CharacterControl.getCurrentCharacter().getSTRValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setSTR(value);
+                CharacterControl.getCurrentCharacter().setSTR(value);
             }
 
             @Override
@@ -187,12 +188,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getDEXValue();
+                return CharacterControl.getCurrentCharacter().getDEXValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setDEX(value);
+                CharacterControl.getCurrentCharacter().setDEX(value);
             }
 
             @Override
@@ -203,12 +204,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getCONValue();
+                return CharacterControl.getCurrentCharacter().getCONValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setCON(value);
+                CharacterControl.getCurrentCharacter().setCON(value);
             }
 
             @Override
@@ -219,12 +220,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getINTValue();
+                return CharacterControl.getCurrentCharacter().getINTValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setINT(value);
+                CharacterControl.getCurrentCharacter().setINT(value);
             }
 
             @Override
@@ -235,12 +236,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getWISValue();
+                return CharacterControl.getCurrentCharacter().getWISValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setWIS(value);
+                CharacterControl.getCurrentCharacter().setWIS(value);
             }
 
             @Override
@@ -251,12 +252,12 @@ public class CharacterOverview extends CharacterFragment {
         setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
             @Override
             public int get() {
-                return characterProvider.getCharacter().getCHAValue();
+                return CharacterControl.getCurrentCharacter().getCHAValue();
             }
 
             @Override
             public void set(int value) {
-                characterProvider.getCharacter().setCHA(value);
+                CharacterControl.getCurrentCharacter().setCHA(value);
             }
 
             @Override
@@ -442,7 +443,7 @@ public class CharacterOverview extends CharacterFragment {
                 @Override
                 public boolean onLongClick(View v) {
                     // Only show dialog when a character is present
-                    if (!characterProvider.hasCharacter())
+                    if (!CharacterControl.hasCurrentCharacter())
                         return false;
 
                     LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
@@ -476,7 +477,7 @@ public class CharacterOverview extends CharacterFragment {
 //                public void onClick(View v) {
 //
 //                    // Only show dialog when a character is present
-//                    if (!characterProvider.hasCharacter())
+//                    if (!CharacterControl.hasCurrentCharacter())
 //                        return;
 //
 //                    LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,

@@ -15,13 +15,8 @@ import be.sanderdecleer.dndapp.utils.CharacterProvider;
  * {@link CharacterProvider} interface to provide character data.
  */
 
-abstract class CharacterFragment extends Fragment
+public abstract class CharacterFragment extends Fragment
         implements CharacterControl.Listener{
-
-    // The object (probably activity) which holds the character data
-    // TODO make sure this survives screen rotation =O
-    // (https://developer.android.com/guide/topics/resources/runtime-changes.html)
-    protected CharacterProvider characterProvider;
 
     // Lifetime cycle functions/callbacks
 
@@ -30,8 +25,7 @@ abstract class CharacterFragment extends Fragment
                              Bundle savedInstanceState) {
 
         // Get Character provider
-        characterProvider = CharacterControl.getInstance();
-        characterProvider.addListener(this);
+        CharacterControl.getInstance().addListener(this);
 
         // Inflate the layout for this fragment
         return inflater.inflate(getLayoutID(), container, false);
@@ -40,8 +34,7 @@ abstract class CharacterFragment extends Fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        characterProvider.removeListener(this);
-        characterProvider = null;
+        CharacterControl.getInstance().removeListener(this);
     }
 
     @Override
@@ -50,6 +43,8 @@ abstract class CharacterFragment extends Fragment
         setup();
         onCharacterChanged();
     }
+
+
 
     // Abstract functions, need to be implemented
     protected abstract int getLayoutID();
@@ -63,7 +58,6 @@ abstract class CharacterFragment extends Fragment
 
     /**
      * Finds a view that was identified by the id attribute
-     *
      * @return The view, if found
      */
     protected View findViewById(int id) {
