@@ -21,20 +21,9 @@ public class CharacterSheetPageAdapter extends FragmentPagerAdapter {
     // TODO make this dependant on the availability of spells, items ...
     private int NUM_ITEMS = 1;
 
-    private Map<Integer, CharacterFragment> activeFragmentMap;
-
 
     public CharacterSheetPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        activeFragmentMap = new ArrayMap<>();
-    }
-
-
-    public boolean backPressed() {
-
-        //  Make character fragments do back press
-
-        return false;
     }
 
     @Override
@@ -59,13 +48,6 @@ public class CharacterSheetPageAdapter extends FragmentPagerAdapter {
             case 1:
                 return SpellSheetOverview.newInstance();
         }
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        CharacterFragment f = (CharacterFragment) super.instantiateItem(container, position);
-        activeFragmentMap.put(position, f);
-        return f;
     }
 
     @Override

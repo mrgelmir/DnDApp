@@ -1,10 +1,6 @@
 package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -18,7 +14,7 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
  * The base for all listView items
  */
 
-public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
+public final class BaseItemView extends RelativeLayout {
 
     /**
      * The view controller determining which views will be loaded and how they will be set up.
@@ -40,7 +36,7 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
         init();
     }
 
-    private void init (){
+    private void init() {
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
@@ -55,36 +51,13 @@ public final class BaseItemView<T extends BaseItem> extends RelativeLayout {
     }
 
     public void onClick() {
-        CreateDialog(viewController.getInfoResourceId(), ItemDialogFragment.VIEW_TYPE_INFO, "info_dialog");
+        ItemDialogFragment.showItemViewDialog(getContext(), viewController,
+                ItemDialogFragment.VIEW_TYPE_INFO, "info_dialog");
     }
 
     public void onLongClick() {
-        CreateDialog(viewController.getEditResourceId(), ItemDialogFragment.VIEW_TYPE_EDIT, "edit_dialog");
+        ItemDialogFragment.showItemViewDialog(getContext(), viewController,
+                ItemDialogFragment.VIEW_TYPE_EDIT, "edit_dialog");
     }
 
-    private void CreateDialog(@LayoutRes int resourceId, @ItemDialogFragment.ViewType int viewType, String tag) {
-
-        // Get FragmentManager
-        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
-
-        // Create dialog using inherited resources
-        ItemDialogFragment itemDialogFragment = ItemDialogFragment.newInstance(resourceId, viewType);
-        itemDialogFragment.setViewSetup(viewController);
-
-        // TODO: 10/04/2017 move to resources or something
-        boolean fullScreen = false;
-
-        // Get fragment transaction
-        if (fullScreen) {
-            // TODO: 10/04/2017 Add/set a background here
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.add(android.R.id.content, itemDialogFragment)
-                    .addToBackStack(null).commit();
-        } else {
-            itemDialogFragment.show(fragmentManager, tag);
-        }
-
-
-    }
 }

@@ -4,8 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -98,13 +101,17 @@ public class CharacterOverview extends CharacterFragment {
         }
 
         // TEST -> this is the way to go, but different
-        LinearLayout strView = (LinearLayout) findViewById(R.id.ability_score_STR);
-        AbilityModel strModel = AbilityModel.getEmpty();
-        strModel.setName("STR");
-        strModel.setScore(CharacterControl.getCurrentCharacter().getSTRValue());
-        AbilityView strViewController = new AbilityView();
-        strViewController.setItem(strModel);
-        strViewController.setupItemView(strView);
+//        LinearLayout strView = (LinearLayout) findViewById(R.id.ability_score_STR);
+//        AbilityModel strModel = AbilityModel.getEmpty();
+//        strModel.setName("STR");
+//        strModel.setScore(CharacterControl.getCurrentCharacter().getSTRValue());
+//        AbilityView strViewController = new AbilityView(getContext());
+//        strViewController.setItem(strModel);
+//        strViewController.setupItemView(strView);
+
+        AbilityView strView = (AbilityView) findViewById(R.id.ability_score_STR);
+        strView.setItem(CharacterControl.getCurrentCharacter().getSTR());
+        strView.setupItemView(strView);
 
         // Update Ability scores
 //        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
@@ -269,9 +276,7 @@ public class CharacterOverview extends CharacterFragment {
         final View.OnClickListener creationMenuToggleListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 toggleCreationMenu();
-
             }
         };
 
@@ -331,6 +336,59 @@ public class CharacterOverview extends CharacterFragment {
 
     private void toggleCreationMenu() {
 
+//        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+//
+//
+//        // TODO move this to a custom FragmentDialog to utilise the back-stack
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//
+//        builder.setTitle("Create");
+//
+//        builder.setItems(new CharSequence[]{"Weapon", "Feature", "Resource"},
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // Temp hardcoded switch
+//                        if (CharacterControl.hasCurrentCharacter()) {
+//
+//                            switch (which) {
+//                                case 0:
+//                                    CharacterControl.getCurrentCharacter().addWeapon(WeaponModel.getEmpty());
+//                                    break;
+//                                case 1:
+//                                    CharacterControl.getCurrentCharacter().addFeature(FeatureModel.getEmpty());
+//                                    break;
+//                                case 2:
+//                                    CharacterControl.getCurrentCharacter().addExpendable(ExpendableModel.getEmpty());
+//                                    break;
+//                            }
+//                            CharacterControl.tryCharacterChanged();
+//                        }
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//        builder.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                fab.show();
+//            }
+//        });
+//
+//        AlertDialog dialog = builder.create();
+//
+//        dialog.show();
+//        fab.hide();
+
+
+        // This is fancy animation code: keep this for later
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floating_action_button);
         // Creation menu revel setup
         final View creationMenu = findViewById(R.id.overview_create_menu);

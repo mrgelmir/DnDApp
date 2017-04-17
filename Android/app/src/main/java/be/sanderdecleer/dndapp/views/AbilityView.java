@@ -1,6 +1,10 @@
 package be.sanderdecleer.dndapp.views;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
@@ -11,9 +15,35 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
  * Created by SD on 13/04/2017.
  */
 
-public class AbilityView implements ItemViewController {
+public class AbilityView extends LinearLayout implements ItemViewController {
 
     AbilityModel data;
+
+    public AbilityView(Context context) {
+        super(context);
+    }
+
+    public AbilityView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public AbilityView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public AbilityView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    private void setup() {
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
 
     @Override
     public void setItem(BaseItem item) {

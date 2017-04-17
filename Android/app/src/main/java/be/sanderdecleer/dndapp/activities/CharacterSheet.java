@@ -5,12 +5,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
-import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -133,10 +131,7 @@ public class CharacterSheet extends AppCompatActivity
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
             backConsumed = true;
-        } else if(mAdapter.backPressed()){
-            backConsumed = true;
         }
-
 
         if(!backConsumed){
             super.onBackPressed();

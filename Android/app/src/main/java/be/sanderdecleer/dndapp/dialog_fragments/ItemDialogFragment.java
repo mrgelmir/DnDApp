@@ -2,6 +2,7 @@ package be.sanderdecleer.dndapp.dialog_fragments;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,9 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +53,42 @@ public class ItemDialogFragment extends DialogFragment {
     private ItemViewController viewSetup = null;
     private View contentView = null;
 
+    public static void showItemViewDialog(Context context, ItemViewController viewController,
+                                          @ItemDialogFragment.ViewType int viewType, String tag) {
+        // Get FragmentManager
+        final FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+
+        final int resourceId;
+        switch (viewType) {
+            default:
+            case VIEW_TYPE_INFO:
+                resourceId = viewController.getInfoResourceId();
+                break;
+
+            case VIEW_TYPE_EDIT:
+                resourceId = viewController.getEditResourceId();
+                break;
+        }
+
+        // Create dialog using inherited resources
+        final ItemDialogFragment itemDialogFragment =
+                ItemDialogFragment.newInstance(resourceId, viewType);
+        itemDialogFragment.setViewSetup(viewController);
+
+        // TODO: 10/04/2017 move to resources or something
+        final boolean fullScreen = false;
+
+        // Get fragment transaction
+        if (fullScreen) {
+            // TODO: 10/04/2017 Add/set a background here
+            final FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .add(android.R.id.content, itemDialogFragment)
+                    .addToBackStack(null).commit();
+        } else {
+            itemDialogFragment.show(fragmentManager, tag);
+        }
+    }
 
     public ItemDialogFragment() {
         // Required empty public constructor
