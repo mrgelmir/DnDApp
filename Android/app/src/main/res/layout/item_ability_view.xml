@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/ability_score_value_default"
-        android:textSize="@dimen/attr_sub"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="@dimen/attr_sub" />
 
 </be.sanderdecleer.dndapp.views.AbilityView>

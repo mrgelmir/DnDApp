@@ -54,19 +54,23 @@ public class ItemDialogFragment extends DialogFragment {
     private View contentView = null;
 
     public static void showItemViewDialog(Context context, ItemViewController viewController,
-                                          @ItemDialogFragment.ViewType int viewType, String tag) {
+                                          @ItemDialogFragment.ViewType int viewType) {
         // Get FragmentManager
         final FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
 
+        // Switch some data depending on type
         final int resourceId;
+        final String tag;
         switch (viewType) {
             default:
             case VIEW_TYPE_INFO:
                 resourceId = viewController.getInfoResourceId();
+                tag = "info_view";
                 break;
 
             case VIEW_TYPE_EDIT:
                 resourceId = viewController.getEditResourceId();
+                tag = "edit_view";
                 break;
         }
 
@@ -118,11 +122,12 @@ public class ItemDialogFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             resourceId = getArguments().getInt(ARG_RESOURCE_ID);
             viewType = getArguments().getInt(ARG_VIEW_TYPE);
         }
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override

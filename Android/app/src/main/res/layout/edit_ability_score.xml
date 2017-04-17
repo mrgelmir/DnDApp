@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="RelativeLayout">
 
     <NumberPicker
-        android:id="@+id/ability_edit_description"
+        android:id="@+id/attribute_value"
         android:layout_width="match_parent"
         android:layout_height="@dimen/number_picker_height">
 
     </NumberPicker>
 
-</RelativeLayout>
+</merge>

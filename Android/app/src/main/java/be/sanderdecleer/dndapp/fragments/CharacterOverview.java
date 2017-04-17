@@ -4,18 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,14 +18,15 @@ import java.util.ArrayList;
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
 import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 import be.sanderdecleer.dndapp.model.character.ExpendableModel;
 import be.sanderdecleer.dndapp.model.character.FeatureModel;
 import be.sanderdecleer.dndapp.model.character.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.views.AbilityView;
+import be.sanderdecleer.dndapp.views.ArmorClassView;
 import be.sanderdecleer.dndapp.views.BaseItemView;
 
 
@@ -97,57 +93,47 @@ public class CharacterOverview extends CharacterFragment {
         // Update data if character is valid
         if (!CharacterControl.hasCurrentCharacter()) {
             // TODO: 16/06/2016 Clear fields? -> use a null character?
+            // For now we just don't show this fragment without a character
             return;
         }
 
-        // TEST -> this is the way to go, but different
-//        LinearLayout strView = (LinearLayout) findViewById(R.id.ability_score_STR);
-//        AbilityModel strModel = AbilityModel.getEmpty();
-//        strModel.setName("STR");
-//        strModel.setScore(CharacterControl.getCurrentCharacter().getSTRValue());
-//        AbilityView strViewController = new AbilityView(getContext());
-//        strViewController.setItem(strModel);
-//        strViewController.setupItemView(strView);
+        // Get Character reference
+        CharacterModel currentCharacter = CharacterControl.getCurrentCharacter();
 
-        AbilityView strView = (AbilityView) findViewById(R.id.ability_score_STR);
-        strView.setItem(CharacterControl.getCurrentCharacter().getSTR());
-        strView.setupItemView(strView);
+        // Ability scores
+        setAbilityScore(R.id.ability_score_STR, currentCharacter.getSTR());
+        setAbilityScore(R.id.ability_score_DEX, currentCharacter.getDEX());
+        setAbilityScore(R.id.ability_score_CON, currentCharacter.getCON());
+        setAbilityScore(R.id.ability_score_INT, currentCharacter.getINT());
+        setAbilityScore(R.id.ability_score_WIS, currentCharacter.getWIS());
+        setAbilityScore(R.id.ability_score_CHA, currentCharacter.getCHA());
 
-        // Update Ability scores
-//        setAbilityScore(R.id.ability_score_STR, R.string.ability_score_STR,
-//                CharacterControl.getCurrentCharacter().getSTRValue());
-        setAbilityScore(R.id.ability_score_DEX, R.string.ability_score_DEX,
-                CharacterControl.getCurrentCharacter().getDEXValue());
-        setAbilityScore(R.id.ability_score_CON, R.string.ability_score_CON,
-                CharacterControl.getCurrentCharacter().getCONValue());
-        setAbilityScore(R.id.ability_score_INT, R.string.ability_score_INT,
-                CharacterControl.getCurrentCharacter().getINTValue());
-        setAbilityScore(R.id.ability_score_WIS, R.string.ability_score_WIS,
-                CharacterControl.getCurrentCharacter().getWISValue());
-        setAbilityScore(R.id.ability_score_CHA, R.string.ability_score_CHA,
-                CharacterControl.getCurrentCharacter().getCHAValue());
+        // Armor class
+        ArmorClassView armorClassView = (ArmorClassView) findViewById(R.id.character_AC);
+        armorClassView.setupItemView(armorClassView);
 
 
-        // Update other stats
-        String formattedAC = String.format(getResources().getString(R.string.character_AC),
-                CharacterControl.getCurrentCharacter().getAC());
-        ((TextView) findViewById(R.id.character_AC)).setText(formattedAC);
+//        String formattedAC = String.format(getResources().getString(R.string.character_AC),
+//                currentCharacter.getAC());
+//        ((TextView) findViewById(R.id.armor_class_label)).setText(formattedAC);
 
+        // Hit points
         String formattedHP = String.format(getResources().getString(R.string.character_HP),
-                CharacterControl.getCurrentCharacter().getHP_current(),
-                CharacterControl.getCurrentCharacter().getHP_max());
+                currentCharacter.getHP_current(),
+                currentCharacter.getHP_max());
         ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
 
+        // Speed
         String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
-                CharacterControl.getCurrentCharacter().getSpeed());
+                currentCharacter.getSpeed());
         ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
 
-        // Update items
+        // All other features, items, resources, spells...
         ArrayList<BaseItem> items = new ArrayList<>();
         if (CharacterControl.hasCurrentCharacter()) {
-            items.addAll(CharacterControl.getCurrentCharacter().weapons);
-            items.addAll(CharacterControl.getCurrentCharacter().expendables);
-            items.addAll(CharacterControl.getCurrentCharacter().abilities);
+            items.addAll(currentCharacter.weapons);
+            items.addAll(currentCharacter.expendables);
+            items.addAll(currentCharacter.abilities);
         }
         baseItemAdapter.clear();
         baseItemAdapter.addAll(items);
@@ -157,121 +143,15 @@ public class CharacterOverview extends CharacterFragment {
     }
 
     // Custom methods
-    private void setAbilityScore(int attributeViewID, int attributeStringId, int attributeValue) {
+    private void setAbilityScore(int attributeViewID, AbilityModel data) {
 
-        View attributeView = findViewById(attributeViewID);
-
-        TextView attrNameView = (TextView) attributeView.findViewById(R.id.attribute_name);
-        TextView attrScoreView = (TextView) attributeView.findViewById(R.id.attribute_value);
-
-        attrNameView.setText(getResources().getText(attributeStringId));
-        // Round down ability score (casting doesn't work in the negatives)
-        int attributeModifier = (int) Math.floor((attributeValue - 10) / 2.0);
-        attrScoreView.setText(String.format(getResources().getString(R.string.ability_score_value),
-                attributeValue, attributeModifier < 0 ? "" : "+", attributeModifier));
+        AbilityView abilityView = (AbilityView) findViewById(attributeViewID);
+        abilityView.setItem(data);
+        abilityView.setupItemView(abilityView);
 
     }
 
     private void attachClickListeners() {
-
-        // TODO: 12/04/2017 Make this more pretty
-        // Set up ability updating
-        setupAbilityView(R.id.ability_score_STR, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getSTRValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setSTR(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_STR);
-            }
-        });
-        setupAbilityView(R.id.ability_score_DEX, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getDEXValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setDEX(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_DEX);
-            }
-        });
-        setupAbilityView(R.id.ability_score_CON, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getCONValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setCON(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_CON);
-            }
-        });
-        setupAbilityView(R.id.ability_score_INT, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getINTValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setINT(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_INT);
-            }
-        });
-        setupAbilityView(R.id.ability_score_WIS, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getWISValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setWIS(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_WIS);
-            }
-        });
-        setupAbilityView(R.id.ability_score_CHA, new AbilityAccessor() {
-            @Override
-            public int get() {
-                return CharacterControl.getCurrentCharacter().getCHAValue();
-            }
-
-            @Override
-            public void set(int value) {
-                CharacterControl.getCurrentCharacter().setCHA(value);
-            }
-
-            @Override
-            public String getName() {
-                return getString(R.string.ability_score_CHA);
-            }
-        });
 
         final View.OnClickListener creationMenuToggleListener = new View.OnClickListener() {
             @Override
@@ -490,89 +370,6 @@ public class CharacterOverview extends CharacterFragment {
             anim.start();
             fab.show();
         }
-    }
-
-    private void setupAbilityView(int viewId, final AbilityAccessor abilityAccessor) {
-
-        final View abilityView = findViewById(viewId);
-        if (abilityView != null) {
-
-            abilityView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    // Only show dialog when a character is present
-                    if (!CharacterControl.hasCurrentCharacter())
-                        return false;
-
-                    LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
-                            abilityAccessor.getName(),
-                            new LayoutUtils.EditViewCallback() {
-                                @Override
-                                public void EditView(View view) {
-                                    // Set values of the picker
-                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-                                    picker.setMinValue(0);
-                                    picker.setMaxValue(24);
-                                    picker.setWrapSelectorWheel(false);
-                                    picker.setValue(abilityAccessor.get());
-                                }
-                            }, new LayoutUtils.DismissDialogCallback() {
-                                @Override
-                                public void OnDialogDismissed(View view) {
-                                    // Confirm values
-                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-                                    abilityAccessor.set(picker.getValue());
-                                    // TODO fix line below: character should listen for this itself?
-                                    CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
-                                }
-                            });
-                    return true;
-                }
-            });
-
-//            abilityView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    // Only show dialog when a character is present
-//                    if (!CharacterControl.hasCurrentCharacter())
-//                        return;
-//
-//                    LayoutUtils.showEditDialog(getActivity(), R.layout.edit_ability_score,
-//                            abilityAccessor.getName(),
-//                            new LayoutUtils.EditViewCallback() {
-//                                @Override
-//                                public void EditView(View view) {
-//                                    // Set values of the picker
-//                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-//                                    picker.setMinValue(0);
-//                                    picker.setMaxValue(24);
-//                                    picker.setWrapSelectorWheel(false);
-//                                    picker.setValue(abilityAccessor.get());
-//                                }
-//                            }, new LayoutUtils.DismissDialogCallback() {
-//                                @Override
-//                                public void OnDialogDismissed(View view) {
-//                                    // Confirm values
-//                                    NumberPicker picker = (NumberPicker) view.findViewById(R.id.ability_edit_description);
-//                                    abilityAccessor.set(picker.getValue());
-//                                    // TODO fix line below: character should listen for this itself?
-//                                    CharacterControl.setCurrentCharacter(CharacterControl.getCurrentCharacter());
-//                                }
-//                            });
-//
-//                }
-//            });
-        }
-    }
-
-    private interface AbilityAccessor {
-
-        void set(int value);
-
-        int get();
-
-        String getName();
     }
 
     private ItemClickListener itemClickListener = new ItemClickListener();

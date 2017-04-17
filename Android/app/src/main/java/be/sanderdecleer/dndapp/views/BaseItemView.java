@@ -52,12 +52,12 @@ public final class BaseItemView extends RelativeLayout {
 
     public void onClick() {
         ItemDialogFragment.showItemViewDialog(getContext(), viewController,
-                ItemDialogFragment.VIEW_TYPE_INFO, "info_dialog");
+                ItemDialogFragment.VIEW_TYPE_INFO);
     }
 
     public void onLongClick() {
         ItemDialogFragment.showItemViewDialog(getContext(), viewController,
-                ItemDialogFragment.VIEW_TYPE_EDIT, "edit_dialog");
+                ItemDialogFragment.VIEW_TYPE_EDIT);
     }
 
 }

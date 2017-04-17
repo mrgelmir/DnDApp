@@ -14,10 +14,7 @@ public class AbilityModel extends BaseItem {
     private int score;
 
     public static AbilityModel getEmpty() {
-        AbilityModel abilityModel = new AbilityModel();
-        abilityModel.name = "XXX";
-        abilityModel.score = 10;
-        return abilityModel;
+        return getForAbility("XXX");
     }
 
     public static AbilityModel getForAbility(String ability){

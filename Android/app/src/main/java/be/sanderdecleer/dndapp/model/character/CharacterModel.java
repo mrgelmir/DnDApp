@@ -202,25 +202,6 @@ public class CharacterModel implements Parcelable {
         return CHA;
     }
 
-    public int getSTRValue() {
-        return STR.getScore();
-    }
-    public int getDEXValue() {
-        return DEX.getScore();
-    }
-    public int getCONValue() {
-        return CON.getScore();
-    }
-    public int getINTValue() {
-        return INT.getScore();
-    }
-    public int getWISValue() {
-        return WIS.getScore();
-    }
-    public int getCHAValue() {
-        return CHA.getScore();
-    }
-
     public CharacterModel setSTR(int str_score) {
         STR.setScore(str_score);
         return this;

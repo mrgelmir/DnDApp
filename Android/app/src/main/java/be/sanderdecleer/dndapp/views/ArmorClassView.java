@@ -1,51 +1,46 @@
 package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.StringBuilderPrinter;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
-import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.model.character.CharacterModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
- * Created by SD on 13/04/2017.
- * Controls the view elements of a {@link AbilityModel}
+ * Created by SD on 17/04/2017.
  */
 
-public class AbilityView extends LinearLayout implements ItemViewController {
+public class ArmorClassView extends RelativeLayout implements ItemViewController {
 
-    AbilityModel data;
-
-    public AbilityView(Context context) {
+    public ArmorClassView(Context context) {
         super(context);
         setup();
     }
 
-    public AbilityView(Context context, @Nullable AttributeSet attrs) {
+    public ArmorClassView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
 
-    public AbilityView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ArmorClassView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setup();
     }
 
-    public AbilityView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ArmorClassView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setup();
     }
 
     private void setup() {
-
-        final ItemViewController thisInstance = this;
+        final ArmorClassView thisInstance = this;
 
         setOnClickListener(new OnClickListener() {
             @Override
@@ -67,21 +62,14 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public void setItem(BaseItem item) {
-        data = (AbilityModel) item;
+        // This view does not use data, but pulls it all from the current character?
     }
 
     @Override
     public void setupItemView(View itemView) {
-        final TextView attributeName = (TextView) itemView.findViewById(R.id.attribute_name);
-        final TextView attributeScore = (TextView) itemView.findViewById(R.id.attribute_value);
-
-        attributeName.setText(data.getName());
-        attributeScore.setText(String.format(
-                itemView.getContext().getText(R.string.ability_score_value).toString(),
-                data.getScore(),
-                data.getModifier() >= 0 ? "+" : "-",
-                Math.abs(data.getModifier())));
-
+        TextView acLabel = (TextView) itemView.findViewById(R.id.armor_class_label);
+        acLabel.setText(String.format(getResources().getString(R.string.character_AC),
+                CharacterControl.getCurrentCharacter().getAC()));
     }
 
     @Override
@@ -91,19 +79,12 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public void setupEditView(View editView) {
-        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.attribute_value);
-
-        statPicker.setMinValue(0);
-        statPicker.setMaxValue(24);
-        statPicker.setValue(data.getScore());
+        setupItemView(editView);
     }
 
     @Override
     public void resolveEditView(View editView) {
-        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.attribute_value);
 
-        data.setScore(statPicker.getValue());
-        CharacterControl.tryCharacterChanged();
     }
 
     @Override
@@ -113,26 +94,26 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public boolean hasTitle() {
-        return true;
+        return false;
     }
 
     @Override
     public String getTitle() {
-        return data.getName();
+        return null;
     }
 
     @Override
     public int getItemResourceId() {
-        return R.layout.item_ability_view;
+        return R.layout.item_armor_class;
     }
 
     @Override
     public int getInfoResourceId() {
-        return R.layout.item_ability_view;
+        return R.layout.item_armor_class;
     }
 
     @Override
     public int getEditResourceId() {
-        return R.layout.edit_ability_score;
+        return R.layout.item_armor_class;
     }
 }
