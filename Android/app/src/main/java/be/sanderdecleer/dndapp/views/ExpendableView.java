@@ -132,6 +132,11 @@ public class ExpendableView implements ItemViewController {
     }
 
     @Override
+    public boolean canRemove() {
+        return true;
+    }
+
+    @Override
     public void remove() {
         if(CharacterControl.hasCurrentCharacter()) {
             CharacterControl.getCurrentCharacter().removeExpendable(data);

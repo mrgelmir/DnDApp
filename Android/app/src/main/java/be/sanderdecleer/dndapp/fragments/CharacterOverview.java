@@ -28,6 +28,7 @@ import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.views.AbilityView;
 import be.sanderdecleer.dndapp.views.ArmorClassView;
 import be.sanderdecleer.dndapp.views.BaseItemView;
+import be.sanderdecleer.dndapp.views.SpeedView;
 
 
 /**
@@ -112,21 +113,15 @@ public class CharacterOverview extends CharacterFragment {
         ArmorClassView armorClassView = (ArmorClassView) findViewById(R.id.character_AC);
         armorClassView.setupItemView(armorClassView);
 
-
-//        String formattedAC = String.format(getResources().getString(R.string.character_AC),
-//                currentCharacter.getAC());
-//        ((TextView) findViewById(R.id.armor_class_label)).setText(formattedAC);
-
         // Hit points
-        String formattedHP = String.format(getResources().getString(R.string.character_HP),
+        String formattedHP = String.format(getResources().getString(R.string.character_HP_format),
                 currentCharacter.getHP_current(),
                 currentCharacter.getHP_max());
         ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
 
         // Speed
-        String formattedSpeed = String.format(getResources().getString(R.string.character_Speed),
-                currentCharacter.getSpeed());
-        ((TextView) findViewById(R.id.character_Speed)).setText(formattedSpeed);
+        SpeedView speedView = (SpeedView) findViewById(R.id.character_Speed);
+        speedView.setupItemView(speedView);
 
         // All other features, items, resources, spells...
         ArrayList<BaseItem> items = new ArrayList<>();

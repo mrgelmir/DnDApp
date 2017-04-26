@@ -7,10 +7,9 @@
     tools:showIn="RelativeLayout">
 
     <NumberPicker
-        android:id="@+id/attribute_value"
+        android:id="@+id/edit_value"
         android:layout_width="match_parent"
         android:layout_height="@dimen/number_picker_height">
-
     </NumberPicker>
 
 </merge>

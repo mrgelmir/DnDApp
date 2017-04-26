@@ -16,7 +16,7 @@
 
     <!-- Attribute score -->
     <TextView
-        android:id="@+id/attribute_value"
+        android:id="@+id/edit_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/ability_score_value_default"

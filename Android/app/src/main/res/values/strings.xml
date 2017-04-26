@@ -23,9 +23,11 @@
 
     <!-- Character Sheet values -->
     <string name="character_default_name">Character name</string>
-    <string name="character_AC">AC: %1$d</string>
-    <string name="character_HP">HP: %1$d/%2$d</string>
-    <string name="character_Speed">Speed: %1$dft</string>
+    <string name="character_AC_title">Armor Class</string>
+    <string name="character_AC_format">AC: %1$d</string>
+    <string name="character_HP_format">HP: %1$d/%2$d</string>
+    <string name="character_speed_title">Speed</string>
+    <string name="character_speed_format">Speed: %1$dft</string>
 
     <!-- Editing values -->
     <string name="edit_add">Add item</string>

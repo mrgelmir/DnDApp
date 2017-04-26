@@ -94,6 +94,11 @@ public class WeaponView implements ItemViewController {
     }
 
     @Override
+    public boolean canRemove() {
+        return true;
+    }
+
+    @Override
     public void remove() {
         if (CharacterControl.hasCurrentCharacter()) {
             CharacterControl.getCurrentCharacter().removeWeapon(data);

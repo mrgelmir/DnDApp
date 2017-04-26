@@ -73,7 +73,7 @@ public class AbilityView extends LinearLayout implements ItemViewController {
     @Override
     public void setupItemView(View itemView) {
         final TextView attributeName = (TextView) itemView.findViewById(R.id.attribute_name);
-        final TextView attributeScore = (TextView) itemView.findViewById(R.id.attribute_value);
+        final TextView attributeScore = (TextView) itemView.findViewById(R.id.edit_value);
 
         attributeName.setText(data.getName());
         attributeScore.setText(String.format(
@@ -91,7 +91,7 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public void setupEditView(View editView) {
-        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.attribute_value);
+        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.edit_value);
 
         statPicker.setMinValue(0);
         statPicker.setMaxValue(24);
@@ -100,10 +100,15 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public void resolveEditView(View editView) {
-        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.attribute_value);
+        final NumberPicker statPicker = (NumberPicker) editView.findViewById(R.id.edit_value);
 
         data.setScore(statPicker.getValue());
         CharacterControl.tryCharacterChanged();
+    }
+
+    @Override
+    public boolean canRemove() {
+        return false;
     }
 
     @Override
@@ -133,6 +138,6 @@ public class AbilityView extends LinearLayout implements ItemViewController {
 
     @Override
     public int getEditResourceId() {
-        return R.layout.edit_ability_score;
+        return R.layout.edit_single_number;
     }
 }

@@ -2,6 +2,7 @@ package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.StringBuilderPrinter;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -13,34 +14,33 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
- * Created by SD on 17/04/2017.
- * Displays armor class and handles click and edit events
+ * Created by SD on 26/04/2017.
  */
 
-public class ArmorClassView extends RelativeLayout implements ItemViewController {
+public class SpeedView extends RelativeLayout implements ItemViewController {
 
-    public ArmorClassView(Context context) {
+    public SpeedView(Context context) {
         super(context);
         setup();
     }
 
-    public ArmorClassView(Context context, AttributeSet attrs) {
+    public SpeedView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
 
-    public ArmorClassView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SpeedView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setup();
     }
 
-    public ArmorClassView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SpeedView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setup();
     }
 
     private void setup() {
-        final ArmorClassView thisInstance = this;
+        final SpeedView thisInstance = this;
 
         setOnClickListener(new OnClickListener() {
             @Override
@@ -58,18 +58,19 @@ public class ArmorClassView extends RelativeLayout implements ItemViewController
                 return true;
             }
         });
+
     }
 
     @Override
     public void setItem(BaseItem item) {
-        // This view does not use data, but pulls it all from the current character?
+        // No local data used, pull this from current character
     }
 
     @Override
     public void setupItemView(View itemView) {
-        TextView acLabel = (TextView) itemView.findViewById(R.id.armor_class_label);
-        acLabel.setText(String.format(getResources().getString(R.string.character_AC_format),
-                CharacterControl.getCurrentCharacter().getAC()));
+        TextView label = (TextView) itemView.findViewById(R.id.speed_label);
+        label.setText(String.format(getResources().getString(R.string.character_speed_format),
+                CharacterControl.getCurrentCharacter().getSpeed()));
     }
 
     @Override
@@ -77,26 +78,34 @@ public class ArmorClassView extends RelativeLayout implements ItemViewController
         setupItemView(infoView);
     }
 
+    private static final String[] speedValues = {"0", "5", "10", "15", "20", "25", "30", "35",
+            "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", "105",
+            "110", "115", "120"};
+
     @Override
     public void setupEditView(View editView) {
         final NumberPicker picker = (NumberPicker) editView.findViewById(R.id.edit_value);
 
-        picker.setMinValue(0);
-        picker.setMaxValue(30);
-        picker.setValue(CharacterControl.getCurrentCharacter().getAC());
+        picker.setMaxValue(speedValues.length - 1);
+        picker.setDisplayedValues(speedValues);
+
+        // match value to the speedValues
+        picker.setValue(CharacterControl.getCurrentCharacter().getSpeed() / 5);
     }
 
     @Override
     public void resolveEditView(View editView) {
         final NumberPicker picker = (NumberPicker) editView.findViewById(R.id.edit_value);
 
-        CharacterControl.getCurrentCharacter().setAC(picker.getValue());
+        CharacterControl.getCurrentCharacter().setSpeed(
+                Integer.parseInt(speedValues[picker.getValue()]));
         CharacterControl.tryCharacterChanged();
     }
 
     @Override
     public void remove() {
-        // lol nope
+        // nope
+        // TODO: 26/04/2017 should this be part of another interface?
     }
 
     @Override
@@ -111,17 +120,17 @@ public class ArmorClassView extends RelativeLayout implements ItemViewController
 
     @Override
     public String getTitle() {
-        return getResources().getString(R.string.character_AC_title);
+        return getResources().getString(R.string.character_speed_title);
     }
 
     @Override
     public int getItemResourceId() {
-        return R.layout.item_armor_class;
+        return R.layout.item_speed;
     }
 
     @Override
     public int getInfoResourceId() {
-        return R.layout.item_armor_class;
+        return R.layout.item_speed;
     }
 
     @Override

@@ -46,9 +46,11 @@ public class ItemDialogFragment extends DialogFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RESOURCE_ID = "resource_id";
     private static final String ARG_VIEW_TYPE = "view_type";
+    private static final String ARG_CAN_REMOVE = "can_remove";
 
     private int resourceId;
     private int viewType;
+    private boolean canRemove;
 
     private ItemViewController viewSetup = null;
     private View contentView = null;
@@ -76,7 +78,7 @@ public class ItemDialogFragment extends DialogFragment {
 
         // Create dialog using inherited resources
         final ItemDialogFragment itemDialogFragment =
-                ItemDialogFragment.newInstance(resourceId, viewType);
+                ItemDialogFragment.newInstance(resourceId, viewType, viewController.canRemove());
         itemDialogFragment.setViewSetup(viewController);
 
         // TODO: 10/04/2017 move to resources or something
@@ -109,13 +111,16 @@ public class ItemDialogFragment extends DialogFragment {
      * @param resourceId Resource Id.
      * @param viewType   the type of view, determines setup function called
      *                   (Choose from VIEW_TYPE_INFO or VIEW_TYPE_EDIT)
+     * @param canRemove  can the item backing this view be removed
      * @return A new instance of fragment ItemDialogFragment.
      */
-    public static ItemDialogFragment newInstance(@LayoutRes int resourceId, @ViewType int viewType) {
+    public static ItemDialogFragment newInstance(@LayoutRes int resourceId, @ViewType int viewType,
+                                                 boolean canRemove) {
         ItemDialogFragment fragment = new ItemDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_RESOURCE_ID, resourceId);
         args.putInt(ARG_VIEW_TYPE, viewType);
+        args.putBoolean(ARG_CAN_REMOVE, canRemove);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,6 +130,7 @@ public class ItemDialogFragment extends DialogFragment {
         if (getArguments() != null) {
             resourceId = getArguments().getInt(ARG_RESOURCE_ID);
             viewType = getArguments().getInt(ARG_VIEW_TYPE);
+            canRemove = getArguments().getBoolean(ARG_CAN_REMOVE);
         }
         super.onCreate(savedInstanceState);
 
@@ -176,7 +182,7 @@ public class ItemDialogFragment extends DialogFragment {
                     dismissBtn.setVisibility(View.GONE);
                     confirmBtn.setVisibility(View.VISIBLE);
                     cancelBtn.setVisibility(View.VISIBLE);
-                    removeButton.setVisibility(View.VISIBLE);
+                    removeButton.setVisibility(canRemove ? View.VISIBLE : View.INVISIBLE);
 
                     // Hook up buttons
                     cancelBtn.setOnClickListener(dismissClickListener);

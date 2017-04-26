@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<be.sanderdecleer.dndapp.views.SpeedView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/speed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/character_speed_format"
+        android:textAlignment="center" />
+</be.sanderdecleer.dndapp.views.SpeedView>

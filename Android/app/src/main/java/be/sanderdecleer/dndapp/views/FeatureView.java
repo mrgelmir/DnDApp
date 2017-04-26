@@ -69,6 +69,11 @@ public class FeatureView implements ItemViewController {
     }
 
     @Override
+    public boolean canRemove() {
+        return true;
+    }
+
+    @Override
     public void remove() {
         if(CharacterControl.hasCurrentCharacter()) {
             CharacterControl.getCurrentCharacter().removeFeature(data);

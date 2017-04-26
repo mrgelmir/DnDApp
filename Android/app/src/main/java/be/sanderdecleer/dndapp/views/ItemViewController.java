@@ -52,6 +52,8 @@ public interface ItemViewController {
      */
     void remove();
 
+    boolean canRemove();
+
     boolean hasTitle();
 
     String getTitle();
