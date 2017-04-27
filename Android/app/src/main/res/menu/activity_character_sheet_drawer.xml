@@ -3,6 +3,7 @@
 
     <group android:checkableBehavior="single">
         <item
+
             android:id="@+id/nav_add_character"
             android:icon="@drawable/ic_add_circle_outline_black_24dp"
             android:title="@string/navigation_drawer_add_character" />
@@ -10,12 +11,11 @@
             android:id="@+id/nav_clear_character"
             android:icon="@drawable/ic_remove_black_24dp"
             android:title="@string/navigation_drawer_clear_character"
-            android:visible="true"/>
+            android:visible="true" />
         <item
             android:id="@+id/nav_create_test_data"
             android:title="Create test data"
-            android:visible="@bool/IS_TEST"
-            />
+            android:visible="@bool/IS_TEST" />
     </group>
 
     <group android:checkableBehavior="single">

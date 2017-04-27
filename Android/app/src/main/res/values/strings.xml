@@ -25,6 +25,7 @@
     <string name="character_default_name">Character name</string>
     <string name="character_AC_title">Armor Class</string>
     <string name="character_AC_format">AC: %1$d</string>
+    <string name="character_HP_title">Hit Points</string>
     <string name="character_HP_format">HP: %1$d/%2$d</string>
     <string name="character_speed_title">Speed</string>
     <string name="character_speed_format">Speed: %1$dft</string>

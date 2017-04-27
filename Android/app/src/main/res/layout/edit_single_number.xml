@@ -4,12 +4,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:showIn="RelativeLayout">
+    tools:parentTag="RelativeLayout">
 
     <NumberPicker
         android:id="@+id/edit_value"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/number_picker_height">
-    </NumberPicker>
+        android:layout_height="@dimen/number_picker_height" />
 
 </merge>

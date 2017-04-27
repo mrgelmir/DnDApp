@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#3F51B5</color>
-    <color name="color_primary_dark">#303F9F</color>
-    <color name="color_accent">#FF4081</color>
-    <!--<color name="color_primary">#3fb576</color>-->
-    <!--<color name="color_primary_dark">#51705f</color>-->
-    <!--<color name="color_accent">#fffc40</color>-->
+    <!-- default -->
 
-    <color name="color_background">#FFFFFF</color>
+    <!--<color name="color_primary">#3F51B5</color>-->
+    <!--<color name="color_primary_dark">#303F9F</color>-->
+    <!--<color name="color_accent">#FF4081</color>-->
 
-    <color name="color_text_primary">#000000</color>
-    <color name="color_text_alternative">#FFFFFF</color>
-    <color name="color_text_positive">#3F51B5</color>
-    <color name="color_text_negative">#FF4081</color>
+    <!--<color name="color_background">#FFFFFF</color>-->
+
+    <!--<color name="color_text_primary">#000000</color>-->
+    <!--<color name="color_text_alternative">#FFFFFF</color>-->
+    <!--<color name="color_text_positive">#3F51B5</color>-->
+    <!--<color name="color_text_negative">#FF4081</color>-->
+
+    <!-- brown -->
+
+    <color name="color_primary">#4e342e</color>
+    <color name="color_primary_dark">#3e2723</color>
+    <color name="color_accent">#bf360c</color>
+
+    <color name="color_background">#ffffff</color>
+
+    <color name="color_text_primary">#212121</color>
+    <color name="color_text_alternative">#cfd8dc</color>
+    <color name="color_text_positive">#212121</color>
+    <color name="color_text_negative">#be360c</color>
 
 </resources>

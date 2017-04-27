@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.views.AbilityView;
 import be.sanderdecleer.dndapp.views.ArmorClassView;
 import be.sanderdecleer.dndapp.views.BaseItemView;
+import be.sanderdecleer.dndapp.views.HitPointsView;
 import be.sanderdecleer.dndapp.views.SpeedView;
 
 
@@ -114,10 +116,8 @@ public class CharacterOverview extends CharacterFragment {
         armorClassView.setupItemView(armorClassView);
 
         // Hit points
-        String formattedHP = String.format(getResources().getString(R.string.character_HP_format),
-                currentCharacter.getHP_current(),
-                currentCharacter.getHP_max());
-        ((TextView) findViewById(R.id.character_HP)).setText(formattedHP);
+        HitPointsView hitPointsView = (HitPointsView) findViewById(R.id.character_HP);
+        hitPointsView.setupItemView(hitPointsView);
 
         // Speed
         SpeedView speedView = (SpeedView) findViewById(R.id.character_Speed);

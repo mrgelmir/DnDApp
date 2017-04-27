@@ -19,9 +19,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemBackground="@color/color_background"
         app:headerLayout="@layout/nav_header_character_sheet"
         app:menu="@menu/activity_character_sheet_drawer" />
-
-
 
 </android.support.v4.widget.DrawerLayout>

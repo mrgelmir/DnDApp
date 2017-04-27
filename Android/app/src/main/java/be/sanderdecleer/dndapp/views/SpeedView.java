@@ -58,7 +58,6 @@ public class SpeedView extends RelativeLayout implements ItemViewController {
                 return true;
             }
         });
-
     }
 
     @Override
@@ -69,15 +68,17 @@ public class SpeedView extends RelativeLayout implements ItemViewController {
     @Override
     public void setupItemView(View itemView) {
         TextView label = (TextView) itemView.findViewById(R.id.speed_label);
-        label.setText(String.format(getResources().getString(R.string.character_speed_format),
-                CharacterControl.getCurrentCharacter().getSpeed()));
+        label.setText(getFormattedSpeed());
     }
 
     @Override
     public void setupInfoView(View infoView) {
-        setupItemView(infoView);
+        TextView label = (TextView) infoView.findViewById(R.id.info_label);
+        label.setText(getFormattedSpeed());
+
     }
 
+    // TODO: 27/04/2017 fix this
     private static final String[] speedValues = {"0", "5", "10", "15", "20", "25", "30", "35",
             "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", "105",
             "110", "115", "120"};
@@ -130,11 +131,16 @@ public class SpeedView extends RelativeLayout implements ItemViewController {
 
     @Override
     public int getInfoResourceId() {
-        return R.layout.item_speed;
+        return R.layout.info_single_label;
     }
 
     @Override
     public int getEditResourceId() {
         return R.layout.edit_single_number;
+    }
+
+    private String getFormattedSpeed() {
+        return String.format(getResources().getString(R.string.character_speed_format),
+                CharacterControl.getCurrentCharacter().getSpeed());
     }
 }
