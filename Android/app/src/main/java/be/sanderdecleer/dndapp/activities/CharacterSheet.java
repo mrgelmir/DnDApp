@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.List;
@@ -56,9 +57,6 @@ public class CharacterSheet extends AppCompatActivity
         // Set view
         setContentView(R.layout.activity_character_sheet);
 
-        // Setup and hide Floating action button
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
         // Link Activity name and option menu to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,6 +74,11 @@ public class CharacterSheet extends AppCompatActivity
         if (navigationView != null)
             navigationView.setNavigationItemSelectedListener(this);
 
+
+        // Get the characters saved on the device
+        final List<CharacterDescription> characterDescriptions =
+                CharacterFileUtil.getAvailableCharacters(this);
+
         // FRAGMENTS
 
         // Viewpager setup
@@ -92,12 +95,35 @@ public class CharacterSheet extends AppCompatActivity
         // Get the placeholder
         mPlaceholder = findViewById(R.id.placeholder);
 
+        final Button createButton = (Button) mPlaceholder.findViewById(R.id.no_character_create);
+        final Button loadButton = (Button) mPlaceholder.findViewById(R.id.no_character_load);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowCreateCharacterDialog();
+            }
+        });
 
-        // TEMP
-//        createTestData();
+
+        // Only show load button if needed
+        if (characterDescriptions.size() > 0) {
+            final CharacterDescription lastCharacter = characterDescriptions.get(0);
+
+            loadButton.setText(String.format(getString(R.string.no_character_load),
+                    lastCharacter.getCharacterName()));
+
+            loadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (lastCharacter != null)
+                        CharacterControl.setCurrentCharacter(CharacterFileUtil.
+                                loadCharacter(lastCharacter.getCharacterFile()));
+                }
+            });
+        } else loadButton.setVisibility(View.GONE);
 
         // Load saved characters
-        populateCharacterMenu();
+        populateCharacterMenu(characterDescriptions);
 
         // Subscribe to character changed
         CharacterControl.getInstance().addListener(this);
@@ -110,6 +136,7 @@ public class CharacterSheet extends AppCompatActivity
             onCharacterChanged();
             // No character -> todo
         }
+
 
     }
 
@@ -133,7 +160,7 @@ public class CharacterSheet extends AppCompatActivity
             backConsumed = true;
         }
 
-        if(!backConsumed){
+        if (!backConsumed) {
             super.onBackPressed();
         }
 
@@ -234,7 +261,7 @@ public class CharacterSheet extends AppCompatActivity
                                         CharacterControl.getCurrentCharacter());
                                 CharacterControl.setCurrentCharacter(null);
                                 // re-populate character menu
-                                populateCharacterMenu();
+                                populateCharacterMenu(CharacterFileUtil.getAvailableCharacters(getBaseContext()));
                                 break;
                             case AlertDialog.BUTTON_NEGATIVE:
                                 // do nothing
@@ -265,14 +292,7 @@ public class CharacterSheet extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_add_character:
-                LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
-                        getString(R.string.name_default), new LayoutUtils.TextResultCallback() {
-                            @Override
-                            public void GetTextResult(String string) {
-                                CharacterModel newModel = new CharacterModel(string);
-                                CharacterControl.getInstance().setCharacter(newModel);
-                            }
-                        });
+                ShowCreateCharacterDialog();
                 break;
             case R.id.nav_clear_character:
                 // TODO: 15/09/2016 Show a popup requesting confirmation of deletion
@@ -287,7 +307,7 @@ public class CharacterSheet extends AppCompatActivity
                 CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestSpellcaster());
 
                 // Reload character menu
-                populateCharacterMenu();
+                populateCharacterMenu(CharacterFileUtil.getAvailableCharacters(this));
                 break;
             default:
 
@@ -339,13 +359,14 @@ public class CharacterSheet extends AppCompatActivity
         boolean hasCharacter = CharacterControl.hasCurrentCharacter();
 
         mPager.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
-
         mPlaceholder.setVisibility(hasCharacter ? View.GONE : View.VISIBLE);
+
         // Maybe animate this later
         mTabLayout.setVisibility(hasCharacter ? View.VISIBLE : View.GONE);
         // TODO remove (this is because spell tab isn't implemented)
         mTabLayout.setVisibility(View.GONE);
 
+        // Hide tab layout on landscape until another tab layout option is found (header too big)
         if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
             mTabLayout.setVisibility(View.GONE);
         }
@@ -382,11 +403,7 @@ public class CharacterSheet extends AppCompatActivity
 
     }
 
-    private void populateCharacterMenu() {
-
-        // get the characters saved on the device
-        final List<CharacterDescription> characterDescriptions =
-                CharacterFileUtil.getAvailableCharacters(this);
+    private void populateCharacterMenu(List<CharacterDescription> characterDescriptions) {
 
         // get a reference to the navigation
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
@@ -424,7 +441,6 @@ public class CharacterSheet extends AppCompatActivity
         }
     }
 
-    // OPTION MENU FUNCTIONALITY
     private void updateOptionsMenu() {
 
         if (optionsMenu == null) {
@@ -447,5 +463,15 @@ public class CharacterSheet extends AppCompatActivity
 
     }
 
-
+    // HELPERS
+    private void ShowCreateCharacterDialog() {
+        LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
+                getString(R.string.name_default), new LayoutUtils.TextResultCallback() {
+                    @Override
+                    public void GetTextResult(String string) {
+                        CharacterModel newModel = new CharacterModel(string);
+                        CharacterControl.getInstance().setCharacter(newModel);
+                    }
+                });
+    }
 }

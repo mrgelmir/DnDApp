@@ -6,6 +6,11 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
+    <!-- No character fragment -->
+    <string name="no_character_text">No character selected.\nTry the sidebar to load an existing character or tap below.</string>
+    <string name="no_character_create">Create new character</string>
+    <string name="no_character_load" formatted="true">Use last character: \'%1$s\'</string>
+
     <!-- Navigation Bar values  -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -49,8 +54,6 @@
     <string name="ability_score_CHA">CHA</string>
     <string name="ability_score_value_default">XX(+X)</string>
     <string name="ability_score_value">%1$d (%2$s%3$d)</string>
-
-    <!-- Ability edit values -->
 
     <!-- Weapon values -->
     <string name="weapon_tag">tag_weapon</string>
