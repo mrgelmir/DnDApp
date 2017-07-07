@@ -11,10 +11,12 @@
         android:id="@+id/no_character_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="@string/no_character_text" />
+        android:text="@string/no_character_text"
+        android:layout_marginTop="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 
     <Button
@@ -26,13 +28,27 @@
         android:layout_centerHorizontal="true"
         android:text="@string/no_character_create" />
 
-    <Button
-        android:id="@+id/no_character_load"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
+    <TextView
+        android:id="@+id/load_character_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/no_character_create"
         android:layout_centerHorizontal="true"
         android:text="@string/no_character_load" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/no_character_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/load_character_title"
+        android:layout_centerHorizontal="true">
+        <!--<Button-->
+        <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/no_character_load" />-->
+
+    </LinearLayout>
 
 </RelativeLayout>

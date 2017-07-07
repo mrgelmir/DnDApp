@@ -1,34 +1,37 @@
 package be.sanderdecleer.dndapp.activities;
 
 import android.app.AlertDialog;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.StyleRes;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ActionProvider;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.text.InputType;
-import android.view.SubMenu;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
+import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.adapters.CharacterSheetPageAdapter;
 import be.sanderdecleer.dndapp.model.CharacterDescription;
-import be.sanderdecleer.dndapp.utils.CharacterControl;
-import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.CharacterModel;
+import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterFileUtil;
 import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.utils.TestCharacterProvider;
@@ -95,8 +98,9 @@ public class CharacterSheet extends AppCompatActivity
         // Get the placeholder
         mPlaceholder = findViewById(R.id.placeholder);
 
+
+        // Create new Character button
         final Button createButton = (Button) mPlaceholder.findViewById(R.id.no_character_create);
-        final Button loadButton = (Button) mPlaceholder.findViewById(R.id.no_character_load);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,22 +109,57 @@ public class CharacterSheet extends AppCompatActivity
         });
 
 
+        // Load existing character view
+        final LinearLayout characterSelector = (LinearLayout) mPlaceholder.findViewById(R.id.no_character_load);
+
+        if (characterDescriptions.size() <= 0) {
+            // Hide if no characters are available
+            characterSelector.setVisibility(View.GONE);
+        } else {
+            // Populate if available
+            for (final CharacterDescription c : characterDescriptions) {
+
+                final Button loadButton = new Button(getBaseContext(), null,
+                        R.style.Widget_AppCompat_Button_Borderless);
+                loadButton.setTextColor(getResources().getColor(R.color.color_text_primary));
+                loadButton.setText(c.getCharacterName());
+                loadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CharacterControl.setCurrentCharacter(CharacterFileUtil.loadCharacter(
+                                c.getCharacterFile()));
+                    }
+                });
+
+                final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                characterSelector.addView(loadButton, layoutParams);
+
+            }
+        }
+
+
+//        final Button loadButton = (Button) mPlaceholder.findViewById(R.id.no_character_load);
+
+
+
         // Only show load button if needed
-        if (characterDescriptions.size() > 0) {
-            final CharacterDescription lastCharacter = characterDescriptions.get(0);
-
-            loadButton.setText(String.format(getString(R.string.no_character_load),
-                    lastCharacter.getCharacterName()));
-
-            loadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (lastCharacter != null)
-                        CharacterControl.setCurrentCharacter(CharacterFileUtil.
-                                loadCharacter(lastCharacter.getCharacterFile()));
-                }
-            });
-        } else loadButton.setVisibility(View.GONE);
+//        if (characterDescriptions.size() > 0) {
+//            final CharacterDescription lastCharacter = characterDescriptions.get(0);
+//
+//            loadButton.setText(String.format(getString(R.string.no_character_load),
+//                    lastCharacter.getCharacterName()));
+//
+//            loadButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (lastCharacter != null)
+//                        CharacterControl.setCurrentCharacter(CharacterFileUtil.
+//                                loadCharacter(lastCharacter.getCharacterFile()));
+//                }
+//            });
+//        } else loadButton.setVisibility(View.GONE);
 
         // Load saved characters
         populateCharacterMenu(characterDescriptions);

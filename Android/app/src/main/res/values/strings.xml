@@ -9,7 +9,7 @@
     <!-- No character fragment -->
     <string name="no_character_text">No character selected.\nTry the sidebar to load an existing character or tap below.</string>
     <string name="no_character_create">Create new character</string>
-    <string name="no_character_load" formatted="true">Use last character: \'%1$s\'</string>
+    <string name="no_character_load" >Load previous character:</string>
 
     <!-- Navigation Bar values  -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
