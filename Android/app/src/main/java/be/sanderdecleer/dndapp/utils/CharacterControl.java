@@ -39,7 +39,7 @@ public class CharacterControl implements CharacterProvider {
      * Attempts to propagate the character changed event
      * Checks if a character is available first
      * if not, nothing happens
-     * NOTE: I do not like this name; TODO find better name
+     * NOTE: I do not like this name; TODO: find better name
      * @return has the character changed event been sent
      */
     public static boolean tryCharacterChanged() {

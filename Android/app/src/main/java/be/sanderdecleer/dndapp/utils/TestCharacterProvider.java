@@ -6,6 +6,7 @@ import be.sanderdecleer.dndapp.model.character.FeatureModel;
 import be.sanderdecleer.dndapp.model.character.WeaponModel;
 
 /**
+ * This class provides test characters for populating the app easily
  * Created by SD on 5/04/2017.
  */
 
@@ -15,7 +16,7 @@ public class TestCharacterProvider {
     public static CharacterModel createTestMonk() {
 
         // Test character 1
-        CharacterModel character = new CharacterModel("Guy Stormcrow")
+        CharacterModel character = new CharacterModel("Max the Mad Monk")
                 .setAbilityScores(14, 16, 14, 11, 14, 13)
                 .setHP_current(8)
                 .setHP_max(13)

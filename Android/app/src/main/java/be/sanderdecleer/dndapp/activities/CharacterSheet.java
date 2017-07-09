@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -95,71 +96,8 @@ public class CharacterSheet extends AppCompatActivity
         // Tabs gone for now: no spells
         mTabLayout.setVisibility(View.GONE);
 
-        // Get the placeholder
-        mPlaceholder = findViewById(R.id.placeholder);
-
-
-        // Create new Character button
-        final Button createButton = (Button) mPlaceholder.findViewById(R.id.no_character_create);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShowCreateCharacterDialog();
-            }
-        });
-
-
-        // Load existing character view
-        final LinearLayout characterSelector = (LinearLayout) mPlaceholder.findViewById(R.id.no_character_load);
-
-        if (characterDescriptions.size() <= 0) {
-            // Hide if no characters are available
-            characterSelector.setVisibility(View.GONE);
-        } else {
-            // Populate if available
-            for (final CharacterDescription c : characterDescriptions) {
-
-                final Button loadButton = new Button(getBaseContext(), null,
-                        R.style.Widget_AppCompat_Button_Borderless);
-                loadButton.setTextColor(getResources().getColor(R.color.color_text_primary));
-                loadButton.setText(c.getCharacterName());
-                loadButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CharacterControl.setCurrentCharacter(CharacterFileUtil.loadCharacter(
-                                c.getCharacterFile()));
-                    }
-                });
-
-                final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                characterSelector.addView(loadButton, layoutParams);
-
-            }
-        }
-
-
-//        final Button loadButton = (Button) mPlaceholder.findViewById(R.id.no_character_load);
-
-
-
-        // Only show load button if needed
-//        if (characterDescriptions.size() > 0) {
-//            final CharacterDescription lastCharacter = characterDescriptions.get(0);
-//
-//            loadButton.setText(String.format(getString(R.string.no_character_load),
-//                    lastCharacter.getCharacterName()));
-//
-//            loadButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (lastCharacter != null)
-//                        CharacterControl.setCurrentCharacter(CharacterFileUtil.
-//                                loadCharacter(lastCharacter.getCharacterFile()));
-//                }
-//            });
-//        } else loadButton.setVisibility(View.GONE);
+        // Set up the placeholder view
+        updatePlaceholderView(characterDescriptions);
 
         // Load saved characters
         populateCharacterMenu(characterDescriptions);
@@ -345,8 +283,11 @@ public class CharacterSheet extends AppCompatActivity
                 CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestMonk());
                 CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestSpellcaster());
 
-                // Reload character menu
-                populateCharacterMenu(CharacterFileUtil.getAvailableCharacters(this));
+                // Refresh character menu and placeholder
+                // TODO: Maybe make an event for this?
+                List<CharacterDescription> availableCharacters = CharacterFileUtil.getAvailableCharacters(this);
+                populateCharacterMenu(availableCharacters);
+                updatePlaceholderView(availableCharacters);
                 break;
             default:
 
@@ -500,6 +441,55 @@ public class CharacterSheet extends AppCompatActivity
         //For now do not show edit items: edit on long tap\
         editAction.setVisible(false);
 
+    }
+
+    // PLACEHOLDER VIEW
+    private void updatePlaceholderView(List<CharacterDescription> characterDescriptions) {
+        // Get the placeholder
+        mPlaceholder = findViewById(R.id.placeholder);
+
+
+        // Set up the new Character button
+        final Button createButton = (Button) mPlaceholder.findViewById(R.id.no_character_create);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowCreateCharacterDialog();
+            }
+        });
+
+
+        // Load existing character view
+        final LinearLayout characterSelector = (LinearLayout) mPlaceholder.findViewById(R.id.no_character_load);
+        final TextView characterSelectorLabel = (TextView) mPlaceholder.findViewById(R.id.load_character_title);
+
+        if (characterDescriptions.size() <= 0) {
+            // Hide if no characters are available
+            characterSelector.setVisibility(View.GONE);
+            characterSelectorLabel.setVisibility(View.GONE);
+        } else {
+            // Populate if available
+            for (final CharacterDescription c : characterDescriptions) {
+
+                final Button loadButton = new Button(getBaseContext(), null,
+                        R.style.Widget_AppCompat_Button_Borderless);
+                loadButton.setTextColor(getResources().getColor(R.color.color_text_primary));
+                loadButton.setText(c.getCharacterName());
+                loadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CharacterControl.setCurrentCharacter(CharacterFileUtil.loadCharacter(
+                                c.getCharacterFile()));
+                    }
+                });
+
+                final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                characterSelector.addView(loadButton, layoutParams);
+
+            }
+        }
     }
 
     // HELPERS
