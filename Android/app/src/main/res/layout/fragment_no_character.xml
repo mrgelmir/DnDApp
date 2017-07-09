@@ -36,6 +36,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/no_character_load" />
 
+    <!-- TODO: what if a massive amount of characters are present -->
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/no_character_load"

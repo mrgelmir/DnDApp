@@ -237,8 +237,8 @@ public class CharacterSheet extends AppCompatActivity
                                 CharacterFileUtil.deleteCharacter(CharacterSheet.this,
                                         CharacterControl.getCurrentCharacter());
                                 CharacterControl.setCurrentCharacter(null);
-                                // re-populate character menu
-                                populateCharacterMenu(CharacterFileUtil.getAvailableCharacters(getBaseContext()));
+
+                                updateAvailableCharacters();
                                 break;
                             case AlertDialog.BUTTON_NEGATIVE:
                                 // do nothing
@@ -283,11 +283,7 @@ public class CharacterSheet extends AppCompatActivity
                 CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestMonk());
                 CharacterFileUtil.saveCharacter(this, TestCharacterProvider.createTestSpellcaster());
 
-                // Refresh character menu and placeholder
-                // TODO: Maybe make an event for this?
-                List<CharacterDescription> availableCharacters = CharacterFileUtil.getAvailableCharacters(this);
-                populateCharacterMenu(availableCharacters);
-                updatePlaceholderView(availableCharacters);
+                updateAvailableCharacters();
                 break;
             default:
 
@@ -468,10 +464,17 @@ public class CharacterSheet extends AppCompatActivity
             characterSelector.setVisibility(View.GONE);
             characterSelectorLabel.setVisibility(View.GONE);
         } else {
+            // Show if characters are available
+            characterSelector.setVisibility(View.VISIBLE);
+            characterSelectorLabel.setVisibility(View.VISIBLE);
+
+            // Clear current children
+            characterSelector.removeAllViews();
+
             // Populate if available
             for (final CharacterDescription c : characterDescriptions) {
 
-                final Button loadButton = new Button(getBaseContext(), null,
+                final Button loadButton = new Button(CharacterSheet.this, null,
                         R.style.Widget_AppCompat_Button_Borderless);
                 loadButton.setTextColor(getResources().getColor(R.color.color_text_primary));
                 loadButton.setText(c.getCharacterName());
@@ -500,7 +503,19 @@ public class CharacterSheet extends AppCompatActivity
                     public void GetTextResult(String string) {
                         CharacterModel newModel = new CharacterModel(string);
                         CharacterControl.getInstance().setCharacter(newModel);
+                        CharacterFileUtil.saveCharacter(
+                                CharacterSheet.this,
+                                CharacterControl.getCurrentCharacter());
+                        updateAvailableCharacters();
                     }
                 });
+    }
+
+    private void updateAvailableCharacters() {
+        // Update sidebar and placeholder view
+        List<CharacterDescription> availableCharacters =
+                CharacterFileUtil.getAvailableCharacters(CharacterSheet.this);
+        populateCharacterMenu(availableCharacters);
+        updatePlaceholderView(availableCharacters);
     }
 }

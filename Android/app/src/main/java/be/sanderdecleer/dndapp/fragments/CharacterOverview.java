@@ -270,7 +270,7 @@ public class CharacterOverview extends CharacterFragment {
 
         if (creationMenu.getVisibility() != View.VISIBLE) {
 
-            final int moveDuration = 200;
+            final int moveDuration = 50;
 
             int[] activatorLocation = new int[2];
             fab.getLocationOnScreen(activatorLocation);

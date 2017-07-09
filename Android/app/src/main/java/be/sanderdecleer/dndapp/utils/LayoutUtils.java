@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.XmlResourceParser;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import be.sanderdecleer.dndapp.R;
@@ -105,19 +107,39 @@ public final class LayoutUtils {
 
     }
 
-    public static void showEditTextDialog(Activity activity, String title, final String startText,
+    public static void showEditTextDialog(final Activity activity, String title, final String startText,
                                           final TextResultCallback textResultCallback) {
         LayoutUtils.showEditDialog(activity, R.layout.edit_text, title,
                 new LayoutUtils.EditViewCallback() {
                     @Override
                     public void EditView(View view) {
-                        EditText label = (EditText) view.findViewById(R.id.edit_field);
+                        final EditText label = (EditText) view.findViewById(R.id.edit_field);
                         label.setText(startText);
+
+
+                        final Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Request keyboard
+                                        if (label.requestFocus()) {
+                                            label.selectAll();
+                                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.showSoftInput(label, InputMethodManager.SHOW_IMPLICIT);
+                                        }
+                                    }
+                                });
+                            }
+                        }, 100);
                     }
                 }, new LayoutUtils.DismissDialogCallback() {
                     @Override
                     public void OnDialogDismissed(View view) {
-                        if(textResultCallback != null){
+                        if (textResultCallback != null) {
                             EditText label = (EditText) view.findViewById(R.id.edit_field);
                             textResultCallback.GetTextResult(label.getText().toString());
                         }
