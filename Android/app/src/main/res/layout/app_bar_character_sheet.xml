@@ -63,6 +63,8 @@
         android:visibility="gone"/>
 
     <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/placeholder"
         layout="@layout/fragment_no_character"
         android:visibility="gone"/>

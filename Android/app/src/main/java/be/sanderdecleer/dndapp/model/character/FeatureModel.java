@@ -38,6 +38,10 @@ public class FeatureModel extends BaseItem {
         return new FeatureModel("", "");
     }
 
+    public static FeatureModel getBasic(String title, String message){
+        return new FeatureModel(title, message);
+    }
+
     @Override
     public Type getType() {
         return Type.Feature;

@@ -8,15 +8,14 @@ import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
+import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.CharacterModel;
@@ -29,8 +28,11 @@ import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.views.AbilityView;
 import be.sanderdecleer.dndapp.views.ArmorClassView;
 import be.sanderdecleer.dndapp.views.BaseItemView;
+import be.sanderdecleer.dndapp.views.ExpendableView;
+import be.sanderdecleer.dndapp.views.FeatureView;
 import be.sanderdecleer.dndapp.views.HitPointsView;
 import be.sanderdecleer.dndapp.views.SpeedView;
+import be.sanderdecleer.dndapp.views.WeaponView;
 
 
 /**
@@ -143,7 +145,6 @@ public class CharacterOverview extends CharacterFragment {
         AbilityView abilityView = (AbilityView) findViewById(attributeViewID);
         abilityView.setItem(data);
         abilityView.setupItemView(abilityView);
-
     }
 
     private void attachClickListeners() {
@@ -175,8 +176,18 @@ public class CharacterOverview extends CharacterFragment {
             public void onClick(View v) {
                 toggleCreationMenu();
                 if (CharacterControl.hasCurrentCharacter()) {
-                    CharacterControl.getCurrentCharacter().addWeapon(WeaponModel.getEmpty());
+                    // Create model and add it to the character
+                    WeaponModel weaponModel = WeaponModel.getEmpty();
+                    CharacterControl.getCurrentCharacter().addWeapon(weaponModel);
                     CharacterControl.tryCharacterChanged();
+
+                    // TODO change this up, dirty AF
+                    // Show edit view for the model
+                    WeaponView weaponView = new WeaponView();
+                    weaponView.setItem(weaponModel);
+                    ItemDialogFragment.showItemViewDialog(getContext(),
+                            weaponView, ItemDialogFragment.VIEW_TYPE_EDIT);
+
                 }
             }
         });
@@ -185,8 +196,20 @@ public class CharacterOverview extends CharacterFragment {
             public void onClick(View v) {
                 toggleCreationMenu();
                 if (CharacterControl.hasCurrentCharacter()) {
-                    CharacterControl.getCurrentCharacter().addFeature(FeatureModel.getEmpty());
+
+                    // Create model and add it to the character
+                    FeatureModel featureModel = FeatureModel.getBasic(
+                            getResources().getString(R.string.feature_default_title),
+                            getResources().getString(R.string.feature_default_description));
+                    CharacterControl.getCurrentCharacter().addFeature(featureModel);
                     CharacterControl.tryCharacterChanged();
+
+                    // TODO change this up, dirty AF
+                    // Show edit view for the model
+                    FeatureView featureView = new FeatureView();
+                    featureView.setItem(featureModel);
+                    ItemDialogFragment.showItemViewDialog(getContext(),
+                            featureView, ItemDialogFragment.VIEW_TYPE_EDIT);
                 }
             }
         });
@@ -195,8 +218,18 @@ public class CharacterOverview extends CharacterFragment {
             public void onClick(View v) {
                 toggleCreationMenu();
                 if (CharacterControl.hasCurrentCharacter()) {
-                    CharacterControl.getCurrentCharacter().addExpendable(ExpendableModel.getEmpty());
+
+                    // Create model and add to character
+                    ExpendableModel expendableModel = ExpendableModel.getEmpty();
+                    CharacterControl.getCurrentCharacter().addExpendable(expendableModel);
                     CharacterControl.tryCharacterChanged();
+
+                    // TODO change this up, dirty AF
+                    // Show edit view for the model
+                    ExpendableView expendableView = new ExpendableView();
+                    expendableView.setItem(expendableModel);
+                    ItemDialogFragment.showItemViewDialog(getContext(),
+                            expendableView, ItemDialogFragment.VIEW_TYPE_EDIT);
                 }
             }
         });

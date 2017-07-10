@@ -133,20 +133,29 @@ public class CharacterFileUtil {
         return new String(bytes);
     }
 
+    public static void deleteCharacter(Context context, CharacterDescription description) {
+        deleteCharacter(context, description.getCharacterFile());
+    }
+
     public static void deleteCharacter(Context context, CharacterModel character) {
         if (character == null) {
             Log.w(LOG_TOKEN, "Character is null");
             return;
         }
+        deleteCharacter(context, getFile(context, characterNameToFileName(character.getName())));
+    }
 
-        File file = getFile(context, characterNameToFileName(character.getName()));
+    private static void deleteCharacter(Context context, File characterFile) {
 
-        if (!file.delete()) {
+        if(!characterFile.exists()){
+            Log.e(LOG_TOKEN, "Could not delete character, file does not exist");
+        }
+
+        if (!characterFile.delete()) {
             // Something went wrong here.
         }
     }
 
-    // TODO: 30/05/2016 Replace with character preview data?
     public static List<CharacterDescription> getAvailableCharacters(Context context) {
 
         File fileDir = getFilesDir(context);
@@ -159,13 +168,17 @@ public class CharacterFileUtil {
         return characterDescriptions;
     }
 
-    /** Checks if external storage is available for read and write */
+    /**
+     * Checks if external storage is available for read and write
+     */
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    /** Checks if external storage is available to at least read */
+    /**
+     * Checks if external storage is available to at least read
+     */
     private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||

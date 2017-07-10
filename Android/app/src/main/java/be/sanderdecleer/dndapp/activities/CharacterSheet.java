@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
@@ -198,29 +199,22 @@ public class CharacterSheet extends AppCompatActivity
             case R.id.action_edit_name:
 
                 // Show name popup
-
-                LayoutUtils.showEditDialog(this, R.layout.edit_text, getString(R.string.name_edit_title),
-                        new LayoutUtils.EditViewCallback() {
+                LayoutUtils.showEditTextDialog(this, getString(R.string.name_edit_title),
+                        CharacterControl.getCurrentCharacter().getName(), new LayoutUtils.TextResultCallback() {
                             @Override
-                            public void EditView(View view) {
-                                EditText textView = (EditText) view.findViewById(R.id.edit_field);
-                                if (textView != null) {
-                                    textView.setText(CharacterControl.getCurrentCharacter().getName());
-                                    textView.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                            public void GetTextResult(String string) {
 
-                                    textView.selectAll();
+                                // Delete character, rename and save again. Might go wrong ...
+                                CharacterFileUtil.deleteCharacter(
+                                        CharacterSheet.this,
+                                        CharacterControl.getCurrentCharacter());
+                                CharacterControl.getCurrentCharacter().setName(string);
+                                CharacterFileUtil.saveCharacter(
+                                        CharacterSheet.this,
+                                        CharacterControl.getCurrentCharacter());
 
-                                    // TODO: 15/09/2016 Open keyboard
-                                }
-                            }
-                        }, new LayoutUtils.DismissDialogCallback() {
-                            @Override
-                            public void OnDialogDismissed(View view) {
-                                EditText textView = (EditText) view.findViewById(R.id.edit_field);
-                                if (textView != null) {
-                                    CharacterControl.getCurrentCharacter().setName(textView.getText().toString());
-                                    updateCharacter();
-                                }
+                                updateCharacter();
+                                updateAvailableCharacters();
                             }
                         });
 
@@ -367,7 +361,7 @@ public class CharacterSheet extends AppCompatActivity
             CharacterControl.getInstance().getCharacter().hasChanges = true;
 
             if (fab != null)
-                fab.show();
+            fab.show();
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
             if (fab != null)
@@ -455,6 +449,8 @@ public class CharacterSheet extends AppCompatActivity
         });
 
 
+
+
         // Load existing character view
         final LinearLayout characterSelector = (LinearLayout) mPlaceholder.findViewById(R.id.no_character_load);
         final TextView characterSelectorLabel = (TextView) mPlaceholder.findViewById(R.id.load_character_title);
@@ -474,9 +470,13 @@ public class CharacterSheet extends AppCompatActivity
             // Populate if available
             for (final CharacterDescription c : characterDescriptions) {
 
-                final Button loadButton = new Button(CharacterSheet.this, null,
-                        R.style.Widget_AppCompat_Button_Borderless);
-                loadButton.setTextColor(getResources().getColor(R.color.color_text_primary));
+//                final Button loadButton = new Button(CharacterSheet.this, null, 0,
+//                        R.style.Widget_AppCompat_Button_Borderless);
+                final Button loadButton = new Button(new ContextThemeWrapper(this, R.style.Widget_AppCompat_Button_Borderless));
+
+                // Dirty hack for the background creation
+                loadButton.setBackground(createButton.getBackground().getConstantState().newDrawable());
+
                 loadButton.setText(c.getCharacterName());
                 loadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -486,8 +486,9 @@ public class CharacterSheet extends AppCompatActivity
                     }
                 });
 
-                final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
 
                 characterSelector.addView(loadButton, layoutParams);
 
