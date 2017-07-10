@@ -26,5 +26,11 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.google.code.gson:gson:2.6.2'
+
+    // For javascript ScriptEngine
+    // https://mvnrepository.com/artifact/com.sun.phobos/jsr223-api
+    compile group: 'com.sun.phobos', name: 'jsr223-api', version: '1.0'
+
+
     testCompile 'junit:junit:4.12'
 }
