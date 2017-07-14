@@ -1,9 +1,5 @@
-package be.sanderdecleer.dndapp.views;
+package be.sanderdecleer.dndapp.controllers;
 
-import android.content.Context;
-import android.support.annotation.IntDef;
-import android.util.AttributeSet;
-import android.util.StringBuilderPrinter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,15 +12,14 @@ import java.util.Locale;
 import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.ExpendableModel;
-import be.sanderdecleer.dndapp.model.character.FeatureModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
  * Created by SD on 22/11/2016.
- * View for the {@link ExpendableModel} class
+ * ViewController for the {@link ExpendableModel} class
  */
 
-public class ExpendableView implements ItemViewController {
+public class ExpendableViewController implements ItemViewController {
 
     private ExpendableModel data;
 

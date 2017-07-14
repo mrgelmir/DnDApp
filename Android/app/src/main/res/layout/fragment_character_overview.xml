@@ -24,7 +24,7 @@
 
         <!-- Attributes -->
         <LinearLayout
-            android:id="@+id/overview_various_todo"
+            android:id="@+id/character_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/overview_ability_scores"

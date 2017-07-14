@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Replace merge with RelativeLayout for design purposes -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
+    android:descendantFocusability="blocksDescendants"
     tools:parentTag="RelativeLayout">
 
     <!-- Title -->
@@ -36,4 +37,4 @@
         android:text="@string/feature_default_description"
         android:textAlignment="viewEnd" />
 
-</merge>
+</RelativeLayout>

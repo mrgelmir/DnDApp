@@ -3,11 +3,7 @@ package be.sanderdecleer.dndapp.dialog_fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,12 +16,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.utils.CharacterControl;
-import be.sanderdecleer.dndapp.views.ItemViewController;
+import be.sanderdecleer.dndapp.controllers.ItemViewController;
+import be.sanderdecleer.dndapp.model.character.BaseItem;
+import be.sanderdecleer.dndapp.utils.LayoutFactory;
+import be.sanderdecleer.dndapp.views.ItemViewType;
 
 
 /**
@@ -35,28 +30,44 @@ import be.sanderdecleer.dndapp.views.ItemViewController;
  */
 public class ItemDialogFragment extends DialogFragment {
 
-    @IntDef({VIEW_TYPE_EDIT, VIEW_TYPE_INFO})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ViewType {
-    }
-
-    public static final int VIEW_TYPE_INFO = 1;
-    public static final int VIEW_TYPE_EDIT = 2;
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    // the fragment initialization parameters
     private static final String ARG_RESOURCE_ID = "resource_id";
     private static final String ARG_VIEW_TYPE = "view_type";
-    private static final String ARG_CAN_REMOVE = "can_remove";
 
-    private int resourceId;
-    private int viewType;
-    private boolean canRemove;
+    private ItemViewType viewType;
 
-    private ItemViewController viewSetup = null;
-    private View contentView = null;
+    private BaseItem item;
 
-    public static void showItemViewDialog(Context context, ItemViewController viewController,
-                                          @ItemDialogFragment.ViewType int viewType) {
+    private ViewGroup contentView;
+
+    private DismissListener dismissListener = null;
+    private ConfirmListener confirmListener = null;
+    private CancelListener cancelListener = null;
+    private RemoveListener removeListener = null;
+
+    /**
+     * Helper method for showing an ItemViewDialog
+     *
+     * @param item     the base item thet will be passed to the LayoutFactory
+     * @param viewType The type of view we want to show, this will determine the buttons for now
+     *                 TODO: add an internal parameter later for better button control
+     */
+    public static ItemDialogFragment createItemViewDialog(BaseItem item, ItemViewType viewType) {
+
+        // Set up data
+        ItemDialogFragment fragment = new ItemDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_VIEW_TYPE, viewType.toInt());
+        fragment.setArguments(args);
+        fragment.setItem(item);
+
+
+        return fragment;
+    }
+
+    @Deprecated
+    public static void createItemViewDialog(Context context, ItemViewController viewController,
+                                            ItemViewType viewType) {
         // Get FragmentManager
         final FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
 
@@ -65,12 +76,12 @@ public class ItemDialogFragment extends DialogFragment {
         final String tag;
         switch (viewType) {
             default:
-            case VIEW_TYPE_INFO:
+            case INFO:
                 resourceId = viewController.getInfoResourceId();
                 tag = "info_view";
                 break;
 
-            case VIEW_TYPE_EDIT:
+            case EDIT:
                 resourceId = viewController.getEditResourceId();
                 tag = "edit_view";
                 break;
@@ -79,7 +90,7 @@ public class ItemDialogFragment extends DialogFragment {
         // Create dialog using inherited resources
         final ItemDialogFragment itemDialogFragment =
                 ItemDialogFragment.newInstance(resourceId, viewType, viewController.canRemove());
-        itemDialogFragment.setViewSetup(viewController);
+//        itemDialogFragment.setViewSetup(viewController);
 
         // TODO: 10/04/2017 move to resources or something
         final boolean fullScreen = false;
@@ -100,8 +111,51 @@ public class ItemDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public void setViewSetup(ItemViewController viewSetup) {
-        this.viewSetup = viewSetup;
+    public ItemDialogFragment show(Context context) {
+
+        // TODO: 10/04/2017 get this from resources or something
+        final boolean fullScreen = false;
+
+        // Get FragmentManager
+        final FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+
+        if (fullScreen) {
+            // Get fragment transaction
+            // TODO: 10/04/2017 Add/set a background here
+            final FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .add(android.R.id.content, this)
+                    .addToBackStack(null).commit();
+        } else {
+            // Plain old fragment stuff
+            this.show(fragmentManager, item.getType().toString());
+        }
+
+        return this;
+    }
+
+    public ItemDialogFragment setConfirmListener(ItemDialogFragment.ConfirmListener listener) {
+        confirmListener = listener;
+        return this;
+    }
+
+    public ItemDialogFragment setCancelListener(ItemDialogFragment.CancelListener listener) {
+        cancelListener = listener;
+        return this;
+    }
+
+    public ItemDialogFragment setConfirmListener(ItemDialogFragment.RemoveListener listener) {
+        removeListener = listener;
+        return this;
+    }
+
+    public ItemDialogFragment setConfirmListener(ItemDialogFragment.DismissListener listener) {
+        dismissListener = listener;
+        return this;
+    }
+
+    public void setItem(BaseItem item) {
+        this.item = item;
     }
 
     /**
@@ -109,90 +163,88 @@ public class ItemDialogFragment extends DialogFragment {
      * this fragment using the provided parameters.
      *
      * @param resourceId Resource Id.
-     * @param viewType   the type of view, determines setup function called
-     *                   (Choose from VIEW_TYPE_INFO or VIEW_TYPE_EDIT)
+     * @param viewType   the type of view, determines button layout
      * @param canRemove  can the item backing this view be removed
      * @return A new instance of fragment ItemDialogFragment.
      */
-    public static ItemDialogFragment newInstance(@LayoutRes int resourceId, @ViewType int viewType,
+    public static ItemDialogFragment newInstance(@LayoutRes int resourceId, ItemViewType viewType,
                                                  boolean canRemove) {
         ItemDialogFragment fragment = new ItemDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_RESOURCE_ID, resourceId);
-        args.putInt(ARG_VIEW_TYPE, viewType);
-        args.putBoolean(ARG_CAN_REMOVE, canRemove);
+        args.putInt(ARG_VIEW_TYPE, viewType.toInt());
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            resourceId = getArguments().getInt(ARG_RESOURCE_ID);
-            viewType = getArguments().getInt(ARG_VIEW_TYPE);
-            canRemove = getArguments().getBoolean(ARG_CAN_REMOVE);
-        }
         super.onCreate(savedInstanceState);
-
+        // This call is to retain the item reference
+        setRetainInstance(true);
+        if (getArguments() != null) {
+            int resourceId = getArguments().getInt(ARG_RESOURCE_ID);
+            viewType = ItemViewType.fromInt(getArguments().getInt(ARG_VIEW_TYPE));
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View parentView = inflater.inflate(R.layout.fragment_info_dialog, container, false);
 
         // Inflate child view
-        contentView = parentView.findViewById(R.id.info_content);
-        inflater.inflate(resourceId, (ViewGroup) contentView);
+        contentView = (ViewGroup) parentView.findViewById(R.id.info_content);
+        LayoutFactory.createView(inflater, contentView, item, viewType, true);
+//        inflater.inflate(resourceId, (ViewGroup) contentView);
 
-        if (viewSetup != null) {
-            // Handle the title
-            TextView title = (TextView) parentView.findViewById(R.id.info_title);
-            if (viewSetup.hasTitle()) {
-                title.setText(viewSetup.getTitle());
-            } else {
-                title.setVisibility(View.GONE);
-            }
 
-            // Get buttons
-            final Button dismissBtn = (Button) parentView.findViewById(R.id.button_dismiss);
-            final Button confirmBtn = (Button) parentView.findViewById(R.id.button_positive);
-            final Button cancelBtn = (Button) parentView.findViewById(R.id.button_negative);
-            final Button removeButton = (Button) parentView.findViewById(R.id.button_remove);
+        // Title setup
+        // TODO see how to handle this, for now no titles (maybe pass as argument)
+        TextView title = (TextView) parentView.findViewById(R.id.info_title);
+        title.setVisibility(View.GONE);
 
-            // Let the setup manage its own content
-            // Enable/disable buttons depending on type
-            switch (viewType) {
-                default:
-                case VIEW_TYPE_INFO:
-                    // Show dismiss button
-                    confirmBtn.setVisibility(View.GONE);
-                    cancelBtn.setVisibility(View.GONE);
-                    dismissBtn.setVisibility(View.VISIBLE);
-                    removeButton.setVisibility(View.GONE);
+        // Get buttons
+        final Button dismissBtn = (Button) parentView.findViewById(R.id.button_dismiss);
+        final Button confirmBtn = (Button) parentView.findViewById(R.id.button_positive);
+        final Button cancelBtn = (Button) parentView.findViewById(R.id.button_negative);
+        final Button removeButton = (Button) parentView.findViewById(R.id.button_remove);
 
-                    // Hook up buttons
-                    dismissBtn.setOnClickListener(dismissClickListener);
+        // Hook up buttons
+        dismissBtn.setOnClickListener(dismissClickListener);
+        cancelBtn.setOnClickListener(cancelClickListener);
+        confirmBtn.setOnClickListener(saveClickListener);
+        removeButton.setOnClickListener(removeClickListener);
 
-                    viewSetup.setupInfoView(contentView);
-                    break;
-                case VIEW_TYPE_EDIT:
-                    // Show cancel and confirm buttons
-                    dismissBtn.setVisibility(View.GONE);
-                    confirmBtn.setVisibility(View.VISIBLE);
-                    cancelBtn.setVisibility(View.VISIBLE);
-                    removeButton.setVisibility(canRemove ? View.VISIBLE : View.INVISIBLE);
+        // Enable/disable buttons  based on listeners
+        // TODO might be a flawed system
+        confirmBtn.setVisibility(confirmListener == null ? View.GONE : View.VISIBLE);
+        cancelBtn.setVisibility(cancelListener == null ? View.GONE : View.VISIBLE);
+        removeButton.setVisibility(removeListener == null ? View.GONE : View.VISIBLE);
+        // Always show dismiss
+        dismissBtn.setVisibility(View.VISIBLE);
 
-                    // Hook up buttons
-                    cancelBtn.setOnClickListener(dismissClickListener);
-                    confirmBtn.setOnClickListener(saveClickListener);
-                    removeButton.setOnClickListener(removeClickListener);
-
-                    viewSetup.setupEditView(contentView);
-                    break;
-            }
-        }
+//        // Enable/disable buttons depending on viewType
+//        switch (viewType) {
+//            default:
+//            case ITEM:
+//            case INFO:
+//                // Only show dismiss button
+//                confirmBtn.setVisibility(View.GONE);
+//                cancelBtn.setVisibility(View.GONE);
+//                dismissBtn.setVisibility(View.VISIBLE);
+//                removeButton.setVisibility(View.GONE);
+//                break;
+//            case EDIT:
+//                // Show cancel and confirm buttons
+//                confirmBtn.setVisibility(View.VISIBLE);
+//                dismissBtn.setVisibility(View.GONE);
+//                cancelBtn.setVisibility(View.VISIBLE);
+//                removeButton.setVisibility(View.VISIBLE);
+//                break;
+//        }
 
         return parentView;
     }
@@ -209,8 +261,16 @@ public class ItemDialogFragment extends DialogFragment {
             dialogWindow.setLayout(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialogWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_corners));
+            dialogWindow.setBackgroundDrawable(getResources().getDrawable(
+                    R.drawable.rounded_corners, null));
         }
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if (dismissListener != null)
+            dismissListener.dismiss();
     }
 
     private View.OnClickListener dismissClickListener = new View.OnClickListener() {
@@ -223,8 +283,10 @@ public class ItemDialogFragment extends DialogFragment {
     private View.OnClickListener saveClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (contentView != null)
-                viewSetup.resolveEditView(contentView);
+//            if (contentView != null)
+//                viewSetup.resolveEditView(contentView);
+            if (confirmListener != null)
+                confirmListener.confirm(contentView);
             dismiss();
         }
     };
@@ -232,11 +294,37 @@ public class ItemDialogFragment extends DialogFragment {
     private View.OnClickListener removeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: 13/04/2017 remove this from the character
-            viewSetup.remove();
+//            viewSetup.remove();
+            if (removeListener != null)
+                removeListener.remove();
             dismiss();
         }
     };
 
+    private View.OnClickListener cancelClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+//            viewSetup.remove();
+            if (cancelListener != null)
+                cancelListener.cancel();
+            dismiss();
+        }
+    };
+
+    public interface DismissListener {
+        void dismiss();
+    }
+
+    public interface CancelListener {
+        void cancel();
+    }
+
+    public interface ConfirmListener {
+        void confirm(View v);
+    }
+
+    public interface RemoveListener {
+        void remove();
+    }
 
 }

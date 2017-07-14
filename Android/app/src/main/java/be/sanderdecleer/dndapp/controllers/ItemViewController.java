@@ -1,4 +1,4 @@
-package be.sanderdecleer.dndapp.views;
+package be.sanderdecleer.dndapp.controllers;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.view.menu.MenuView;
@@ -8,6 +8,11 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
 
 /**
  * Created by SD on 6/04/2017.
+ * Base class responsible for displaying items @{@link BaseItem} derivatives with custom functionality
+ * Stores resource id of and functions for setting up:
+ * - ItemView
+ * - InfoView
+ * - EditView
  */
 
 public interface ItemViewController {
@@ -43,9 +48,23 @@ public interface ItemViewController {
     /**
      * Passes the edit view to get final values
      *
-     * @param editView
+     * @param editView the given View
      */
     void resolveEditView(View editView);
+
+
+
+    @LayoutRes
+    int getItemResourceId();
+
+    @LayoutRes
+    int getInfoResourceId();
+
+    @LayoutRes
+    int getEditResourceId();
+
+
+    // TODO: Figure out if functionality below is really needed
 
     /**
      * Removes this object from the current character
@@ -58,13 +77,5 @@ public interface ItemViewController {
 
     String getTitle();
 
-    @LayoutRes
-    int getItemResourceId();
-
-    @LayoutRes
-    int getInfoResourceId();
-
-    @LayoutRes
-    int getEditResourceId();
-
 }
+

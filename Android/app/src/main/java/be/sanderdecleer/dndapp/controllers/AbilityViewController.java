@@ -1,10 +1,6 @@
-package be.sanderdecleer.dndapp.views;
+package be.sanderdecleer.dndapp.controllers;
 
-import android.content.Context;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -15,55 +11,12 @@ import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
- * Created by SD on 13/04/2017.
- * Controls the view elements of a {@link AbilityModel}
+ * Created by SD on 14/07/2017.
  */
 
-public class AbilityView extends LinearLayout implements ItemViewController {
+public class AbilityViewController implements ItemViewController, ItemDialogFragment.ConfirmListener {
 
-    AbilityModel data;
-
-    public AbilityView(Context context) {
-        super(context);
-        setup();
-    }
-
-    public AbilityView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        setup();
-    }
-
-    public AbilityView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setup();
-    }
-
-    public AbilityView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        setup();
-    }
-
-    private void setup() {
-
-        final ItemViewController thisInstance = this;
-
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ItemDialogFragment.showItemViewDialog(getContext(), thisInstance,
-                        ItemDialogFragment.VIEW_TYPE_INFO);
-            }
-        });
-
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ItemDialogFragment.showItemViewDialog(getContext(), thisInstance,
-                        ItemDialogFragment.VIEW_TYPE_EDIT);
-                return true;
-            }
-        });
-    }
+    private AbilityModel data;
 
     @Override
     public void setItem(BaseItem item) {
@@ -139,5 +92,10 @@ public class AbilityView extends LinearLayout implements ItemViewController {
     @Override
     public int getEditResourceId() {
         return R.layout.edit_single_number;
+    }
+
+    @Override
+    public void confirm(View v) {
+        resolveEditView(v);
     }
 }

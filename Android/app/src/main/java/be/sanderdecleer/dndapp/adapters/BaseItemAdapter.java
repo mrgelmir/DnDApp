@@ -3,6 +3,7 @@ package be.sanderdecleer.dndapp.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,14 +11,8 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import be.sanderdecleer.dndapp.model.character.BaseItem;
-import be.sanderdecleer.dndapp.model.character.ExpendableModel;
-import be.sanderdecleer.dndapp.model.character.FeatureModel;
-import be.sanderdecleer.dndapp.model.character.WeaponModel;
-import be.sanderdecleer.dndapp.utils.CharacterControl;
-import be.sanderdecleer.dndapp.views.BaseItemView;
-import be.sanderdecleer.dndapp.views.ExpendableView;
-import be.sanderdecleer.dndapp.views.FeatureView;
-import be.sanderdecleer.dndapp.views.WeaponView;
+import be.sanderdecleer.dndapp.utils.LayoutFactory;
+import be.sanderdecleer.dndapp.views.ItemViewType;
 
 /**
  * Created by SD on 22/11/2016.
@@ -39,57 +34,31 @@ public class BaseItemAdapter extends ArrayAdapter<BaseItem>
     // for the specified item.
     @Override
     public int getItemViewType(int position) {
-        return getItem(position).getType().getValue();
+        BaseItem item = getItem(position);
+        return item == null ? -1 : item.getType().getValue();
     }
 
     // Get a View that displays the data at the specified position in the data set.
     @Override
     @NonNull
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
         final BaseItem item = getItem(position);
 
-        // Check if an existing view is being reused, otherwise inflate the view
-        BaseItemView itemView = (BaseItemView) convertView;
+        // Check if an existing view is being reused, otherwise inflate new view
+        ViewGroup itemView = (ViewGroup) convertView;
         if (itemView == null) {
-            itemView = getInflatedLayoutForItem(item);
+            itemView = (ViewGroup) LayoutFactory.createView(
+                    LayoutInflater.from(getContext()), parent,
+                    item, ItemViewType.ITEM);
         }
 
-        // Bind the data to the view
-        itemView.setItem(item);
+        // Apply the new data to the view
+        if (item != null)
+            item.getViewController().setupItemView(itemView);
 
         // Return the completed view to render on screen
         return itemView;
-    }
-
-    private BaseItemView getInflatedLayoutForItem(BaseItem item) {
-
-        // Get item type for customisation
-        BaseItem.Type type = item.getType();
-
-        // Create basic view
-        BaseItemView view = new BaseItemView(getContext());
-
-        // Customise view based on ItemViewController implementations
-        switch (type) {
-            case Expendable:
-                view.setup(new ExpendableView());
-                break;
-            case Feature:
-                view.setup(new FeatureView());
-                break;
-            case Weapon:
-                view.setup(new WeaponView());
-                break;
-            default:
-            case Item: // todo
-                return null;
-        }
-
-        // TODO fix this
-        view.setMinimumHeight(150);
-
-        return view;
     }
 
     @Override

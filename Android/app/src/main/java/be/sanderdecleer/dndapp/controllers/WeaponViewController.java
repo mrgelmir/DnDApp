@@ -1,7 +1,5 @@
-package be.sanderdecleer.dndapp.views;
+package be.sanderdecleer.dndapp.controllers;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,13 +8,14 @@ import be.sanderdecleer.dndapp.R;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.model.character.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
+import be.sanderdecleer.dndapp.views.BaseItemView;
 
 /**
  * Created by SD on 22/11/2016.
  * Controls the view elements of a {@link WeaponModel} via the {@link BaseItemView}
  */
 
-public class WeaponView implements ItemViewController {
+public class WeaponViewController implements ItemViewController {
 
     // Reference to data
     private WeaponModel data;

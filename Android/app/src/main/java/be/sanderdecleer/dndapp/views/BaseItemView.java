@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import be.sanderdecleer.dndapp.controllers.ItemViewController;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 
@@ -50,14 +51,5 @@ public final class BaseItemView extends RelativeLayout {
         viewController.setupItemView(this);
     }
 
-    public void onClick() {
-        ItemDialogFragment.showItemViewDialog(getContext(), viewController,
-                ItemDialogFragment.VIEW_TYPE_INFO);
-    }
-
-    public void onLongClick() {
-        ItemDialogFragment.showItemViewDialog(getContext(), viewController,
-                ItemDialogFragment.VIEW_TYPE_EDIT);
-    }
 
 }

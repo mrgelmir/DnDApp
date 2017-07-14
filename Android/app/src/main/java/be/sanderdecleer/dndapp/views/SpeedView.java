@@ -2,13 +2,13 @@ package be.sanderdecleer.dndapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.StringBuilderPrinter;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import be.sanderdecleer.dndapp.R;
+import be.sanderdecleer.dndapp.controllers.ItemViewController;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
@@ -45,16 +45,16 @@ public class SpeedView extends RelativeLayout implements ItemViewController {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemDialogFragment.showItemViewDialog(getContext(), thisInstance,
-                        ItemDialogFragment.VIEW_TYPE_INFO);
+                ItemDialogFragment.createItemViewDialog(getContext(), thisInstance,
+                        ItemViewType.INFO);
             }
         });
 
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ItemDialogFragment.showItemViewDialog(getContext(), thisInstance,
-                        ItemDialogFragment.VIEW_TYPE_EDIT);
+                ItemDialogFragment.createItemViewDialog(getContext(), thisInstance,
+                        ItemViewType.EDIT);
                 return true;
             }
         });

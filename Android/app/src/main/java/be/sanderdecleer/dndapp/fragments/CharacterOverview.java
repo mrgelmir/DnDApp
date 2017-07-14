@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
+import be.sanderdecleer.dndapp.controllers.AbilityViewController;
+import be.sanderdecleer.dndapp.controllers.ItemViewController;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
@@ -25,14 +28,10 @@ import be.sanderdecleer.dndapp.model.character.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.views.AbilityView;
 import be.sanderdecleer.dndapp.views.ArmorClassView;
-import be.sanderdecleer.dndapp.views.BaseItemView;
-import be.sanderdecleer.dndapp.views.ExpendableView;
-import be.sanderdecleer.dndapp.views.FeatureView;
 import be.sanderdecleer.dndapp.views.HitPointsView;
+import be.sanderdecleer.dndapp.views.ItemViewType;
 import be.sanderdecleer.dndapp.views.SpeedView;
-import be.sanderdecleer.dndapp.views.WeaponView;
 
 
 /**
@@ -140,11 +139,29 @@ public class CharacterOverview extends CharacterFragment {
     }
 
     // Custom methods
-    private void setAbilityScore(int attributeViewID, AbilityModel data) {
+    private void setAbilityScore(int attributeViewID, final AbilityModel data) {
 
-        AbilityView abilityView = (AbilityView) findViewById(attributeViewID);
-        abilityView.setItem(data);
-        abilityView.setupItemView(abilityView);
+        ViewGroup abilityView = (ViewGroup) findViewById(attributeViewID);
+        final AbilityViewController viewController = (AbilityViewController) data.getViewController();
+        viewController.setupInfoView(abilityView);
+
+        // Subscribe to clicks
+        abilityView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ItemDialogFragment.createItemViewDialog(data, ItemViewType.EDIT)
+                        .setConfirmListener(viewController)
+                        .show(getContext());
+                return true;
+            }
+        });
+        abilityView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ItemDialogFragment.createItemViewDialog(data, ItemViewType.INFO).show(getContext());
+            }
+        });
+
     }
 
     private void attachClickListeners() {
@@ -176,17 +193,15 @@ public class CharacterOverview extends CharacterFragment {
             public void onClick(View v) {
                 toggleCreationMenu();
                 if (CharacterControl.hasCurrentCharacter()) {
-                    // Create model and add it to the character
+                    // Create model and add it to the characters
                     WeaponModel weaponModel = WeaponModel.getEmpty();
                     CharacterControl.getCurrentCharacter().addWeapon(weaponModel);
                     CharacterControl.tryCharacterChanged();
 
-                    // TODO change this up, dirty AF
                     // Show edit view for the model
-                    WeaponView weaponView = new WeaponView();
-                    weaponView.setItem(weaponModel);
-                    ItemDialogFragment.showItemViewDialog(getContext(),
-                            weaponView, ItemDialogFragment.VIEW_TYPE_EDIT);
+                    ItemDialogFragment
+                            .createItemViewDialog(weaponModel, ItemViewType.EDIT)
+                            .show(getContext());
 
                 }
             }
@@ -204,12 +219,10 @@ public class CharacterOverview extends CharacterFragment {
                     CharacterControl.getCurrentCharacter().addFeature(featureModel);
                     CharacterControl.tryCharacterChanged();
 
-                    // TODO change this up, dirty AF
                     // Show edit view for the model
-                    FeatureView featureView = new FeatureView();
-                    featureView.setItem(featureModel);
-                    ItemDialogFragment.showItemViewDialog(getContext(),
-                            featureView, ItemDialogFragment.VIEW_TYPE_EDIT);
+                    ItemDialogFragment
+                            .createItemViewDialog(featureModel, ItemViewType.EDIT)
+                            .show(getContext());
                 }
             }
         });
@@ -224,12 +237,10 @@ public class CharacterOverview extends CharacterFragment {
                     CharacterControl.getCurrentCharacter().addExpendable(expendableModel);
                     CharacterControl.tryCharacterChanged();
 
-                    // TODO change this up, dirty AF
                     // Show edit view for the model
-                    ExpendableView expendableView = new ExpendableView();
-                    expendableView.setItem(expendableModel);
-                    ItemDialogFragment.showItemViewDialog(getContext(),
-                            expendableView, ItemDialogFragment.VIEW_TYPE_EDIT);
+                    ItemDialogFragment
+                            .createItemViewDialog(expendableModel, ItemViewType.EDIT)
+                            .show(getContext());
                 }
             }
         });
@@ -406,16 +417,23 @@ public class CharacterOverview extends CharacterFragment {
             implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            BaseItemView itemView = (BaseItemView) view;
-            if (itemView != null)
-                itemView.onClick();
+
+            // Get item
+            BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
+            // Show info view
+            ItemDialogFragment.createItemViewDialog(item, ItemViewType.INFO)
+                    .show(parent.getContext());
         }
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            BaseItemView itemView = (BaseItemView) view;
-            if (itemView != null) {
-                itemView.onLongClick();
+
+            // Get item
+            BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
+            // Show edit view
+            if (item != null) {
+                ItemDialogFragment.createItemViewDialog(item, ItemViewType.EDIT)
+                        .show(parent.getContext());
                 return true;
             }
             return false;

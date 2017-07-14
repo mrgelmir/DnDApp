@@ -32,37 +32,6 @@
     </RelativeLayout>
 
     <!-- Interaction buttons -->
-
-    <Button
-        android:id="@+id/button_dismiss"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/info_content"
-        android:text="Dismiss"
-        android:textColor="@color/color_text_positive" />
-
-    <Button
-        android:id="@+id/button_negative"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/info_content"
-        android:layout_toStartOf="@+id/button_positive"
-        android:text="Cancel"
-        android:textColor="@color/color_text_negative" />
-
-    <Button
-        android:id="@+id/button_positive"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/info_content"
-        android:text="Confirm edits"
-        android:textColor="@color/color_text_positive" />
-
     <Button
         android:id="@+id/button_remove"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -72,5 +41,39 @@
         android:layout_below="@+id/info_content"
         android:text="Remove"
         android:textColor="@color/color_text_negative" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/info_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_dismiss"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dismiss"
+            android:textColor="@color/color_text_positive" />
+
+        <Button
+            android:id="@+id/button_negative"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/color_text_negative" />
+
+        <Button
+            android:id="@+id/button_positive"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm edits"
+            android:textColor="@color/color_text_positive" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>

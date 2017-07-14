@@ -1,7 +1,5 @@
-package be.sanderdecleer.dndapp.views;
+package be.sanderdecleer.dndapp.controllers;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,11 +10,10 @@ import be.sanderdecleer.dndapp.model.character.FeatureModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 
 /**
- * Created by SD on 22/11/2016.
- * Controls the view element of a {@link FeatureModel} via the {@link BaseItemView}
+ * Created by SD on 14/07/2017.
  */
 
-public class FeatureView implements ItemViewController {
+public class FeatureViewController implements ItemViewController {
 
     private FeatureModel data;
 
@@ -40,7 +37,6 @@ public class FeatureView implements ItemViewController {
     public void setupInfoView(View infoView) {
 
         final TextView descriptionLabel = (TextView) infoView.findViewById(R.id.ability_description);
-
         descriptionLabel.setText(data.description);
     }
 
@@ -105,5 +101,4 @@ public class FeatureView implements ItemViewController {
     public String getTitle() {
         return data.title;
     }
-
 }
