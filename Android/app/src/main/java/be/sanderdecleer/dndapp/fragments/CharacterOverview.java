@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import be.sanderdecleer.dndapp.adapters.BaseItemAdapter;
 import be.sanderdecleer.dndapp.controllers.AbilityViewController;
-import be.sanderdecleer.dndapp.controllers.ItemViewController;
 import be.sanderdecleer.dndapp.dialog_fragments.ItemDialogFragment;
 import be.sanderdecleer.dndapp.model.character.AbilityModel;
 import be.sanderdecleer.dndapp.model.character.BaseItem;
@@ -28,10 +29,8 @@ import be.sanderdecleer.dndapp.model.character.WeaponModel;
 import be.sanderdecleer.dndapp.utils.CharacterControl;
 import be.sanderdecleer.dndapp.utils.CharacterProvider;
 import be.sanderdecleer.dndapp.R;
-import be.sanderdecleer.dndapp.views.ArmorClassView;
-import be.sanderdecleer.dndapp.views.HitPointsView;
+import be.sanderdecleer.dndapp.utils.LayoutUtils;
 import be.sanderdecleer.dndapp.views.ItemViewType;
-import be.sanderdecleer.dndapp.views.SpeedView;
 
 
 /**
@@ -44,6 +43,14 @@ import be.sanderdecleer.dndapp.views.SpeedView;
 public class CharacterOverview extends CharacterFragment {
 
     private BaseItemAdapter baseItemAdapter;
+
+    // TODO: fix this
+    private static final String[] speedValues = {"0", "5", "10", "15", "20", "25", "30", "35",
+            "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", "105",
+            "110", "115", "120"};
+    private static final String[] acValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
+            "24", "25"};
 
     public CharacterOverview() {
         // Required empty public constructor
@@ -102,7 +109,7 @@ public class CharacterOverview extends CharacterFragment {
         }
 
         // Get Character reference
-        CharacterModel currentCharacter = CharacterControl.getCurrentCharacter();
+        final CharacterModel currentCharacter = CharacterControl.getCurrentCharacter();
 
         // Ability scores
         setAbilityScore(R.id.ability_score_STR, currentCharacter.getSTR());
@@ -113,16 +120,99 @@ public class CharacterOverview extends CharacterFragment {
         setAbilityScore(R.id.ability_score_CHA, currentCharacter.getCHA());
 
         // Armor class
-        ArmorClassView armorClassView = (ArmorClassView) findViewById(R.id.character_AC);
-        armorClassView.setupItemView(armorClassView);
+        final TextView armorClassView = (TextView) findViewById(R.id.character_AC);
+        armorClassView.setText(String.format(
+                getResources().getString(R.string.character_AC_format),
+                currentCharacter.getAC()));
+        armorClassView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                LayoutUtils.showSpinnerDialog(getActivity(),
+                        getString(R.string.character_AC_title), acValues,
+                        currentCharacter.getAC(),
+                        new LayoutUtils.ArrayResultCallback() {
+                            @Override
+                            public void GetResult(int arrayIndex) {
+                                currentCharacter.setAC(Integer.parseInt(acValues[arrayIndex]));
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                return true;
+            }
+        });
 
         // Hit points
-        HitPointsView hitPointsView = (HitPointsView) findViewById(R.id.character_HP);
-        hitPointsView.setupItemView(hitPointsView);
+        final TextView hitPointsView = (TextView) findViewById(R.id.character_HP);
+        hitPointsView.setText(String.format(getResources().getString(R.string.character_HP_format),
+                currentCharacter.getHP_current(), currentCharacter.getHP_max()));
+        hitPointsView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                LayoutUtils.showEditDialog(getActivity(), R.layout.edit_hit_points,
+                        getString(R.string.character_HP_title),
+                        new LayoutUtils.EditViewCallback() {
+                            @Override
+                            public void EditView(View view) {
+                                final NumberPicker current = (NumberPicker) view.findViewById(R.id.hit_points_current);
+                                final NumberPicker maximum = (NumberPicker) view.findViewById(R.id.hit_points_max);
 
-        // Speed
-        SpeedView speedView = (SpeedView) findViewById(R.id.character_Speed);
-        speedView.setupItemView(speedView);
+                                int hp_current = currentCharacter.getHP_current();
+                                int hp_max = currentCharacter.getHP_max();
+
+                                current.setMaxValue(hp_max);
+                                current.setMinValue(0);
+                                current.setValue(hp_current);
+
+                                maximum.setMinValue(6);
+                                maximum.setMaxValue(300); // Totally arbitrary number for now
+                                maximum.setValue(hp_max);
+
+                                // Check for max value changed
+                                maximum.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                                    @Override
+                                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                        // Change to new maximum value
+                                        current.setMaxValue(newVal);
+                                    }
+                                });
+                            }
+                        },
+                        new LayoutUtils.DismissDialogCallback() {
+                            @Override
+                            public void OnDialogDismissed(View view) {
+                                final NumberPicker current = (NumberPicker) view.findViewById(R.id.hit_points_current);
+                                final NumberPicker maximum = (NumberPicker) view.findViewById(R.id.hit_points_max);
+
+                                currentCharacter.setHP_current(current.getValue());
+                                currentCharacter.setHP_max(maximum.getValue());
+
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                return true;
+            }
+        });
+
+        // Speed view
+        final TextView speedView = (TextView) findViewById(R.id.character_Speed);
+        speedView.setText(String.format(getResources().getString(R.string.character_speed_format),
+                CharacterControl.getCurrentCharacter().getSpeed()));
+        speedView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                LayoutUtils.showSpinnerDialog(getActivity(),
+                        getString(R.string.character_speed_title), speedValues,
+                        currentCharacter.getSpeed() / 5,
+                        new LayoutUtils.ArrayResultCallback() {
+                            @Override
+                            public void GetResult(int arrayIndex) {
+                                currentCharacter.setSpeed(Integer.parseInt(speedValues[arrayIndex]));
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                return true;
+            }
+        });
 
         // All other features, items, resources, spells...
         ArrayList<BaseItem> items = new ArrayList<>();
@@ -155,12 +245,12 @@ public class CharacterOverview extends CharacterFragment {
                 return true;
             }
         });
-        abilityView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ItemDialogFragment.createItemViewDialog(data, ItemViewType.INFO).show(getContext());
-            }
-        });
+//        abilityView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ItemDialogFragment.createItemViewDialog(data, ItemViewType.INFO).show(getContext());
+//            }
+//        });
 
     }
 

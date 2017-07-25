@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import be.sanderdecleer.dndapp.R;
 
@@ -32,6 +33,10 @@ public final class LayoutUtils {
 
     public interface TextResultCallback {
         void GetTextResult(String string);
+    }
+
+    public interface ArrayResultCallback {
+        void GetResult(int arrayIndex);
     }
 
     private interface EditAlertDialogBuilderCallback {
@@ -107,7 +112,8 @@ public final class LayoutUtils {
 
     }
 
-    public static void showEditTextDialog(final Activity activity, String title, final String startText,
+    public static void showEditTextDialog(final Activity activity, String title,
+                                          final String startText,
                                           final TextResultCallback textResultCallback) {
         LayoutUtils.showEditDialog(activity, R.layout.edit_text, title,
                 new LayoutUtils.EditViewCallback() {
@@ -145,6 +151,31 @@ public final class LayoutUtils {
                         }
                     }
                 });
+    }
+
+    public static void showSpinnerDialog(final Activity activity, String title,
+                                         final String[] values, final int startValue,
+                                         final ArrayResultCallback arrayResultCallback) {
+
+        LayoutUtils.showEditDialog(activity, R.layout.edit_single_number, title, new EditViewCallback() {
+            @Override
+            public void EditView(View view) {
+                final NumberPicker picker = (NumberPicker) view.findViewById(R.id.edit_value);
+
+                picker.setMaxValue(values.length - 1);
+                picker.setDisplayedValues(values);
+
+                picker.setValue(startValue);
+            }
+        }, new DismissDialogCallback() {
+            @Override
+            public void OnDialogDismissed(View view) {
+                final NumberPicker picker = (NumberPicker) view.findViewById(R.id.edit_value);
+
+                arrayResultCallback.GetResult(picker.getValue());
+            }
+        });
+
     }
 
     private static void showDialog(Activity activity, int layoutId, String title,

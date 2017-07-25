@@ -30,26 +30,29 @@
             android:layout_below="@+id/overview_ability_scores"
             android:paddingTop="@dimen/padding_narrow">
             <!-- AC -->
-            <include
+            <TextView
                 android:id="@+id/character_AC"
-                layout="@layout/item_armor_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/character_AC_format"
+                android:textAlignment="center" />
             <!-- Movement -->
-            <include
+            <TextView
                 android:id="@+id/character_Speed"
-                layout="@layout/item_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/character_speed_format"
+                android:textAlignment="center" />
             <!-- HitPoints -->
-            <include
+            <TextView
                 android:id="@+id/character_HP"
-                layout="@layout/item_hit_points"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/character_HP_format"
+                android:textAlignment="center" />
         </LinearLayout>
 
 
