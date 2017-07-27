@@ -20,11 +20,14 @@
     <color name="color_accent">#bf360c</color>
 
     <color name="color_background">#ffffff</color>
-    <color name="color_clear">#00ffffff</color>
 
     <color name="color_text_primary">#212121</color>
     <color name="color_text_alternative">#cfd8dc</color>
     <color name="color_text_positive">#212121</color>
     <color name="color_text_negative">#be360c</color>
+
+
+    <!-- General colors -->
+    <color name="color_clear">#00ffffff</color>
 
 </resources>

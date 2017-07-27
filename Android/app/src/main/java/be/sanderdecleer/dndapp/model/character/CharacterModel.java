@@ -28,10 +28,10 @@ public class CharacterModel implements Parcelable {
     private AbilityModel WIS = AbilityModel.getForAbility("WIS");
     private AbilityModel CHA = AbilityModel.getForAbility("CHA");
 
-    private int speed;
-    private int AC;
-    private int HP_max;
-    private int HP_current;
+    private int speed = 30;
+    private int AC = 10;
+    private int HP_max = 10;
+    private int HP_current = 10;
 
     /**
      * Does this character model have unsaved changes?
@@ -165,7 +165,6 @@ public class CharacterModel implements Parcelable {
 
         return other.getName().equals(getName());
     }
-
 
     // Getters and Setters below
 

@@ -40,23 +40,28 @@
             <!-- AC -->
             <TextView
                 android:id="@+id/character_AC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/character_AC_format"
                 android:textAlignment="center" />
             <!-- Movement -->
             <TextView
                 android:id="@+id/character_Speed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/character_speed_format"
                 android:textAlignment="center" />
             <!-- HitPoints -->
             <TextView
                 android:id="@+id/character_HP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/character_HP_format"
                 android:textAlignment="center" />
         </LinearLayout>

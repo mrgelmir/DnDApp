@@ -144,12 +144,12 @@ public class ItemDialogFragment extends DialogFragment {
         return this;
     }
 
-    public ItemDialogFragment setConfirmListener(ItemDialogFragment.RemoveListener listener) {
+    public ItemDialogFragment setRemoveListener(ItemDialogFragment.RemoveListener listener) {
         removeListener = listener;
         return this;
     }
 
-    public ItemDialogFragment setConfirmListener(ItemDialogFragment.DismissListener listener) {
+    public ItemDialogFragment setDismissListener(ItemDialogFragment.DismissListener listener) {
         dismissListener = listener;
         return this;
     }

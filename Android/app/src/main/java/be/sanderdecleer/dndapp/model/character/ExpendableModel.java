@@ -52,7 +52,7 @@ public class ExpendableModel extends BaseItem {
     }
 
     public static ExpendableModel getEmpty() {
-        return new ExpendableModel("temp", 0, 0);
+        return new ExpendableModel("temp", 1, 1);
     }
 
     @Override

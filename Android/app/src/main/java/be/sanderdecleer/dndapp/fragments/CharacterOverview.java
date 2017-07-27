@@ -13,6 +13,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class CharacterOverview extends CharacterFragment {
 
     private BaseItemAdapter baseItemAdapter;
 
-    // TODO: fix this
+    // TODO: fix these
     private static final String[] speedValues = {"0", "5", "10", "15", "20", "25", "30", "35",
             "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", "105",
             "110", "115", "120"};
@@ -145,6 +146,45 @@ public class CharacterOverview extends CharacterFragment {
         final TextView hitPointsView = (TextView) findViewById(R.id.character_HP);
         hitPointsView.setText(String.format(getResources().getString(R.string.character_HP_format),
                 currentCharacter.getHP_current(), currentCharacter.getHP_max()));
+        hitPointsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutUtils.showInfoDialog(getActivity(), R.layout.info_hit_points,
+                        getString(R.string.character_HP_title),
+                        new LayoutUtils.EditViewCallback() {
+                            @Override
+                            public void EditView(View view) {
+                                final SeekBar hpBar = (SeekBar) view.findViewById(R.id.hit_points_slider);
+                                final TextView currentHp = (TextView) view.findViewById(R.id.hit_points_current);
+                                final TextView maxHp = (TextView) view.findViewById(R.id.hit_points_max);
+
+                                currentHp.setText(Integer.toString(currentCharacter.getHP_current()));
+                                maxHp.setText(Integer.toString(currentCharacter.getHP_max()));
+
+                                hpBar.setMax(currentCharacter.getHP_max());
+                                hpBar.setProgress(currentCharacter.getHP_current());
+
+                                hpBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                        currentCharacter.setHP_current(progress);
+                                        currentHp.setText(Integer.toString(progress));
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+                                        CharacterControl.tryCharacterChanged();
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
         hitPointsView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -284,13 +324,19 @@ public class CharacterOverview extends CharacterFragment {
                 toggleCreationMenu();
                 if (CharacterControl.hasCurrentCharacter()) {
                     // Create model and add it to the characters
-                    WeaponModel weaponModel = WeaponModel.getEmpty();
-                    CharacterControl.getCurrentCharacter().addWeapon(weaponModel);
-                    CharacterControl.tryCharacterChanged();
+                    final WeaponModel weaponModel = WeaponModel.getEmpty();
 
                     // Show edit view for the model
                     ItemDialogFragment
                             .createItemViewDialog(weaponModel, ItemViewType.EDIT)
+                            .setConfirmListener(new ItemDialogFragment.ConfirmListener() {
+                                @Override
+                                public void confirm(View v) {
+                                    // Add weapon and update its values
+                                    CharacterControl.getCurrentCharacter().addWeapon(weaponModel);
+                                    weaponModel.getViewController().resolveEditView(v);
+                                }
+                            })
                             .show(getContext());
 
                 }
@@ -303,15 +349,21 @@ public class CharacterOverview extends CharacterFragment {
                 if (CharacterControl.hasCurrentCharacter()) {
 
                     // Create model and add it to the character
-                    FeatureModel featureModel = FeatureModel.getBasic(
+                    final FeatureModel featureModel = FeatureModel.getBasic(
                             getResources().getString(R.string.feature_default_title),
                             getResources().getString(R.string.feature_default_description));
-                    CharacterControl.getCurrentCharacter().addFeature(featureModel);
-                    CharacterControl.tryCharacterChanged();
 
                     // Show edit view for the model
                     ItemDialogFragment
                             .createItemViewDialog(featureModel, ItemViewType.EDIT)
+                            .setConfirmListener(new ItemDialogFragment.ConfirmListener() {
+                                @Override
+                                public void confirm(View v) {
+                                    // Add feature and update its values
+                                    CharacterControl.getCurrentCharacter().addFeature(featureModel);
+                                    featureModel.getViewController().resolveEditView(v);
+                                }
+                            })
                             .show(getContext());
                 }
             }
@@ -323,13 +375,19 @@ public class CharacterOverview extends CharacterFragment {
                 if (CharacterControl.hasCurrentCharacter()) {
 
                     // Create model and add to character
-                    ExpendableModel expendableModel = ExpendableModel.getEmpty();
-                    CharacterControl.getCurrentCharacter().addExpendable(expendableModel);
-                    CharacterControl.tryCharacterChanged();
+                    final ExpendableModel expendableModel = ExpendableModel.getEmpty();
 
                     // Show edit view for the model
                     ItemDialogFragment
                             .createItemViewDialog(expendableModel, ItemViewType.EDIT)
+                            .setConfirmListener(new ItemDialogFragment.ConfirmListener() {
+                                @Override
+                                public void confirm(View v) {
+                                    // Add expendable and update its values
+                                    CharacterControl.getCurrentCharacter().addExpendable(expendableModel);
+                                    expendableModel.getViewController().resolveEditView(v);
+                                }
+                            })
                             .show(getContext());
                 }
             }
@@ -509,7 +567,7 @@ public class CharacterOverview extends CharacterFragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             // Get item
-            BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
+            final BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
             // Show info view
             ItemDialogFragment.createItemViewDialog(item, ItemViewType.INFO)
                     .show(parent.getContext());
@@ -519,10 +577,55 @@ public class CharacterOverview extends CharacterFragment {
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
             // Get item
-            BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
+            final BaseItem item = (BaseItem) parent.getAdapter().getItem(position);
             // Show edit view
             if (item != null) {
-                ItemDialogFragment.createItemViewDialog(item, ItemViewType.EDIT)
+                ItemDialogFragment itemViewDialog = ItemDialogFragment.createItemViewDialog(item, ItemViewType.EDIT);
+
+                // Set  up correct removal if needed
+                switch (item.getType()) {
+
+                    case Weapon:
+                        itemViewDialog.setRemoveListener(new ItemDialogFragment.RemoveListener() {
+                            @Override
+                            public void remove() {
+                                CharacterControl.getCurrentCharacter().removeWeapon((WeaponModel) item);
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                        break;
+                    case Feature:
+                        itemViewDialog.setRemoveListener(new ItemDialogFragment.RemoveListener() {
+                            @Override
+                            public void remove() {
+                                CharacterControl.getCurrentCharacter().removeFeature((FeatureModel) item);
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                        break;
+                    case Expendable:
+                        itemViewDialog.setRemoveListener(new ItemDialogFragment.RemoveListener() {
+                            @Override
+                            public void remove() {
+                                CharacterControl.getCurrentCharacter().removeExpendable((ExpendableModel) item);
+                                CharacterControl.tryCharacterChanged();
+                            }
+                        });
+                        break;
+                    case Item:
+                    case AbilityScore:
+                    case ArmorClass:
+                    case Speed:
+                        break;
+                }
+
+                itemViewDialog
+                        .setConfirmListener(new ItemDialogFragment.ConfirmListener() {
+                            @Override
+                            public void confirm(View v) {
+                                item.getViewController().resolveEditView(v);
+                            }
+                        })
                         .show(parent.getContext());
                 return true;
             }

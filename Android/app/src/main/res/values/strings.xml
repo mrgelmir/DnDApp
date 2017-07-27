@@ -38,6 +38,7 @@
     <!-- Editing values -->
     <string name="edit_add">Add item</string>
     <string name="edit_default">Edit text</string>
+    <string name="divider">/</string>
 
     <!-- Name values -->
     <string name="name_default">New Character</string>
@@ -54,6 +55,10 @@
     <string name="ability_score_CHA">CHA</string>
     <string name="ability_score_value_default">XX(+X)</string>
     <string name="ability_score_value">%1$d (%2$s%3$d)</string>
+
+    <!-- Hit point values -->
+    <string name="hit_points_current">Current Hit Points</string>
+    <string name="hit_points_max">Max Hit Points</string>
 
     <!-- Weapon values -->
     <string name="weapon_tag">tag_weapon</string>
